@@ -1,5 +1,5 @@
 {
-	"name": "Protip",
+	"name": "protip",
 	"version": "0.0.1",
 	"description": "A new generation jQuery Tooltip plugin.",
 	"main": "index.js",
