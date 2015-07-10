@@ -23,9 +23,9 @@
 		);
 	} else {
 		root.ProtipClass = factory(
-			jQuery,
-			window.ProtipConstants,
-			window.ProtipItemClass
+			root.jQuery,
+			root.ProtipConstants,
+			root.ProtipItemClass
 		);
 	}
 }(this, function ($, C, ProtipItemClass) {
