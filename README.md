@@ -1,5 +1,5 @@
 # Warning!
-Development of the plugin is still in progress. While it's mostly seems stable, there are still some tests need to be writen and need to expand the documentation more.
+Development of the plugin is still in progress. While it's mostly seems stable, there are still some tests need to be writen and need to expand the documentation more. The minified file now includes jQuery aswell as I faced some issues when excluding with browserify.
 
 # Introduction
 At the company I working for we use many tooltips for several purposes. Especially our admin area/control panel side has heavy tooltip usage. There were several unusual requests which always required to develop new features into our existing plugin. Now I've created Protip, a new generation of tooltips. It's not so lightweight but it doesn't intends to be. We needed a solution which can fit into every scenario we face with.
