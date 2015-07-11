@@ -107,6 +107,8 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 - left-bottom
 - corner-left-bottom
 
+![Available Protip positions](https://raw.githubusercontent.com/DoclerLabs/Protip/master/img/docs-positions.png)
+
 ## data-pt-gravity
 
 ### True/False
