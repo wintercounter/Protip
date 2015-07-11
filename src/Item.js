@@ -129,11 +129,11 @@
 		 */
 		actionHandler: function(eventType){
 
-			/*if (this.data.trigger === C.TRIGGER_STICKY) {
+			if (this.data.trigger === C.TRIGGER_STICKY) {
 				// No handler needed for sticky
 			}
 			// Handling clicky protips
-			else*/ if (eventType === C.EVENT_CLICK && this.data.trigger === C.TRIGGER_CLICK) {
+			else if (eventType === C.EVENT_CLICK && this.data.trigger === C.TRIGGER_CLICK) {
 				this.toggle();
 			}
 			// Handling mouseover protips
@@ -237,7 +237,7 @@
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
 
-			// Set new timout task if needed
+			// Set new timeout task if needed
 			if (!force && this.data.delayOut) {
 				this._task.delayOut = setTimeout(function(){
 					this.hide(true);
@@ -350,7 +350,7 @@
 		/**
 		 * Determines the type of width.
 		 *
-		 * @returns {Constants.ATTR_MAX_WIDTH|Constants.ATTR_WIDTH}
+		 * @returns {C.ATTR_MAX_WIDTH|C.ATTR_WIDTH}
 		 * @private
 		 */
 		_getWidthType: function(){
@@ -461,7 +461,9 @@
 		 * @private
 		 */
 		_onProtipMouseleave: function(){
-			this.hide();
+            if (this.data.trigger === C.TRIGGER_HOVER) {
+                this.hide();
+            }
 		},
 
 		/**

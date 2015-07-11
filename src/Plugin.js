@@ -1,6 +1,7 @@
-'use strict';
-
 (function (root, factory) {
+
+    'use strict';
+
 	if (typeof define === 'function' && define.amd) {
 		define([
 			'jquery',
@@ -18,6 +19,8 @@
 		);
 	}
 }(this, function ($, ProtipClass) {
+
+    'use strict';
 
 	// Extend the jQuery object with singleton members
 	$ = $.extend($, {
@@ -111,4 +114,8 @@
 			});
 		}
 	});
+
 }));
+
+window.$ = require('jquery');
+require('./Plugin');
