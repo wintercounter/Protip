@@ -116,6 +116,3 @@
 	});
 
 }));
-
-window.$ = require('jquery');
-require('./Plugin');

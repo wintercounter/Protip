@@ -3,7 +3,7 @@
     <meta charset="utf-8">
     <title>Mocha tests</title>
     <link rel="stylesheet" href="../css/protip.css">
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
 </head>
 <body>
 
@@ -401,11 +401,11 @@ Licence: <a href="http://www.os-templates.com/template-terms">Website Template L
                 <h1 class="test-section-title">Auto (Mutation Observer); On click it will get removed</h1>
 
                 <article class="one_quarter">
-                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-delay-in="500" data-pt-observer="true" onclick="this.setAttribute('data-pt-title','New title');this.textContent='Changed';">Title change</h2>
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-observer="true" onclick="this.setAttribute('data-pt-title','New title');this.textContent='Changed';">Title change</h2>
                 </article>
 
                 <article class="one_quarter clone" onclick="this.parentNode.removeChild(this)">
-                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-delay-in="500" data-pt-observer="false">Removeable</h2>
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-observer="false">Removeable</h2>
                 </article>
 
                 <button class="add" style="float: left;">Add node</button>
@@ -421,10 +421,13 @@ Licence: <a href="http://www.os-templates.com/template-terms">Website Template L
         <p class="fl_right">Template by <a href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
     </footer>
 </div>
-<script src="../bundle.js"></script>
+<script src="../protip.min.js"></script>
 <script>
     $(document).ready(function() {
         $.protip();
+        $('body').on('click', 'button.add', function(){
+            $('.clone').clone(false, false).removeClass('clone').insertBefore($(this));
+        });
     });
 </script>
 

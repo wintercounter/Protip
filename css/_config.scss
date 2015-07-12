@@ -1,0 +1,7 @@
+$_protipConfig: (
+    arrow-size: 4px
+);
+
+@function protipConfig($key){
+    @return map-get($_protipConfig, $key);
+}

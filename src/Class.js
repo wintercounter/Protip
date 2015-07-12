@@ -68,9 +68,7 @@
 			/** @type String                Template of protip icon */
 			iconTemplate:                   C.TEMPLATE_ICON,
 			/** @type Boolean               Should we observ whole document for assertions and removals */
-			observer:                       true,
-			/** @type Number                Arrow size. Calculated into positions. (px) */
-			arrowOffset:                    4
+			observer:                       true
 		},
 
 		/**

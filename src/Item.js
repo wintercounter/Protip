@@ -252,6 +252,17 @@
 			this._isVisible = false;
 		},
 
+        /**
+         *
+         * @returns {{width: number, height: number}}
+         */
+        getArrowOffset: function(){
+            return {
+                width:  this.el.protipArrow.outerWidth(),
+                height: this.el.protipArrow.outerHeight()
+            };
+        },
+
 		/**
 		 * Fetches every data-* properties from the source element.
 		 * It extends the defaults, then it applies back to the element.
@@ -328,6 +339,7 @@
 
 			// Convert to jQuery object and append
 			this.el.protip = $(this.el.protip);
+            this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
 			this.el.target.append(this.el.protip);
 		},
 
