@@ -1,5 +1,5 @@
 # Warning!
-Development of the plugin is still in progress. While it's mostly seems stable, there are still some tests need to be writen and need to expand the documentation more. The minified file now includes jQuery aswell as I faced some issues when excluding with browserify.
+Development of the plugin is still in progress. While it's mostly seems stable, there are still some tests need to be written and need to expand the documentation more.
 
 # Introduction
 At the company I working for we use many tooltips for several purposes. Especially our admin area/control panel side has heavy tooltip usage. There were several unusual requests which always required to develop new features into our existing plugin. Now I've created Protip, a new generation of tooltips. It's not so lightweight but it doesn't intends to be. We needed a solution which can fit into every scenario we face with.
@@ -28,7 +28,7 @@ You may need some global configurations on the behaviors of your tooltips. You c
 
     // Available options with default values
     $.protip({
-        /** @type String                Selector for clickable protips */
+        /** @type String                Selector for elements with Protip */
         selector:                       '.protip',
         /** @type String                Namespace of the data attributes */
         namespace:                      'pt',
@@ -38,7 +38,7 @@ You may need some global configurations on the behaviors of your tooltips. You c
         arrowTemplate:                  '<span class="' + Constants.SELECTOR_PREFIX + Constants.SELECTOR_ARROW + '"></span>',
         /** @type String                Template of protip icon */
         iconTemplate:                   '<i class="icon-{icon}"></i>',
-        /** @type Boolean               Should we observ the whole document for assertions and removals */
+        /** @type Boolean               Should we observe the whole document for assertions and removals */
         observer:                       true
     });
 
@@ -139,7 +139,7 @@ It will enable/disable the gravity option. In case it's true, protip is going to
 **Level 2** All other except corners
 **Level 3** Even corners
 
-You may define a level number. Set to **1** in case you wan't to you gravity only in the most common positions. **2** will trigger both **1** and **2**. ***3*** will trigger all of them.
+You may define a level number. Set to **1** in case you want to you gravity only in the most common positions. **2** will trigger both **1** and **2**. ***3*** will trigger all of them.
 
 ### Fully manual control
 Sometimes you may need to have certain tooltips to have only 3 or 5 number of positions with custom offsets in all positions. There is a custom markup for this purpose:
