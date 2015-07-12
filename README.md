@@ -21,6 +21,8 @@ At the company I working for we use many tooltips for several purposes. Especial
 # Installation
 Simply just include the **protip.min.js** and **protip.min.css** files and insert `$.protip();` after the page has been loaded (probably in `$(document).ready()`).
 
+*Be sure jQuery is included.*
+
 ---
 # Usage
 ## Configuration
