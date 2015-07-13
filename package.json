@@ -1,6 +1,6 @@
 {
   "name": "Protip",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A new generation jQuery Tooltip plugin.",
   "main": "protip.min.js",
   "scripts": {
