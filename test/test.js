@@ -92,9 +92,7 @@ suite('Protip: Generating Contents', function() {
 
 });
 
-
-
-// Tescontent custom js
+// Custom js
 setTimeout(function(){
 	$('body').on('click', 'button.add', function(){
 		$('.clone').clone(false, false).removeClass('clone').insertBefore($(this));

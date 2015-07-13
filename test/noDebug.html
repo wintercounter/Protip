@@ -1,0 +1,435 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mocha tests</title>
+    <link rel="stylesheet" href="../css/protip.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+</head>
+<body>
+
+<style type="text/css">
+    .protip {box-shadow: 0 0 5px green;}
+
+    #osfooter{display:block;position:fixed;bottom:0;left:0;width:100%;height:300px;margin-bottom:-300px;overflow:hidden;background-color:transparent;z-index:5000;text-indent:-5000px;}
+    #osfooter div{margin-bottom:-1000px;}
+    #osfooter a{display:block; text-indent:-5000px;}
+    /*
+HTML 5 Template Name: Basic 86
+File: Layout CSS
+Author: OS Templates
+Author URI: http://www.os-templates.com/
+Licence: <a href="http://www.os-templates.com/template-terms">Website Template Licence</a>
+*/
+
+    html{overflow-y:scroll;} /* Forces a scrollbar when the viewport is larger than the websites content - CSS3 */
+
+    body{margin:0; padding:0; font-size:13px; font-family:Georgia, "Times New Roman", Times, serif; color:#919191; background-color:#232323;}
+
+    .clear:after{content:"."; display:block; height:0; clear:both; visibility:hidden; line-height:0;}
+    .clear{display:block; clear:both;}
+    html[xmlns] .clear{display:block;}
+    * html .clear{height:1%;}
+
+    a{outline:none; text-decoration:none;}
+
+    code{font-weight:normal; font-style:normal; font-family:Georgia, "Times New Roman", Times, serif;}
+
+    .fl_left{float:left;}
+    .fl_right{float:right;}
+
+    img{margin:0; padding:0; border:none; line-height:normal; vertical-align:middle;}
+    .imgholder, .imgl, .imgr{padding:4px; border:1px solid #D6D6D6; text-align:center;}
+    .imgl{float:left; margin:0 15px 15px 0; clear:left;}
+    .imgr{float:right; margin:0 0 15px 15px; clear:right;}
+
+    /*----------------------------------------------HTML 5 Overrides-------------------------------------*/
+
+    address, article, aside, figcaption, figure, footer, header, nav, section{display:block; margin:0; padding:0;}
+
+    q{display:block; padding:0 10px 8px 10px; color:#979797; background-color:#ECECEC; font-style:italic; line-height:normal;}
+    q:before{content:'“ '; font-size:26px;}
+    q:after{content:' „'; font-size:26px; line-height:0;}
+
+    /* ----------------------------------------------Wrapper-------------------------------------*/
+
+    div.wrapper{display:block; width:100%; margin:0; padding:0; text-align:left;}
+
+    .row1, .row1 a{color:#C0BAB6; background-color:#333333;}
+    .row2{color:#979797; background-color:#FFFFFF;}
+    .row2 a{color:#FF9900; background-color:#FFFFFF;}
+    .row3, .row3 a{color:#919191; background-color:#232323;}
+
+    /*----------------------------------------------Generalise-------------------------------------*/
+
+    #header, #container, #footer{display:block; width:960px; margin:0 auto;}
+
+    nav ul{margin:0; padding:0; list-style:none;}
+
+    h1, h2, h3, h4, h5, h6{margin:0; padding:0; font-size:16px; font-weight:bold; font-style:normal; line-height:normal; text-transform:uppercase;}
+
+    address{font-style:normal;}
+
+    blockquote, q{display:block; padding:8px 10px; color:#979797; background-color:#ECECEC; font-style:italic; line-height:normal;}
+    blockquote:before, q:before{content:'“ '; font-size:26px;}
+    blockquote:after, q:after{content:' „'; font-size:26px; line-height:0;}
+
+    form, fieldset, legend{margin:0; padding:0; border:none;}
+    legend{display:none;}
+    input, textarea, select{font-size:12px; font-family:Georgia,"Times New Roman",Times,serif;}
+
+    .one_quarter, .two_quarter, .three_quarter, .four_quarter{display:block; float:left; margin:0 20px 0 0;}
+    .one_quarter{width:225px;}
+    .two_quarter{width:470px;}
+    .three_quarter{width:715px;}
+    .four_quarter{width:960px; float:none; margin-right:0; clear:both;}
+
+    .one_third, .two_third, .three_third{display:block; float:left; margin:0 30px 0 0;}
+    .one_third{width:300px;}
+    .two_third{width:630px;}
+    .three_third{width:960px; float:none; margin-right:0; clear:both;}
+
+    .lastbox{margin-right:0;}
+
+    /*----------------------------------------------Header-------------------------------------*/
+
+    #header{padding:20px 0;}
+
+    #header #hgroup{float:left; margin:0 0 20px 0;}
+    #header #hgroup h1, #header #hgroup h2{font-weight:normal; text-transform:none;}
+    #header #hgroup h1{font-size:36px;}
+    #header #hgroup h2{font-size:13px;}
+
+    #header nav{display:block; float:right; margin:10px 0 0 0; padding:20px 0; color:#C0BAB6; background-color:#232323;}
+    #header nav ul{padding:0 20px;}
+    #header nav li{display:inline; margin-right:25px; text-transform:uppercase;}
+    #header nav li.last{margin-right:0;}
+    #header nav li a{color:#C0BAB6; background-color:#232323;}
+    #header nav li a:hover{color:#FF9900; background-color:#232323;}
+
+    /*----------------------------------------------Content Area-------------------------------------*/
+
+    #container{padding:30px 0;}
+    #container section{display:block; width:100%; margin:0 0 50px 0; padding:0;}
+    #container .last{margin:0;}
+    #container .more{text-align:right;}
+
+    /* ------Slider-----*/
+
+    #container #slider{}
+    #container #slider figure{}
+    #container #slider figure img{float:right; width:630px; height:300px;}
+    #container #slider figure figcaption{display:block; float:left; width:280px; height:260px; padding:20px; overflow:hidden; color:#989898; background-color:#DEDEDE; line-height:1.6em;}
+    #container #slider figure figcaption a{color:#FF9900; background-color:#DEDEDE;}
+    #container #slider figure h2{font-size:42px; font-weight:normal; font-style:italic; text-transform:none;}
+    #container #slider figure footer{}
+
+    /* ------Main Content-----*/
+
+    #container #homepage{display:block; width:100%; line-height:1.6em;}
+
+    #container #homepage #services{}
+    #container #homepage #services article{}
+    #container #homepage #services article h2{font-size:14px; margin-bottom:15px;}
+    #container #homepage #services article p{margin:0; padding:0;}
+    #container #homepage #services article img{float:left; width:80px; height:80px; margin:0 10px 10px 0; padding:4px; border:1px solid #DEDEDE;}
+    #container #homepage #services article footer{margin:10px 0 0 0;}
+
+    #container #homepage #latest{}
+    #container #homepage #latest article{}
+    #container #homepage #latest article figure{}
+    #container #homepage #latest article figure img{margin:0 0 10px 0; padding:4px; border:1px solid #D6D6D6;}
+    #container #homepage #latest article figure figcaption{}
+    #container #homepage #latest article figure h2{font-size:14px;}
+    #container #homepage #latest article figure footer{}
+
+    /*----------------------------------------------Footer-------------------------------------*/
+
+    #footer{padding:20px 0;}
+    #footer p{margin:0; padding:0;}
+
+
+
+    #ptdocs-positions h2 {
+        margin-bottom: 15px;
+        font-size: 9px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .test-section-title {
+        margin: 40px 0 20px;
+        float: left;
+        width: 100%;
+        border-bottom: 1px solid #999;
+        padding-bottom: 5px;
+    }
+</style>
+<div class="wrapper row1">
+    <header id="header" class="clear">
+        <div id="hgroup">
+            <h1><a href="http://www.os-templates.com/free-basic-html5-templates">Basic 86</a></h1>
+            <h2>Free HTML5 Website Template</h2>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="http://www.os-templates.com/free-basic-html5-templates" class="protip" data-pt-title="The first test tooltip.">Text Link</a></li>
+                <li><a href="http://www.os-templates.com/free-basic-html5-templates">Text Link</a></li>
+                <li><a href="http://www.os-templates.com/free-basic-html5-templates">Text Link</a></li>
+                <li><a href="http://www.os-templates.com/free-basic-html5-templates">Text Link</a></li>
+                <li class="last"><a href="http://www.os-templates.com/free-basic-html5-templates">Text Link</a></li>
+            </ul>
+        </nav>
+    </header>
+</div>
+<!-- content -->
+<div class="wrapper row2">
+    <div id="container" class="clear">
+        <!-- Slider -->
+        <section id="slider" class="clear">
+            <figure><img width="630" height="300" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="Template Demo Image" class="protip" data-pt-title="The second test tooltip.">
+                <figcaption>
+                    <h2>Eu justo augue estas</h2>
+                    <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna. Urnaultrices quis curabitur phasellentesque congue magnis vestibulum quismodo nulla et feugiat adipiscinia pellentum leo.</p>
+                    <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                </figcaption>
+            </figure>
+        </section>
+        <!-- main content -->
+        <div id="homepage">
+            <!-- services area -->
+            <section id="services" class="clear">
+                <!-- article 1 -->
+                <article class="one_third">
+                    <h2>Lorum ipsum dolor</h2>
+                    <img class="protip" data-pt-title="The third test tooltip." width="80" height="80" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="Template Demo Image">
+                    <p>Vestibulumaccumsan egestibulum eu justo convallis augue estas aenean elit intesque sed. Facilispede estibulum nulla orna nisl velit elit ac aliquat non tincidunt. Namjusto cras urna urnaretra lor urna neque sed quis orci nulla. Laoremut vitae doloreet condimentumst phasellentes dolor ut a ipsum id consectetus. Inpede cumst vitae ris tellentesque fring intesquet.</p>
+                    <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                </article>
+                <!-- article 2 -->
+                <article class="one_third">
+                    <h2>Lorum ipsum dolor</h2>
+                    <img width="80" height="80" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="Template Demo Image">
+                    <p>Vestibulumaccumsan egestibulum eu justo convallis augue estas aenean elit intesque sed. Facilispede estibulum nulla orna nisl velit elit ac aliquat non tincidunt. Namjusto cras urna urnaretra lor urna neque sed quis orci nulla. Laoremut vitae doloreet condimentumst phasellentes dolor ut a ipsum id consectetus. Inpede cumst vitae ris tellentesque fring intesquet.</p>
+                    <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                </article>
+                <!-- article 3 -->
+                <article class="one_third lastbox">
+                    <h2>Lorum ipsum dolor</h2>
+                    <img width="80" height="80" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" alt="Template Demo Image">
+                    <p>Vestibulumaccumsan egestibulum eu justo convallis augue estas aenean elit intesque sed. Facilispede estibulum nulla orna nisl velit elit ac aliquat non tincidunt. Namjusto cras urna urnaretra lor urna neque sed quis orci nulla. Laoremut vitae doloreet condimentumst phasellentes dolor ut a ipsum id consectetus. Inpede cumst vitae ris tellentesque fring intesquet.</p>
+                    <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                </article>
+            </section>
+            <!-- / services area -->
+            <!-- One Quarter -->
+            <section id="latest" class="last clear">
+                <article class="one_quarter">
+                    <figure><img width="215" height="100" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" width="215" height="100" alt="Template Demo Image">
+                        <figcaption>
+                            <h2 id="protip-test-content">Indonectetus facilis</h2>
+                            <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+                            <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                        </figcaption>
+                    </figure>
+                </article>
+                <article class="one_quarter protip protip-self" data-pt-title="#protip-test-content" data-pt-target="true">
+                    <figure><img width="215" height="100" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" width="215" height="100" alt="Template Demo Image">
+                        <figcaption>
+                            <h2>Indonectetus facilis</h2>
+                            <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+                            <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                        </figcaption>
+                    </figure>
+                </article>
+                <article class="one_quarter protip protip-targeted" data-pt-title="The third test tooltip." data-pt-target="#protip-targeted">
+                    <figure><img width="215" height="100" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" width="215" height="100" alt="Template Demo Image">
+                        <figcaption>
+                            <h2 id="protip-targeted">Indonectetus facilis</h2>
+                            <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+                            <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                        </figcaption>
+                    </figure>
+                </article>
+                <article class="one_quarter lastbox">
+                    <figure><img width="215" height="100" src="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=" width="215" height="100" alt="Template Demo Image">
+                        <figcaption>
+                            <h2>Indonectetus facilis</h2>
+                            <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+                            <footer class="more"><a href="http://www.os-templates.com/free-basic-html5-templates">Read More &raquo;</a></footer>
+                        </figcaption>
+                    </figure>
+                </article>
+            </section>
+            <!-- / One Quarter -->
+
+            <h1 class="test-section-title">Position testing</h1>
+
+            <section id="ptdocs-positions" class="last clear" style="margin-top: 40px">
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="top">TOP</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="top" data-pt-target="true">TOP *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="top-left">TOP LEFT</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="top-left" data-pt-target="true">TOP LEFT *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="top-right">TOP RIGHT</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="top-right" data-pt-target="true">TOP RIGHT *</h2>
+                </article>
+                <article class="one_quarter lastbox">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-left-top">CORNER LEFT TOP</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-left-top" data-pt-target="true">CORNER LEFT TOP *</h2>
+                </article>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right">RIGHT</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right" data-pt-target="true">RIGHT *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right-top">RIGHT-TOP</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right-top" data-pt-target="true">RIGHT-TOP *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right-bottom">RIGHT-BOTTOM</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right-bottom" data-pt-target="true">RIGHT-BOTTOM *</h2>
+                </article>
+                <article class="one_quarter lastbox">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom">BOTTOM</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom" data-pt-target="true">BOTTOM *</h2>
+                </article>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom-left">BOTTOM-LEFT</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom-left" data-pt-target="true">BOTTOM-LEFT *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom-right">BOTTOM-RIGHT</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom-right" data-pt-target="true">BOTTOM-RIGHT *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-right-top">CORNER-RIGHT-TOP</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-right-top" data-pt-target="true">CORNER-RIGHT-TOP *</h2>
+                </article>
+                <article class="one_quarter lastbox">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-right-bottom">CORNER-RIGHT-BOTTOM</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-right-bottom" data-pt-target="true">CORNER-RIGHT-BOTTOM *</h2>
+                </article>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left-top">LEFT-TOP</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left-top" data-pt-target="true">LEFT-TOP *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left">LEFT</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left" data-pt-target="true">LEFT *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left-bottom">LEFT-BOTTOM</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left-bottom" data-pt-target="true">LEFT-BOTTOM *</h2>
+                </article>
+                <article class="one_quarter lastbox">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-left-bottom">CORNER-LEFT-BOTTOM</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-left-bottom" data-pt-target="true">CORNER-LEFT-BOTTOM *</h2>
+                </article>
+
+                <h1 class="test-section-title">Gravity testing</h1>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom" data-pt-gravity="true">true, bottom</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom" data-pt-gravity="true" data-pt-target="true">true, bottom *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left" data-pt-gravity="top-right 10 15; bottom-right -10 -15">top-right 10 15; bottom-right -10 -15</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left" data-pt-gravity="top-right 10 15; bottom-right -10 -15" data-pt-target="true">top-right 10 15; bottom-right -10 -15 *</h2>
+                </article>
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left-bottom" data-pt-gravity="1">1</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="left-bottom" data-pt-gravity="1" data-pt-target="true">1 *</h2>
+                </article>
+                <article class="one_quarter lastbox">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-left-bottom" data-pt-gravity="2">2</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="corner-left-bottom" data-pt-gravity="2" data-pt-target="true">2 *</h2>
+                </article>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom" data-pt-gravity="top-left; bottom-left">top-left; bottom-left</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom" data-pt-gravity="top-left; bottom-left" data-pt-target="true">true, bottom *</h2>
+                </article>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom" data-pt-gravity="top-left; bottom-left; ...">top-left; bottom-left; ...</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="bottom" data-pt-gravity="top-left; bottom-left; ..." data-pt-target="true">top-left; bottom-left; ...</h2>
+                </article>
+
+                <h1 class="test-section-title">Triggers</h1>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right" data-pt-gravity="true" data-pt-trigger="sticky">Sticky</h2>
+                    <h2 class="protip" data-pt-title="Test title" data-pt-position="right" data-pt-gravity="true" data-pt-trigger="click">Clicky</h2>
+                </article>
+
+                <h1 class="test-section-title">Sources / Close in tooltip</h1>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="#protip_content_one" data-pt-position="right" data-pt-trigger="sticky">Custom HTML content</h2>
+                    <h2 class="protip" data-pt-title="#protip_content_one" data-pt-position="right" data-pt-trigger="click">Custom HTML content (Clicky)</h2>
+                </article>
+
+                <div id="protip_content_one" style="display: none">
+                    This is a custom HTML content. <strong class="protip-close">Close</strong>
+                </div>
+
+                <h1 class="test-section-title">Delays and Interactive</h1>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-delay-in="500">DelayIn 500</h2>
+                </article>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-delay-out="500">DelayOut 500</h2>
+                </article>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-delay-in="500" data-pt-delay-out="500">DelayIn/Out 500</h2>
+                </article>
+
+                <article class="one_quarter lastbox">
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-interactive="true">Interactive</h2>
+                </article>
+
+                <h1 class="test-section-title">Auto (Mutation Observer); On click it will get removed</h1>
+
+                <article class="one_quarter">
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-observer="true" onclick="this.setAttribute('data-pt-title','New title');this.textContent='Changed';">Title change</h2>
+                </article>
+
+                <article class="one_quarter clone" onclick="this.parentNode.removeChild(this)">
+                    <h2 class="protip" data-pt-title="Test content" data-pt-position="right" data-pt-observer="false">Removeable</h2>
+                </article>
+
+                <button class="add" style="float: left;">Add node</button>
+            </section>
+        </div>
+        <!-- / content body -->
+    </div>
+</div>
+<!-- Footer -->
+<div class="wrapper row3">
+    <footer id="footer" class="clear">
+        <p class="fl_left">Copyright &copy; 2009 - 2015 - All Rights Reserved - <a href="http://www.os-templates.com/">Domain Name</a></p>
+        <p class="fl_right">Template by <a href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
+    </footer>
+</div>
+<script src="../protip.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $.protip();
+        $('body').on('click', 'button.add', function(){
+            $('.clone').clone(false, false).removeClass('clone').insertBefore($(this));
+        });
+    });
+</script>
+
+</body>
+</html>

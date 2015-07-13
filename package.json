@@ -1,45 +1,53 @@
 {
-	"name": "protip",
-	"version": "0.0.1",
-	"description": "A new generation jQuery Tooltip plugin.",
-	"main": "index.js",
-	"scripts": {
-		"test": "npm run-script bundle_test",
-		"bundle_test": "browserify -t html2js-browserify test/test.js -o bundle.test.js",
-		"bundle_prod": "browserify src/Plugin.js -x jquery -o bundle.js",
-		"build": "npm run-script bundle_prod && npm run-script sass && minify --output protip.min.js bundle.js && minify --output protip.min.css css/protip.css",
-		"sass": "node_modules/.bin/scss-cli css/protip.scss"
-	},
-	"author": "Victor Vincent <wintercounter@gmail.com>",
-	"license": "MIT",
-	"main": "protip.min.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/DoclerLabs/Protip"
-	},
-	"bugs": {
-		"url": "https://github.com/DoclerLabs/Protip/issues"
-	},
-	"keywords": [
-		"tooltip",
-		"jquery",
-		"plugin",
-		"observer",
-		"live",
-		"gravity",
-		"auto"
-	],
-	"devDependencies": {
-		"async": "~0.9.0",
-		"browserify": "^4.0.0",
-		"chai": "~1.9.1",
-		"html2js-browserify": "0.0.2",
-		"mocha": "~1.21.4",
-		"sinon": "~1.10.3",
-		"minifier": "~0.7.0",
-		"scss-cli": "0.0.6"
-	},
-	"dependencies": {
-		"jquery": "*"
-	}
+  "name": "Protip",
+  "version": "0.0.2",
+  "description": "A new generation jQuery Tooltip plugin.",
+  "main": "protip.min.js",
+  "scripts": {
+    "test": "npm run-script bundle_test",
+    "bundle_test": "browserify -t html2js-browserify test/test.js -o bundle.test.js",
+    "bundle_prod": "browserify -x jquery src/Init.js -o bundle.js",
+    "build": "npm run-script bundle_prod && npm run-script sass && minify --output protip.min.js bundle.js && minify --output protip.min.css css/protip.css",
+    "sass": "node_modules/.bin/scss-cli css/protip.scss"
+  },
+  "author": "Victor Vincent <wintercounter@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DoclerLabs/Protip"
+  },
+  "bugs": {
+    "url": "https://github.com/DoclerLabs/Protip/issues"
+  },
+  "keywords": [
+    "tooltip",
+    "jquery",
+    "plugin",
+    "observer",
+    "live",
+    "gravity",
+    "auto"
+  ],
+  "devDependencies": {
+    "async": "~0.9.0",
+    "browserify": "^4.0.0",
+    "chai": "~1.9.1",
+    "html2js-browserify": "0.0.2",
+    "mocha": "~1.21.4",
+    "sinon": "~1.10.3",
+    "minifier": "~0.7.0",
+    "scss-cli": "0.0.6",
+    "browserify-shim": "~3.8.9"
+  },
+  "dependencies": {
+    "jquery": "*"
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "global:jQuery"
+  }
 }
