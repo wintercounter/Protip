@@ -220,7 +220,6 @@
 				.addClass(C.SELECTOR_SHOW);
 
             // If we need animation
-            console.log(this.data.animate);
             this.data.animate && this.el.protip.addClass(C.SELECTOR_ANIMATE).addClass(this.data.animate);
 
 			// Set visibility
