@@ -75,12 +75,16 @@
 		SELECTOR_CONTAINER: 'container',
 		SELECTOR_SHOW: 'protip-show',
 		SELECTOR_CLOSE: '.protip-close',
+        SELECTOR_SKIN_PREFIX: 'protip-skin-',
+        SELECTOR_ANIMATE: 'animated',
 
 		TEMPLATE_PROTIP: '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
 
 		ATTR_WIDTH: 'width',
-		ATTR_MAX_WIDTH: 'max-width'
+		ATTR_MAX_WIDTH: 'max-width',
+
+        SKIN_DEFAULT: 'default'
 	};
 
 	ProtipConstants.TEMPLATE_ARROW = '<span class="' + ProtipConstants.SELECTOR_PREFIX + ProtipConstants.SELECTOR_ARROW + '"></span>';

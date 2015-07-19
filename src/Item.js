@@ -49,30 +49,6 @@
 
 // Define the ProtipItemClass members
 	$.extend(true, ProtipItemClass.prototype, {
-		/**
-		 * List of data-* properties and their default values.
-		 *
-		 * @type Object
-		 */
-		_prop: {
-			trigger:     C.TRIGGER_HOVER,
-			title:       null,
-			inited:      false,
-			delayIn:     0,
-			delayOut:    0,
-			interactive: false,
-			gravity:     true,
-			offsetTop:   0,
-			offsetLeft:  0,
-			position:    C.POSITION_BOTTOM,
-			classes:     null,
-			arrow:       true,
-			width:       300,
-			identifier:  false,
-			icon:        false,
-			observer:    false,
-			target:      C.SELECTOR_BODY
-		},
 
 		/**
 		 * Constructor of the class
@@ -85,6 +61,30 @@
 		 * @private
 		 */
 		_Construct: function(id, el, classInstance){
+
+            /** @type {object} List of data-* properties and their default values. */
+            this._prop = {
+                trigger:     C.TRIGGER_HOVER,
+                title:       null,
+                inited:      false,
+                delayIn:     0,
+                delayOut:    0,
+                interactive: false,
+                gravity:     true,
+                offsetTop:   0,
+                offsetLeft:  0,
+                position:    C.POSITION_BOTTOM,
+                classes:     null,
+                arrow:       true,
+                width:       300,
+                identifier:  false,
+                icon:        false,
+                observer:    false,
+                target:      C.SELECTOR_BODY,
+                skin:        undefined,
+                animate:     undefined
+            };
+
 			/** @type {object}    Object storing jQuery elements */
 			this.el               = {};
 
@@ -193,7 +193,7 @@
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
 
-			// Set new timout task if needed
+			// Set new timeout task if needed
 			if (!force && this.data.delayIn) {
 				this._task.delayIn = setTimeout(function(){
 					this.show(true);
@@ -203,29 +203,38 @@
 				return;
 			}
 
-			var style,
-				position;
+			var style;
 
 			// Handle gravity/non-gravity based position calculations
 			if (this.data.gravity) {
 				style = new GravityTester(this);
-				position = style.position || this.data.position;
 				delete style.position;
 			}
 			else {
 				style = new PositionCalculator(this);
-				position = this.data.position;
 			}
 
-			// Apply styles, classes, attributes
+			// Apply styles, classes
 			this.el.protip
 				.css(style)
-				.addClass(C.SELECTOR_SHOW)
-				.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
+				.addClass(C.SELECTOR_SHOW);
+
+            // If we need animation
+            console.log(this.data.animate);
+            this.data.animate && this.el.protip.addClass(C.SELECTOR_ANIMATE).addClass(this.data.animate);
 
 			// Set visibility
 			this._isVisible = true;
 		},
+
+        /**
+         * Apply a position to the tooltip.
+         *
+         * @param position
+         */
+        applyPosition: function(position){
+            this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
+        },
 
 		/**
 		 * Make a tooltip invisible.
@@ -248,7 +257,11 @@
 			}
 
 			// Remove classes and set visibility
-			this.el.protip.removeClass(C.SELECTOR_SHOW);
+			this.el.protip
+                .removeClass(C.SELECTOR_SHOW)
+                .removeClass(C.SELECTOR_ANIMATE)
+                .removeClass(this.data.animate);
+
 			this._isVisible = false;
 		},
 
@@ -278,7 +291,7 @@
 
 			// Merge/Extend
 			this.data = $.extend({}, this._prop, this.data);
-
+            console.log(this.data);
 			// Now apply back to the element
 			$.each(this.data, $.proxy(function(key, value){
 				this.el.source.data(this._namespaced(key), value);
@@ -350,11 +363,14 @@
 		 * @private
 		 */
 		_getClassList: function(){
-			var classList = [C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER];
+			var classList = [];
 
-			if (this.data.classes) {
-				classList.push(this.data.classes);
-			}
+            // Main container class
+            classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
+            // Skin class
+            classList.push(C.SELECTOR_SKIN_PREFIX + (this.data.skin || this.classInstance.settings.skin));
+            // Custom classes
+			this.data.classes && classList.push(this.data.classes);
 
 			return classList.join(' ');
 		},
@@ -362,7 +378,7 @@
 		/**
 		 * Determines the type of width.
 		 *
-		 * @returns {C.ATTR_MAX_WIDTH|C.ATTR_WIDTH}
+		 * @returns {C.ATTR_MAX_WIDTH || C.ATTR_WIDTH}
 		 * @private
 		 */
 		_getWidthType: function(){

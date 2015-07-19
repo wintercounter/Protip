@@ -68,7 +68,9 @@
 			/** @type String                Template of protip icon */
 			iconTemplate:                   C.TEMPLATE_ICON,
 			/** @type Boolean               Should we observ whole document for assertions and removals */
-			observer:                       true
+			observer:                       true,
+            /** @type String                Default skin to use */
+            skin:                           C.SKIN_DEFAULT
 		},
 
 		/**

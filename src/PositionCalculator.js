@@ -137,6 +137,8 @@
 		 * @private
 		 */
 		_getPosition: function(){
+            this._itemInstance.applyPosition(this._position);
+
 			var position = {left: 0, top: 0};
 			var arrowOffset = this._itemInstance.getArrowOffset();
 

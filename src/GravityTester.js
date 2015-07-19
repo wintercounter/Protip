@@ -38,7 +38,7 @@
 	/**
 	 * GravityTester class.
 	 *
-	 * @param protipItem {ProtipItemClass} The ProtipItem Intance.
+	 * @param protipItem {ProtipItemClass} The ProtipItem Instance.
 	 * @returns {<top>:<string>, <left>:<string>}
 	 * @constructor
 	 */
@@ -99,8 +99,8 @@
 		},
 
 		/**
-		 * Does position test based on the poisition given in the parameter.
-		 * It'll do a position caculation and tries the protip from every side.
+		 * Does position test based on the position given in the parameter.
+		 * It'll do a position calculation and tries the protip from every side.
 		 *
 		 * @param position {object} Position of the element.
 		 * @returns {boolean}
