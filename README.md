@@ -165,7 +165,7 @@ Protip has built-in support for **Animate.css** (https://daneden.github.io/anima
 
 Usage:
 ```html
-<div class="protip" data-pt-animation="bounceIn"></div>
+<div class="protip" data-pt-animate="bounceIn"></div>
 ```
 
 **Protip's CSS doesn't include Animate.css. Download from here: https://rawgit.com/daneden/animate.css/master/animate.css**
