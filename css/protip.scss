@@ -20,7 +20,7 @@ $arrow-size: protipConfig(arrow-size);
 			// If there is an icon in the tooltip (warning, ok, etc.) the content has different style
 			+ span {
 				@include boxSizing;
-				padding-left: 25px;
+				padding-left: 30px;
 			}
 		}
 	}

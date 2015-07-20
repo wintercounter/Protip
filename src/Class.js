@@ -36,7 +36,7 @@
 	/**
 	 * The Protip main class
 	 *
-	 * @param [Object] settings Overrideable configuration options
+	 * @param settings [Object] Overridable configuration options
 	 * @returns {ProtipClass}
 	 * @constructor
 	 */
@@ -55,20 +55,26 @@
 		 * @private
 		 */
 		_defaults: {
-			/** @type String                Selector for clickable protips */
-			selector:                       C.DEFAULT_SELECTOR,
-			/** @type String                Namespace of the data attributes */
-			namespace:                      C.DEFAULT_NAMESPACE,
-			/** @type String                Template of protip element */
-			protipTemplate:                 C.TEMPLATE_PROTIP,
-			/** @type String                Template of the arrow element */
-			arrowTemplate:                  C.TEMPLATE_ARROW,
-			/** @type String                Template of protip icon */
-			iconTemplate:                   C.TEMPLATE_ICON,
-			/** @type Boolean               Should we observ whole document for assertions and removals */
-			observer:                       true,
-            /** @type String                Default skin to use */
-            skin:                           C.SKIN_DEFAULT
+			/** @type String    Selector for clickable protips */
+			selector:           C.DEFAULT_SELECTOR,
+			/** @type String    Namespace of the data attributes */
+			namespace:          C.DEFAULT_NAMESPACE,
+			/** @type String    Template of protip element */
+			protipTemplate:     C.TEMPLATE_PROTIP,
+			/** @type String    Template of the arrow element */
+			arrowTemplate:      C.TEMPLATE_ARROW,
+			/** @type String    Template of protip icon */
+			iconTemplate:       C.TEMPLATE_ICON,
+			/** @type Boolean   Should we observe whole document for assertions and removals */
+			observer:           true,
+            /** @type String    Default skin to use */
+            skin:               C.SKIN_DEFAULT,
+            /** @type String    Default size to use (provided by the Default skin only) */
+            size:               C.SIZE_DEFAULT,
+            /** @type String    Default color scheme to use (provided by the Default skin only) */
+            scheme:             C.SCHEME_DEFAULT,
+            /** @type Boolean   Global animation? */
+            animate:            false
 		},
 
 		/**
@@ -79,7 +85,7 @@
 		 */
 		_Construct: function(settings){
 			/**
-			 * Overrided configuration options (extends defaults)
+			 * Overridden configuration options (extends defaults)
 			 *
 			 * @type Object
 			 */
@@ -148,7 +154,7 @@
 		},
 
 		/**
-		 * Return a namspaced version of a data propery's name.
+		 * Return a namespaced version of a data property's name.
 		 *
 		 * @param string {string} The input string. eq: action
 		 * @returns {string} eg: ptAction

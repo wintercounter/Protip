@@ -31,25 +31,31 @@ You may need some global configurations on the behaviors of your tooltips. You c
 
     // Available options with default values
     $.protip({
-        /** @type String                Selector for elements with Protip */
-        selector:                       '.protip',
-        /** @type String                Namespace of the data attributes */
-        namespace:                      'pt',
-        /** @type String                Template of protip element */
-        protipTemplate:                 '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
-        /** @type String                Template of the arrow element */
-        arrowTemplate:                  '<span class="' + Constants.SELECTOR_PREFIX + Constants.SELECTOR_ARROW + '"></span>',
-        /** @type String                Template of protip icon */
-        iconTemplate:                   '<i class="icon-{icon}"></i>',
-        /** @type Boolean               Should we observe the whole document for assertions and removals */
-        observer:                       true,
-        /** @type String                Which skin to use globally? */
-        skin:                           C.SKIN_DEFAULT
+        /** @type String    Selector for clickable protips */
+        selector:           C.DEFAULT_SELECTOR,
+        /** @type String    Namespace of the data attributes */
+        namespace:          C.DEFAULT_NAMESPACE,
+        /** @type String    Template of protip element */
+        protipTemplate:     C.TEMPLATE_PROTIP,
+        /** @type String    Template of the arrow element */
+        arrowTemplate:      C.TEMPLATE_ARROW,
+        /** @type String    Template of protip icon */
+        iconTemplate:       C.TEMPLATE_ICON,
+        /** @type Boolean   Should we observe whole document for assertions and removals */
+        observer:           true,
+        /** @type String    Default skin to use */
+        skin:               C.SKIN_DEFAULT,
+        /** @type String    Default size to use (provided by the Default skin only) */
+        size:               C.SIZE_DEFAULT,
+        /** @type String    Default color scheme to use (provided by the Default skin only) */
+        scheme:             C.SCHEME_DEFAULT,
+        /** @type Boolean   Global animation? */
+        animate:            false
     });
 
 | Property       | Default  | Details   |
 |----------------|----------|-----------|
-| **selector**       | .protip  | We will use this selector to identfy elements with protip.  |
+| **selector**       | .protip  | We will use this selector to identify elements with protip.  |
 | **namespace**      | pt       | data-[NAMESPACE]-* |
 | **protipTemplate** | See code | Template of a protip. Variables ({}) will get replaced. |
 | **arrowTemplate**  | See code | Template of a protip arrow. |
@@ -84,7 +90,8 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 | **icon**        | false     | *Bool, String* | Adds icon template to the tooltip markup with the specified icon **class**.                                                                                                                                                                 |
 | **observer**    | false     | *Bool*         | If **true**, we will attach an observer to the source element and watch for changes. *For example if you change the data-pt-title attribute, the tooltip title will be changed also.*                                                         |
 | **target**      | 'body'    | *Bool, String* | We will append the tooltip to this **selector**. Use **true** if you want to append into the source element.                                                                                                                                    |
-| **skin**        | 'default' | *Bool, String* | Skin to apply on the tooltip.                                                                                                                                    |
+| **skin**        | undefined | *Bool, String* | Skin to apply only to this tooltip.                                                                                                                                    |
+| **scheme**      | undefined | *String*       | tiny, small, normal, big, large (Provided only by the Default skin.)                                                                                                                                    |
 | **animate**     | undefined | *Bool, String* | Animation type based on Animate.css. See: Animations                                                                                                                                    |
 
 ## jQuery Helpers

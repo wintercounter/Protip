@@ -82,6 +82,7 @@
                 observer:    false,
                 target:      C.SELECTOR_BODY,
                 skin:        undefined,
+                size:        undefined,
                 animate:     undefined
             };
 
@@ -220,7 +221,10 @@
 				.addClass(C.SELECTOR_SHOW);
 
             // If we need animation
-            this.data.animate && this.el.protip.addClass(C.SELECTOR_ANIMATE).addClass(this.data.animate);
+            (this.data.animate || this.classInstance.settings.animate) &&
+                this.el.protip
+                    .addClass(C.SELECTOR_ANIMATE)
+                    .addClass(this.data.animate || this.classInstance.settings.animate);
 
 			// Set visibility
 			this._isVisible = true;
@@ -259,7 +263,7 @@
 			this.el.protip
                 .removeClass(C.SELECTOR_SHOW)
                 .removeClass(C.SELECTOR_ANIMATE)
-                .removeClass(this.data.animate);
+                .removeClass(this.data.animate || this.classInstance.settings.animate);
 
 			this._isVisible = false;
 		},
@@ -288,9 +292,9 @@
 				this.data[key] = this.el.source.data(this._namespaced(key));
 			}, this));
 
-			// Merge/Extend
-			this.data = $.extend({}, this._prop, this.data);
-            console.log(this.data);
+            // Merge/Extend
+            this.data = $.extend({}, this._prop, this.data);
+
 			// Now apply back to the element
 			$.each(this.data, $.proxy(function(key, value){
 				this.el.source.data(this._namespaced(key), value);
@@ -363,11 +367,18 @@
 		 */
 		_getClassList: function(){
 			var classList = [];
+            var skin = this.data.skin || this.classInstance.settings.skin;
+            var size = this.data.size || this.classInstance.settings.size;
+            var scheme = this.data.scheme || this.classInstance.settings.scheme;
 
             // Main container class
             classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
             // Skin class
-            classList.push(C.SELECTOR_SKIN_PREFIX + (this.data.skin || this.classInstance.settings.skin));
+            classList.push(C.SELECTOR_SKIN_PREFIX + skin);
+            // Size class
+            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
+            // Scheme class
+            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
             // Custom classes
 			this.data.classes && classList.push(this.data.classes);
 

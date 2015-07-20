@@ -1,33 +1,243 @@
-.protip-skin-default {
-    &.protip {
-        &-container {
-            font-size: 15px;
-            color: #fff;
-            background: #336699;
-            padding: 16px;
-            border-radius: 6px;
-            font-family: sans-serif;
-            opacity: 0;
-            box-shadow: 0 1px 2px rgba(#fff, 0.1);
-            transition: opacity 0.2s ease-out;
+$_protipDefaultSkinColors: (
+    'pro': #da2e2b,
+    'blue': #336699,
+    'red': #802731,
+    'aqua': #339996,
+    'black': #000000,
+    'white': #ffffff,
+    'leaf': #339959,
+    'purple': #613399,
+    'pink': #D457AA,
+    'orange': #E64426
+);
 
-            > i {
-                font-size: 18px;
-                top: 10px;
-                left: 10px;
-            }
-        }
+$_protipDefaultSkinSizes: (
 
-        &-show {
-            opacity: 1;
+        'tiny': (
+                arrow-size: 4px,
+                css: (
+                        padding: 8px,
+                        font-size: 10px,
+                        border-radius: 3px
+                )
+        ),
+
+        'small': (
+                arrow-size: 6px,
+                css: (
+                        padding: 13px,
+                        font-size: 12px,
+                        border-radius: 4px
+                )
+        ),
+
+        'normal': (
+                arrow-size: 8px,
+                css: (
+                        padding: 16px,
+                        font-size: 15px,
+                        border-radius: 6px
+                )
+        ),
+
+        'big': (
+                arrow-size: 10px,
+                css: (
+                        padding: 20px,
+                        font-size: 18px,
+                        border-radius: 8px
+                )
+        ),
+
+        'large': (
+                arrow-size: 12px,
+                css: (
+                        padding: 20px,
+                        font-size: 18px,
+                        border-radius: 8px
+                )
+        )
+);
+
+@mixin protipDefaultSkinArrowGenerator($skin, $arrow-size, $offset, $color, $cornerRadiusFix) {
+
+    ///////////// TOP
+    .#{$skin}[data-pt-position="top-left"],
+    .#{$skin}[data-pt-position="top"],
+    .#{$skin}[data-pt-position="top-right"] {
+        .protip-arrow {
+            top: 100%;
+            left: auto;
+            margin: 0 0 0 $arrow-size*-1;
+            border-width: $arrow-size $arrow-size 0 $arrow-size;
+            border-color: $color transparent transparent transparent;
         }
     }
+
+    .#{$skin}[data-pt-position="top-left"]	.protip-arrow	{left: $offset}
+    .#{$skin}[data-pt-position="top"] 		.protip-arrow	{left: 50%}
+    .#{$skin}[data-pt-position="top-right"]	.protip-arrow	{left: auto; right: $offset; margin-right: $arrow-size*-1}
+
+    ///////////// BOTTOM
+    .#{$skin}[data-pt-position="bottom-left"],
+    .#{$skin}[data-pt-position="bottom"],
+    .#{$skin}[data-pt-position="bottom-right"] {
+        .protip-arrow {
+            top: $arrow-size*-1;
+            left: auto;
+            margin: 0 0 0 $arrow-size*-1;
+            border-width: 0 $arrow-size $arrow-size $arrow-size;
+            border-color: transparent transparent $color transparent;
+        }
+    }
+
+    .#{$skin}[data-pt-position="bottom-left"]		.protip-arrow	{left: $offset}
+    .#{$skin}[data-pt-position="bottom"]			.protip-arrow	{left: 50%}
+    .#{$skin}[data-pt-position="bottom-right"]	.protip-arrow	{left: auto; right: $offset; margin-right: $arrow-size*-1}
+
+    ///////////// LEFT
+    .#{$skin}[data-pt-position="left-top"],
+    .#{$skin}[data-pt-position="left"],
+    .#{$skin}[data-pt-position="left-bottom"] {
+        .protip-arrow {
+            top: auto;
+            left: 100%;
+            margin: $arrow-size*-1 0 0 0;
+            border-width: $arrow-size 0 $arrow-size $arrow-size;
+            border-color: transparent transparent transparent $color;
+        }
+    }
+
+    .#{$skin}[data-pt-position="left-top"]	.protip-arrow 	{top: $offset}
+    .#{$skin}[data-pt-position="left"]		.protip-arrow 	{top: 50%}
+    .#{$skin}[data-pt-position="left-bottom"]	.protip-arrow 	{top: auto; bottom: $offset; margin-bottom: $arrow-size*-1}
+
+    ///////////// RIGHT
+    .#{$skin}[data-pt-position="right-top"],
+    .#{$skin}[data-pt-position="right"],
+    .#{$skin}[data-pt-position="right-bottom"] {
+        .protip-arrow {
+            top: auto;
+            right: 100%;
+            margin: $arrow-size*-1 0 0 0;
+            border-width: $arrow-size $arrow-size $arrow-size 0;
+            border-color: transparent $color transparent transparent;
+        }
+    }
+
+    .#{$skin}[data-pt-position="right-top"]		.protip-arrow 	{top: $offset}
+    .#{$skin}[data-pt-position="right"]			.protip-arrow 	{top: 50%}
+    .#{$skin}[data-pt-position="right-bottom"]	.protip-arrow 	{top: auto; bottom: $offset; margin-bottom: $arrow-size*-1}
+    /////////////
+
+    ///////////// CORNERS
+    .#{$skin}[data-pt-position="corner-left-top"] {
+        @if $cornerRadiusFix {
+            border-bottom-right-radius: 0;
+        }
+
+        .protip-arrow {
+            top: 100%;
+            left: 100%;
+            margin: 0 0 0 $arrow-size*-1;
+            border-width: 0 $arrow-size $arrow-size 0;
+            border-color: transparent $color transparent transparent;
+        }
+    }
+
+    .#{$skin}[data-pt-position="corner-right-top"] {
+        @if $cornerRadiusFix {
+            border-bottom-left-radius: 0;
+        }
+
+        .protip-arrow {
+            top: 100%;
+            left: $arrow-size*-1;
+            margin: 0 0 0 $arrow-size;
+            border-width: $arrow-size $arrow-size 0 0;
+            border-color: $color transparent transparent transparent;
+        }
+    }
+
+    .#{$skin}[data-pt-position="corner-left-bottom"] {
+        @if $cornerRadiusFix {
+            border-top-right-radius: 0;
+        }
+
+        .protip-arrow {
+            top: $arrow-size*-1;
+            left: 100%;
+            margin: 0 0 0 $arrow-size*-1;
+            border-width: 0 0 $arrow-size $arrow-size;
+            border-color: transparent transparent $color transparent;
+        }
+    }
+
+    .#{$skin}[data-pt-position="corner-right-bottom"] {
+        @if $cornerRadiusFix {
+            border-top-left-radius: 0;
+        }
+
+        .protip-arrow {
+            top: 0;
+            left: $arrow-size*-1;
+            margin: $arrow-size*-1 0 0 $arrow-size;
+            border-width: $arrow-size 0 0 $arrow-size;
+            border-color: transparent transparent transparent $color;
+        }
+    }
+
 }
 
-@include protipArrowGenerator(
-    $skin: protip-skin-default,
-    $arrow-size: 8px,
-    $offset: 20px,
-    $color: #336699,
-    $cornerRadiusFix: 0
-);
+// Schemes
+@each $colorName, $color in $_protipDefaultSkinColors {
+
+    $skinSel: protip-skin-default--scheme-#{$colorName};
+
+    .#{$skinSel} {
+        &.protip {
+            &-container {
+                color: #fff;
+                background: $color;
+                font-family: sans-serif;
+                opacity: 0;
+                transition: opacity 0.2s ease-out;
+
+                > i {
+                    font-size: 1.2em;
+                }
+            }
+
+            &-show {
+                opacity: 1;
+            }
+        }
+    }
+
+    @include protipDefaultSkinArrowGenerator(
+        $skin: $skinSel,
+        $arrow-size: 8px,
+        $offset: 20px,
+        $color: $color,  // Ugly, i know :(
+        $cornerRadiusFix: 0
+    );
+}
+
+// Sizes
+@each $sizeName, $sizeMap in $_protipDefaultSkinSizes {
+    $sizeSel: protip-skin-default--size-#{$sizeName};
+
+    .#{$sizeSel} {
+        @each $prop, $val in map-get($sizeMap, css) {
+            #{$prop}: #{$val};
+        }
+    }
+
+    @include protipDefaultSkinArrowGenerator (
+        $skin: $sizeSel,
+        $arrow-size: map-get($sizeMap, arrow-size),
+        $offset: 20px,
+        $color: invalid,  // Ugly, i know :(
+        $cornerRadiusFix: 0
+    );
+}
