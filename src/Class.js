@@ -11,15 +11,13 @@
 		define([
 			'jquery',
 			'./Constants',
-			'./Item',
-			'./MutationObserver'
+			'./Item'
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
 			require('jquery'),
 			require('./Constants'),
-			require('./Item'),
-			require('./MutationObserver')
+			require('./Item')
 		);
 	} else {
 		root.ProtipClass = factory(
@@ -33,7 +31,7 @@
 	'use strict';
 
 	// Lower the interval time, we don't need that much accuracy.
-	MutationObserver._period = 100;
+	window.MutationObserver._period = 100;
 
 	/**
 	 * The Protip main class
