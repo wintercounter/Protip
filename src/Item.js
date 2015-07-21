@@ -40,11 +40,13 @@
 	 * @param id            {string}      Identifier of the protip.
 	 * @param el            {jQuery}      Source element we are creating the instance for.
 	 * @param classInstance {ProtipClass} The main protip class instance.
+	 * @param override      [object]      Override data-pt-* values.
+	 *
 	 * @returns {ProtipItemClass}
 	 * @constructor
 	 */
-	var ProtipItemClass = function(id, el, classInstance){
-		return this._Construct(id, el, classInstance);
+	var ProtipItemClass = function(id, el, classInstance, override){
+		return this._Construct(id, el, classInstance, override);
 	};
 
 // Define the ProtipItemClass members
@@ -57,10 +59,15 @@
 		 * @param id            {string}      Identifier of the protip.
 		 * @param el            {jQuery}      Source element we are creating the instance for.
 		 * @param classInstance {ProtipClass} The main protip class instance.
+		 * @param override      [object]      Override data-pt-* values.
+		 *
 		 * @returns {ProtipItemClass}
 		 * @private
 		 */
-		_Construct: function(id, el, classInstance){
+		_Construct: function(id, el, classInstance, override){
+
+			/** @type {object} Override data-pt-* values. */
+			this._override = override || {};
 
             /** @type {object} List of data-* properties and their default values. */
             this._prop = {
@@ -294,6 +301,7 @@
 
             // Merge/Extend
             this.data = $.extend({}, this._prop, this.data);
+            this.data = $.extend({}, this.data, this._override);
 
 			// Now apply back to the element
 			$.each(this.data, $.proxy(function(key, value){

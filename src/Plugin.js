@@ -41,9 +41,10 @@
 		 *
 		 * @returns {*}
 		 */
-		protipShow: function() {
+		protipShow: function(override) {
 			return this.each(function(index, el) {
-				$.protipClassInstance.getItemInstance(el).show(true);
+				$._protipClassInstance.getItemInstance(el).destroy();
+				$._protipClassInstance.getItemInstance(el, override).show(true);
 			});
 		},
 
@@ -54,7 +55,7 @@
 		 */
 		protipHide: function() {
 			return this.each(function(index, el) {
-				$.protipClassInstance.getItemInstance(el).hide(true);
+				$._protipClassInstance.getItemInstance(el).hide(true);
 			});
 		},
 
@@ -67,9 +68,9 @@
 			var instance;
 
 			return this.each(function(index, el) {
-				instance = $.protipClassInstance.getItemInstance(el);
+				instance = $._protipClassInstance.getItemInstance(el);
 				instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
-			});
+			}.bind(this));
 		},
 
 		/**
@@ -79,8 +80,8 @@
 		 */
 		protipHideInside: function(){
 			return this.each(function(index, el) {
-				el.find($.protipClassInstance.settings.selector).each(function(index, el){
-					$.protipClassInstance.getItemInstance(el).hide(true);
+				el.find($._protipClassInstance.settings.selector).each(function(index, el){
+					$._protipClassInstance.getItemInstance(el).hide(true);
 				});
 			});
 		},
@@ -92,8 +93,8 @@
 		 */
 		protipShowInside: function(){
 			return this.each(function(index, el) {
-				el.find($.protipClassInstance.settings.selector).each(function(index, el){
-					$.protipClassInstance.getItemInstance(el).show(true);
+				el.find($._protipClassInstance.settings.selector).each(function(index, el){
+					$._protipClassInstance.getItemInstance(el).show(true);
 				});
 			});
 		},
@@ -107,8 +108,8 @@
 			var instance;
 
 			return this.each(function(index, el) {
-				el.find($.protipClassInstance.settings.selector).each(function(index, el){
-					instance = $.protipClassInstance.getItemInstance(el);
+				el.find($._protipClassInstance.settings.selector).each(function(index, el){
+					instance = $._protipClassInstance.getItemInstance(el);
 					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
 				});
 			});

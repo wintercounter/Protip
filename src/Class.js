@@ -179,11 +179,12 @@
 		 * and stores locally the instance.
 		 *
 		 * @param el {jQuery} Source element which has the tooltip.
+		 * @param override {object} data-pt-* overrides
 		 * @returns {ProtipItemClass}
 		 */
-		createItemInstance: function(el){
+		createItemInstance: function(el, override){
 			var id = this._generateId();
-			this._itemInstances[id] = new ProtipItemClass(id, el, this);
+			this._itemInstances[id] = new ProtipItemClass(id, el, this, override);
 			return this._itemInstances[id];
 		},
 
@@ -203,12 +204,13 @@
 		 * Getter for retriving an ItemClass instance based on the passwed element.
 		 * In case this element doesn't have ItemClass yet this method will also create a new one.
 		 *
-		 * @param el {jQuery} The element we're searching it's instance for.
+		 * @param el       {jQuery} The element we're searching it's instance for.
+		 * @param override {object} data-pt-* overridables
 		 * @returns {ProtipItemClass}
 		 */
-		getItemInstance: function(el){
+		getItemInstance: function(el, override){
 			var identifier = el.data(this.namespaced(C.PROP_IDENTIFIER));
-			return this._isInited(el) ? this._itemInstances[identifier] : this.createItemInstance(el);
+			return this._isInited(el) ? this._itemInstances[identifier] : this.createItemInstance(el, override);
 		},
 
 		/**
