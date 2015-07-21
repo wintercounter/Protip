@@ -38,7 +38,7 @@ $arrow-size: protipConfig(arrow-size);
 	&-show {
 		position: absolute;
 		visibility: visible;
-        z-index: 5;
+        z-index: 50;
 	}
 }
 
