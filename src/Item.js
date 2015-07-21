@@ -197,6 +197,11 @@
 		 */
 		show: function(force){
 
+			// No title? Why tooltip?
+			if (!this.data.title) {
+				return;
+			}
+
 			// Clear timeouts
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
@@ -433,7 +438,7 @@
 		 * @private
 		 */
 		_detectTitle: function(){
-			if (this.data.title.charAt(0) === '#') {
+			if (this.data.title && this.data.title.charAt(0) === '#') {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
 			}
