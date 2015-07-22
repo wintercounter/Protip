@@ -457,6 +457,11 @@
 				target = this.el.source;
 			}
 
+			// If has target container
+			else if (target === C.SELECTOR_BODY && this.el.parents(C.SELECTOR_TARGET)) {
+				target = this.el.parents(C.SELECTOR_TARGET);
+			}
+
 			// Target is a selector
 			else if (target) {
 				target = $(target);

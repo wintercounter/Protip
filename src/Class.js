@@ -343,7 +343,7 @@
 					var els = $(mutation.addedNodes[i].parentNode).find(this.settings.selector);
 					els.each(function(index, el){
 						el = $(el);
-						if (el.data(this.namespaced(C.PROP_ACTION)) === C.TRIGGER_STICKY){
+						if (el.data(this.namespaced(C.PROP_TRIGGER)) === C.TRIGGER_STICKY){
 							this.getItemInstance(el).show();
 						}
 					}.bind(this));

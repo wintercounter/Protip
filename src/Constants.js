@@ -39,7 +39,7 @@
 		TRIGGER_HOVER: 'hover',
 		TRIGGER_STICKY: 'sticky',
 
-		PROP_ACTION: 'action',
+		PROP_TRIGGER: 'trigger',
 		PROP_TITLE: 'title',
 		PROP_STICKY: 'sticky',
 		PROP_INITED: 'inited',
@@ -79,6 +79,7 @@
         SELECTOR_SIZE_PREFIX: '--size-',
         SELECTOR_SCHEME_PREFIX: '--scheme-',
         SELECTOR_ANIMATE: 'animated',
+		SELECTOR_TARGET: '.protip-target',
 
 		TEMPLATE_PROTIP: '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
