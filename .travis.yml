@@ -1,11 +1,8 @@
 language: node_js
 node_js:
-- '0.10.22'
-before_install:
-  - npm install grunt
-  - npm install grunt-cli
+- '0.12.7'
 install: npm install
-before_script: grunt run build-all
+before_script: npm run build-all
 env:
   global:
   - secure: NbGfwLMHps/xQH3oW6g/+htXq4w/pyDNOWPi4jDu0sB+zBPiqx4GXcF68sRCEkrYSVE2gZjsdbBLnRRcWgFOK/wS5UneMMU9kV9IhFW4ABGfYK95XjXyTFHaeyTijnsiUChEnKqOyj6TYAMTXUdHdgdEaqSY4mSGmYPaU/KMvC9K8KGdf/+2rW0qgQJRIh0Ts+oaQLapiFSOOJ6Iyx+l+8AyR14H3MtgXpPYWK4mXde2Udlyy+x979+cez1Qx+ixw0qmpC8MIiUu0ZpDtfRL466n9Hwn7H5nvoHXGoY/ydyRIDugsIKYZitt4GUpOZ9l7R4Iewb+/4kJqLfPZu/AWZagAFaSQLEk5AnMmUNzdZ8IFENvXk9e6WKxZ4JY+ePUyzXsLwnsur2lCsoOUbPmg7UgjsHyE/RIFXCNCJEME6tx76gaaqWiiS/HliKyW9OV7pmcKvcETUHAwowXxuyLPIAADdsqBW5rrOlhdxzIgaNHPe3hJ38YghkhiK0w0fh+jMMvyN94knQcVP2ODfNqb0DG9NqRetlaOqvfDVjlDWDw14B16NVqSk6YCDtsrCIxoPQ50Zb7XgHWYgEZc6z5LMKKQp+G8N1qsTKTnq4paeXATARSyVttDprlxViJMHKTaTQqVjH8P7h6313+u4F+36CRSEyU/4mgtF4Z/m+mE00=
