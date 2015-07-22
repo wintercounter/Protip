@@ -3,7 +3,6 @@ node_js:
   - '0.12.7'
 install:
   - npm install
-  - npm install mversion -g
 before_script:
   - npm run build-all
 before_deploy:
