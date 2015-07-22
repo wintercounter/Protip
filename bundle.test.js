@@ -10888,9 +10888,6 @@ if (typeof module !== 'undefined' && module.exports) {
  */
 
 (function (root, factory) {
-
-	'use strict';
-
 	if (typeof define === 'function' && define.amd) {
 		define([], factory);
 	} else if (typeof exports === 'object') {
@@ -10900,7 +10897,7 @@ if (typeof module !== 'undefined' && module.exports) {
 	}
 }(this, function () {
 
-	'use strict';
+	"use strict";
 
 	var ProtipConstants = {
 		POSITION_TOP_LEFT: 'top-left',
