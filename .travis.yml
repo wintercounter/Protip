@@ -6,13 +6,13 @@ install:
 before_script:
   - npm run build-all
 before_deploy:
-  - npm version patch
   - git config --global push.default simple
   - git config --global user.email "wintercounter@gmail.com"
   - git config --global user.name "Travis"
   - git config --global credential.helper "store --file=.git/credentials"
   - git remote set-url origin https://github.com/DoclerLabs/Protip.git
   - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
+  - npm version patch
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
 env:
