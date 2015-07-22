@@ -80,12 +80,12 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 |-------------|----------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **trigger**     | 'hover'   | *String*       | How you want to trigger this tooltip? Available values: **hover**, **click**, **sticky** (sticky will be shown on load)                                                                                                                                   |
 | **title**       | null      | *String*       | The tooltip content. Provide an ID starting with **#** to get data (*even whole HTML*) from another DOM element's content. Example: `<div id="tooltipContent"><em>This is my tooltips content</em></div>`                                       |
-| **delayIn**     | 0         | *Int*          | Delay of showing a tooltip. Handy in cases when you want to prevent tooltips on quick mouseovers.                                                                                                                                       |
-| **delayOut**    | 0         | *Int*          | Delay of hiding the tooltip. Handy in cases you have clickable content in the tooltip for example.                                                                                                                                      |
+| **delay-in**    | 0         | *Int*          | Delay of showing a tooltip. Handy in cases when you want to prevent tooltips on quick mouseovers.                                                                                                                                       |
+| **delay-out**   | 0         | *Int*          | Delay of hiding the tooltip. Handy in cases you have clickable content in the tooltip for example.                                                                                                                                      |
 | **interactive** | false     | *Bool*         | If **true**, protip will use a default **250ms** as *delayOut* for clickable contents.                                                                                                                                                            |
 | **gravity**     | true      | *Bool, String* | Gravity will check your tooltip before showing it and it will search for better positions if the tooltip won't fit to viewport. Gravity has **multiple options available**, there is a separate section in the documentation about gravity. |
-| **offsetTop**   | 0         | *Int*          | Adjust the **Y** position of the tooltip.                                                                                                                                                                                                   |
-| **offsetLeft**  | 0         | *Int*          | Adjust the **X** position of the tooltip.                                                                                                                                                                                                   |
+| **offset-top**  | 0         | *Int*          | Adjust the **Y** position of the tooltip.                                                                                                                                                                                                   |
+| **offset-left** | 0         | *Int*          | Adjust the **X** position of the tooltip.                                                                                                                                                                                                   |
 | **position**    | 'bottom'  | *String*       | Preferred position. **Check Positions section** for available options and details.                                                                                                                                                           |
 | **classes**     | null      | *String*       | These classes will be added to the tooltip which may enable additional styling for example.                                                                                                                                             |
 | **arrow**       | true      | *Bool*         | Hide arrow from this tooltip. At initialization there is an option to set the size of the arrow. Protip will calculate this into positions.                                                                                              |
@@ -99,7 +99,7 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 
 ## jQuery Helpers
 ```javascript
-var el = $('.elem');
+var el = $('.el');
 
 // Show the tooltip of this element.
 el.protipShow();
@@ -184,5 +184,17 @@ Usage:
 # Skins
 Built in, docs are coming soon...
 
+---
+# TODO
+- Docs:
+  - Demo (almost done)
+  - Skins
+  - Schemes
+  - Sizes
+  - About .protip-target class
+  
+# Credits
+- nano template "engine" https://github.com/trix/nano
+- MutationObserver polyfill https://github.com/megawac/MutationObserver.js
 
 ![](http://c.statcounter.com/10536219/0/6b821473/1/)
