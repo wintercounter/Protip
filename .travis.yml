@@ -12,7 +12,7 @@ before_deploy:
   - git config --global credential.helper "store --file=.git/credentials"
   - git remote set-url origin https://github.com/DoclerLabs/Protip.git
   - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
-  - git commit -a -m "Auto Build"
+  - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
 env:
   global:
