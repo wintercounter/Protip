@@ -1,3 +1,6 @@
+![TravisCI Build Status](https://travis-ci.org/DoclerLabs/Protip.svg)
+
+---
 # Features in Brief
 - 16 position.
 - Live refresh of tooltip options.
