@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.8'
+- '0.10.22'
 before_install: npm install -g grunt-cli
 install: npm install
 before_script: grunt run build-all
@@ -10,5 +10,4 @@ env:
 after_script:
   - git config credential.helper "store --file=.git/credentials"
   - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
-  - git add
-  - git commit -m "Auto Build"
+  - git commit -a -m "Auto Build"
