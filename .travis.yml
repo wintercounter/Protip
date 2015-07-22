@@ -9,7 +9,7 @@ after_script:
   - git config --global push.default simple
   - git config --global user.email "wintercounter@gmail.com"
   - git config --global user.name "Travis"
-  - git config --globaL credential.helper "store --file=.git/credentials"
+  - git config --global credential.helper "store --file=.git/credentials"
   - git remote set-url origin https://github.com/DoclerLabs/Protip.git
   - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
   - git commit -a -m "Auto Build"
@@ -17,3 +17,10 @@ after_script:
 env:
   global:
     secure: epGWxbnH1UFyeHL/ZJ1Fe+f/Xzje0iPN3yt2QPWWcWKxH8gPBpWEGXPzNIaMXrmunZl79hfC7D2xpE6tDpSg+Xyo+C3e+EL+q0N/otP3WIoLaIc8V2R3uR3iNOPX8Tr26+JNgs+gRz9QQXDt/fD0CD2klor5XfZOLq7BlSzr81RIVu60IRIlycN/dwh5U73J3KOO4RY6DdksfZ4bIFrPMPN+nQSXLplR6MwEpeNUgLvMJSnzLsdKa63V4hfoTEPKRsl1U/jfzXushevQwEhB1Ok/OT6nDtUH4FfCw8JGYMlMjvc56KhRzasvougvIvVXJDQi8H4WKiISqhUpfhg9e+IWu7KRBt1HPtfx/jsHrAWr0j5M7dCyUbcaIkdmBICW0Ff2dq3PCqJppxZeJ3rXiHtI7pjg86QJpuDTVSsgIjrzUdrrJj+6OUNEJMpJg332nWTwSpDv+BxG9gJTetBmrcjIJ+f6jpob6BdbaVmQxxdA39Gs29XThGLUSRD9fHYxxCXOU0H4dROTNHEmPNk/zGnGO039Wu3+DxVX2s0VY9T0scR26Rc7E7zcDtsikxKj0BUagGVWGfTnh24UW1HPhqUdbOdNPxWR0h6QjSe8dnyitn0OMXnwOb6CDKlAykAv1vCK4MpmHnh0azvU5JPE9j4AmQEf6S6MDx2ot8Nm/gM=
+deploy:
+  provider: npm
+  email: wintercounter@gmail.com
+  api_key:
+    secure: am0NFP+jLbIjZULVFpGgnXgmbQeWUUJIXdeI8mhxr0xl2MRkv75oWrguf5RTsCLdTIf7s/w2cZGubcfRUXuTkzKwD27r0aiT+dY+0l59Itahv+ugjQ35la3eWY7reIyxEa4mMC52CA/ZCHoz3VH2n6GN1ci09M/oJ4rU1BKlWHnTZY0IupOVpnu1c6r4JgTr9CPoItdKv/RumUY8DfTyhh6lYzm/oY5rZsMApTLFhzvr+/tyrrbQtndZ46RD2+ZrKwTd7YfCYX6KEEpW1A0Hr9VDAGMh1rvcdrHX5BvIm5ajQXVIXcSCIb1DsoNPKe5aCKfCJ1VZb87R1QNLdrOU7rfgjW/WaKi/8nGTLuLfUXiqyLP8hchkRWuRPRiD5ZWvjupXA614J1FiU1+HsTza8XcNmWQy8QGVpKwVyUOKWi/GQwYMxNG4/ib94dQGrAQKfdjBzTl4bou8G7jgOHKz6llPgKWo4wR1IfxMhZN83S6UP5G6XXc6xqHUbEytb19zkNWmtVu/5rG2TNW2KSgAaOUkk87is4sZOlfQNKrlIQ4kTqgnTPFYmhpOytXbyihskchyT9s9vrbCXknLs/fBiXYhjPYXdPjo/6kRpo1Vo4BZoBzNiWjFiJVce2OGIUk6rqshueHG9Y5wvQLixZcrZLFQq+oW95JkN/N73jCPUbI=
+  on:
+    repo: DoclerLabs/Protip
