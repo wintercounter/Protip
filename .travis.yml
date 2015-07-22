@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '0.12.7'
+  - '0.12.7'
 install: npm install
 before_script: npm run build-all
 after_script:
