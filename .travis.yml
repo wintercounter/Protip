@@ -5,7 +5,7 @@ install:
   - npm install
 before_script:
   - npm run build-all
-after_script:
+before_deploy:
   - git config --global push.default simple
   - git config --global user.email "wintercounter@gmail.com"
   - git config --global user.name "Travis"
