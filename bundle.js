@@ -982,7 +982,7 @@ require('./src/Plugin');
                 gravity:     true,
                 offsetTop:   0,
                 offsetLeft:  0,
-                position:    C.POSITION_BOTTOM,
+                position:    C.POSITION_RIGHT,
                 classes:     null,
                 arrow:       true,
                 width:       300,
