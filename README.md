@@ -197,4 +197,7 @@ Built in, docs are coming soon...
 - nano template "engine" https://github.com/trix/nano
 - MutationObserver polyfill https://github.com/megawac/MutationObserver.js
 
+# Bookmarks
+- I want to use these in commit messages sometimes :) http://www.emoji-cheat-sheet.com/
+
 ![](http://c.statcounter.com/10536219/0/6b821473/1/)

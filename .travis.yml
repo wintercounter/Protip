@@ -6,6 +6,7 @@ install:
 before_script:
   - npm run build-all
 before_deploy:
+  - npm version patch
   - git config --global push.default simple
   - git config --global user.email "wintercounter@gmail.com"
   - git config --global user.name "Travis"
