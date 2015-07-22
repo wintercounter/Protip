@@ -19,7 +19,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./Item')
 		);
@@ -347,7 +347,7 @@ require('./src/Plugin');
 					var els = $(mutation.addedNodes[i].parentNode).find(this.settings.selector);
 					els.each(function(index, el){
 						el = $(el);
-						if (el.data(this.namespaced(C.PROP_ACTION)) === C.TRIGGER_STICKY){
+						if (el.data(this.namespaced(C.PROP_TRIGGER)) === C.TRIGGER_STICKY){
 							this.getItemInstance(el).show();
 						}
 					}.bind(this));
@@ -463,7 +463,7 @@ require('./src/Plugin');
 		TRIGGER_HOVER: 'hover',
 		TRIGGER_STICKY: 'sticky',
 
-		PROP_ACTION: 'action',
+		PROP_TRIGGER: 'trigger',
 		PROP_TITLE: 'title',
 		PROP_STICKY: 'sticky',
 		PROP_INITED: 'inited',
@@ -503,6 +503,7 @@ require('./src/Plugin');
         SELECTOR_SIZE_PREFIX: '--size-',
         SELECTOR_SCHEME_PREFIX: '--scheme-',
         SELECTOR_ANIMATE: 'animated',
+		SELECTOR_TARGET: '.protip-target',
 
 		TEMPLATE_PROTIP: '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
@@ -539,7 +540,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
@@ -712,7 +713,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityParser'),
 			require('./PositionCalculator')
@@ -919,7 +920,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityTester'),
 			require('./PositionCalculator')
@@ -1359,6 +1360,11 @@ require('./src/Plugin');
 				target = this.el.source;
 			}
 
+			// If has target container
+			else if (target === C.SELECTOR_BODY && this.el.parents(C.SELECTOR_TARGET)) {
+				target = this.el.parents(C.SELECTOR_TARGET);
+			}
+
 			// Target is a selector
 			else if (target) {
 				target = $(target);
@@ -1488,7 +1494,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Class')
 		);
 	} else {
@@ -1616,7 +1622,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
