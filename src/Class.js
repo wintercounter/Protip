@@ -67,14 +67,16 @@
 			iconTemplate:       C.TEMPLATE_ICON,
 			/** @type Boolean   Should we observe whole document for assertions and removals */
 			observer:           true,
-            /** @type String    Default skin to use */
-            skin:               C.SKIN_DEFAULT,
-            /** @type String    Default size to use (provided by the Default skin only) */
-            size:               C.SIZE_DEFAULT,
-            /** @type String    Default color scheme to use (provided by the Default skin only) */
-            scheme:             C.SCHEME_DEFAULT,
-            /** @type Boolean   Global animation? */
-            animate:            false
+			/** @type String    Default skin to use */
+			skin:               C.SKIN_DEFAULT,
+			/** @type String    Default size to use (provided by the Default skin only) */
+			size:               C.SIZE_DEFAULT,
+			/** @type String    Default color scheme to use (provided by the Default skin only) */
+			scheme:             C.SCHEME_DEFAULT,
+			/** @type Boolean   Global animation? */
+			animate:            false,
+			/** @type Number    Global offset of all tooltips. */
+			offset:             0
 		},
 
 		/**
