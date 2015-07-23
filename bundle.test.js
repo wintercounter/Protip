@@ -12214,7 +12214,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
 			var position = {left: 0, top: 0};
 			var arrowOffset = this._itemInstance.getArrowOffset();
-			var globalOffset = this.classInstance.settings.offset;
+			var globalOffset = this._itemInstance.classInstance.settings.offset;
 
 			switch(this._position){
 				case C.POSITION_TOP:
