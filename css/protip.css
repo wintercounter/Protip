@@ -4,7 +4,8 @@
   left: 0;
   top: 0;
   z-index: -2;
-  visibility: hidden; }
+  visibility: hidden;
+  line-height: 1.3; }
   .protip-container > i {
     position: absolute;
     top: 10px;
