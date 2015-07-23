@@ -522,9 +522,9 @@
 		 * @private
 		 */
 		_onProtipMouseleave: function(){
-            if (this.data.trigger === C.TRIGGER_HOVER) {
-                this.hide();
-            }
+			if (this.data.trigger === C.TRIGGER_HOVER) {
+				this.hide();
+			}
 		},
 
 		/**
