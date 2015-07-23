@@ -1358,8 +1358,8 @@ require('./src/Plugin');
 			}
 
 			// If has target container
-			else if (target === C.SELECTOR_BODY && this.el.parents(C.SELECTOR_TARGET)) {
-				target = this.el.parents(C.SELECTOR_TARGET);
+			else if (target === C.SELECTOR_BODY && this.el.source.parents(C.SELECTOR_TARGET)) {
+				target = this.el.source.parents(C.SELECTOR_TARGET);
 			}
 
 			// Target is a selector
