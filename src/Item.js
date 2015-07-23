@@ -463,7 +463,7 @@
 			}
 
 			// If has target container
-			else if (target === C.SELECTOR_BODY && this.el.source.parents(C.SELECTOR_TARGET)) {
+			else if (target === C.SELECTOR_BODY && this.el.source.parents(C.SELECTOR_TARGET).size()) {
 				target = this.el.source.parents(C.SELECTOR_TARGET);
 			}
 
