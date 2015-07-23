@@ -187,11 +187,12 @@ Built in, docs are coming soon...
 ---
 # TODO
 - Docs:
-  - Demo (almost done)
   - Skins
   - Schemes
   - Sizes
   - About .protip-target class
+  - Auto-interactive link detection
+- Demo (almost done)
   
 # Credits
 - nano template "engine" https://github.com/trix/nano

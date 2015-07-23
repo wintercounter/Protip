@@ -32,7 +32,7 @@
 	}
 }(this, function ($, C, GravityTester, PositionCalculator) {
 
-	'use strict';
+	"use strict";
 
 	/**
 	 * ProtipItem Class
@@ -441,6 +441,11 @@
 			if (this.data.title && this.data.title.charAt(0) === '#') {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
+			}
+
+			// Set to interactive if detects link
+			if (this.data.title && this.data.title.indexOf('<a ')+1) {
+				this.data.interactive = true;
 			}
 		},
 
