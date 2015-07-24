@@ -372,7 +372,6 @@
 				for (var i = 0; i < mutation.removedNodes.length; i++) {
 					var el = $(mutation.removedNodes[i]);
 					el.find(this.settings.selector).each(function(index, item){
-						console.log('desti', el, item);
 						this.getItemInstance($(item)).destroy();
 					}.bind(this));
 
