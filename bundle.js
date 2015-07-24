@@ -376,7 +376,6 @@ require('./src/Plugin');
 				for (var i = 0; i < mutation.removedNodes.length; i++) {
 					var el = $(mutation.removedNodes[i]);
 					el.find(this.settings.selector).each(function(index, item){
-						console.log('desti', el, item);
 						this.getItemInstance($(item)).destroy();
 					}.bind(this));
 
@@ -1084,13 +1083,13 @@ require('./src/Plugin');
 		 * Reset data, hide, unbind, remove.
 		 */
 		destroy: function(){
+			this.hide(true);
+			this._unbind();
+			this.el.protip.remove();
 			this.el.source
 				.data(this._namespaced(C.PROP_INITED), false)
 				.data(this._namespaced(C.PROP_IDENTIFIER), false)
 				.removeData();
-			this.hide(true);
-			this._unbind();
-			this.el.protip.remove();
 			this.classInstance.onItemDestoryed(this.data.identifier);
 		},
 
