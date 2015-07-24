@@ -10672,7 +10672,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * In case this element doesn't have ItemClass yet this method will also create a new one.
 		 *
 		 * @param el       {jQuery} The element we're searching it's instance for.
-		 * @param override {object} data-pt-* overridables
+		 * @param override [object] data-pt-* overridables
 		 * @returns {ProtipItemClass}
 		 */
 		getItemInstance: function(el, override){
@@ -10742,10 +10742,12 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * @private
 		 */
 		_onAction: function(ev){
-			ev.type === C.EVENT_CLICK && ev.preventDefault();
-
 			var el = $(ev.currentTarget);
-			this.getItemInstance(el).actionHandler(ev.type);
+			var item = this.getItemInstance(el);
+
+			ev.type === C.EVENT_CLICK && item.data.trigger === C.TRIGGER_CLICK && ev.preventDefault();
+
+			item.actionHandler(ev.type);
 		},
 
 		/**
