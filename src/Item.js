@@ -163,10 +163,14 @@
 		 * Reset data, hide, unbind, remove.
 		 */
 		destroy: function(){
-			this.el.source.removeData();
+			this.el.source
+				.data(this._namespaced(C.PROP_INITED), false)
+				.data(this._namespaced(C.PROP_IDENTIFIER), false)
+				.removeData();
 			this.hide(true);
 			this._unbind();
 			this.el.protip.remove();
+			this.classInstance.onItemDestoryed(this.data.identifier);
 		},
 
 		/**

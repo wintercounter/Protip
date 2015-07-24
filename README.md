@@ -192,6 +192,7 @@ Built in, docs are coming soon...
   - Sizes
   - About .protip-target class
   - Auto-interactive link detection
+  - Gravity vs. Offset relation
 - Demo (almost done)
   
 # Credits

@@ -173,6 +173,14 @@
 		 */
 		destroyItemInstance: function(key){
 			this._itemInstances[key].destroy();
+		},
+
+		/**
+		 * Called after item destory has been done.
+		 *
+		 * @param key
+		 */
+		onItemDestoryed: function(key){
 			delete this._itemInstances[key];
 		},
 
@@ -344,18 +352,27 @@
 		_mutationObserverCallback: function(mutations) {
 			mutations.forEach(function(mutation) {
 				for (var i = 0; i < mutation.addedNodes.length; i++) {
-					var els = $(mutation.addedNodes[i].parentNode).find(this.settings.selector);
-					els.each(function(index, el){
-						el = $(el);
-						if (el.data(this.namespaced(C.PROP_TRIGGER)) === C.TRIGGER_STICKY){
-							this.getItemInstance(el).show();
-						}
-					}.bind(this));
+					node = $(mutation.addedNodes[i]);
+
+					if (!node.hasClass(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)) {
+						var els = node.parent().find(this.settings.selector);
+						els.each(function (index, el) {
+							el = $(el);
+							if (this._isInited(el)) {
+								return;
+							}
+							var instance = this.getItemInstance(el);
+							if (instance.data.trigger === C.TRIGGER_STICKY) {
+								this.getItemInstance(el).show();
+							}
+						}.bind(this));
+					}
 				}
 
 				for (var i = 0; i < mutation.removedNodes.length; i++) {
 					var el = $(mutation.removedNodes[i]);
 					el.find(this.settings.selector).each(function(index, item){
+						console.log('desti', el, item);
 						this.getItemInstance($(item)).destroy();
 					}.bind(this));
 
