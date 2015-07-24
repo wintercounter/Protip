@@ -355,9 +355,9 @@ require('./src/Plugin');
 		 */
 		_mutationObserverCallback: function(mutations) {
 			mutations.forEach(function(mutation) {
+				var node;
 				for (var i = 0; i < mutation.addedNodes.length; i++) {
 					node = $(mutation.addedNodes[i]);
-
 					if (!node.hasClass(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)) {
 						var els = node.parent().find(this.settings.selector);
 						els.each(function (index, el) {
