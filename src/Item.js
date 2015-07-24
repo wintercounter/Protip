@@ -69,29 +69,29 @@
 			/** @type {object} Override data-pt-* values. */
 			this._override = override || {};
 
-            /** @type {object} List of data-* properties and their default values. */
-            this._prop = {
-                trigger:     C.TRIGGER_HOVER,
-                title:       null,
-                inited:      false,
-                delayIn:     0,
-                delayOut:    0,
-                interactive: false,
-                gravity:     true,
-                offsetTop:   0,
-                offsetLeft:  0,
-                position:    C.POSITION_RIGHT,
-                classes:     null,
-                arrow:       true,
-                width:       300,
-                identifier:  false,
-                icon:        false,
-                observer:    false,
-                target:      C.SELECTOR_BODY,
-                skin:        undefined,
-                size:        undefined,
-                animate:     undefined
-            };
+			/** @type {object} List of data-* properties and their default values. */
+			this._prop = {
+				trigger:     C.TRIGGER_HOVER,
+				title:       null,
+				inited:      false,
+				delayIn:     0,
+				delayOut:    0,
+				interactive: false,
+				gravity:     true,
+				offsetTop:   0,
+				offsetLeft:  0,
+				position:    C.POSITION_RIGHT,
+				classes:     null,
+				arrow:       true,
+				width:       300,
+				identifier:  false,
+				icon:        false,
+				observer:    false,
+				target:      C.SELECTOR_BODY,
+				skin:        undefined,
+				size:        undefined,
+				animate:     undefined
+			};
 
 			/** @type {object}    Object storing jQuery elements */
 			this.el               = {};
@@ -236,24 +236,24 @@
 				.css(style)
 				.addClass(C.SELECTOR_SHOW);
 
-            // If we need animation
-            (this.data.animate || this.classInstance.settings.animate) &&
-                this.el.protip
-                    .addClass(C.SELECTOR_ANIMATE)
-                    .addClass(this.data.animate || this.classInstance.settings.animate);
+			// If we need animation
+			(this.data.animate || this.classInstance.settings.animate) &&
+				this.el.protip
+					.addClass(C.SELECTOR_ANIMATE)
+					.addClass(this.data.animate || this.classInstance.settings.animate);
 
 			// Set visibility
 			this._isVisible = true;
 		},
 
-        /**
-         * Apply a position to the tooltip.
-         *
-         * @param position
-         */
-        applyPosition: function(position){
-            this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
-        },
+		/**
+		 * Apply a position to the tooltip.
+		 *
+		 * @param position
+		 */
+		applyPosition: function(position){
+			this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
+		},
 
 		/**
 		 * Make a tooltip invisible.
@@ -277,23 +277,23 @@
 
 			// Remove classes and set visibility
 			this.el.protip
-                .removeClass(C.SELECTOR_SHOW)
-                .removeClass(C.SELECTOR_ANIMATE)
-                .removeClass(this.data.animate || this.classInstance.settings.animate);
+				.removeClass(C.SELECTOR_SHOW)
+				.removeClass(C.SELECTOR_ANIMATE)
+				.removeClass(this.data.animate || this.classInstance.settings.animate);
 
 			this._isVisible = false;
 		},
 
-        /**
-         *
-         * @returns {{width: number, height: number}}
-         */
-        getArrowOffset: function(){
-            return {
-                width:  this.el.protipArrow.outerWidth(),
-                height: this.el.protipArrow.outerHeight()
-            };
-        },
+		/**
+		 *
+		 * @returns {{width: number, height: number}}
+		 */
+		getArrowOffset: function(){
+			return {
+				width:  this.el.protipArrow.outerWidth(),
+				height: this.el.protipArrow.outerHeight()
+			};
+		},
 
 		/**
 		 * Fetches every data-* properties from the source element.
@@ -308,9 +308,9 @@
 				this.data[key] = this.el.source.data(this._namespaced(key));
 			}, this));
 
-            // Merge/Extend
-            this.data = $.extend({}, this._prop, this.data);
-            this.data = $.extend({}, this.data, this._override);
+			// Merge/Extend
+			this.data = $.extend({}, this._prop, this.data);
+			this.data = $.extend({}, this.data, this._override);
 
 			// Now apply back to the element
 			$.each(this.data, $.proxy(function(key, value){
@@ -372,7 +372,7 @@
 
 			// Convert to jQuery object and append
 			this.el.protip = $(this.el.protip);
-            this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
+			this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
 			this.el.target.append(this.el.protip);
 		},
 
@@ -384,19 +384,19 @@
 		 */
 		_getClassList: function(){
 			var classList = [];
-            var skin = this.data.skin || this.classInstance.settings.skin;
-            var size = this.data.size || this.classInstance.settings.size;
-            var scheme = this.data.scheme || this.classInstance.settings.scheme;
+			var skin = this.data.skin || this.classInstance.settings.skin;
+			var size = this.data.size || this.classInstance.settings.size;
+			var scheme = this.data.scheme || this.classInstance.settings.scheme;
 
-            // Main container class
-            classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-            // Skin class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin);
-            // Size class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
-            // Scheme class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
-            // Custom classes
+			// Main container class
+			classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
+			// Skin class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin);
+			// Size class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
+			// Scheme class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
+			// Custom classes
 			this.data.classes && classList.push(this.data.classes);
 
 			return classList.join(' ');

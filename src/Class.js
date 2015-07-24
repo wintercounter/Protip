@@ -195,6 +195,7 @@
 		createItemInstance: function(el, override){
 			var id = this._generateId();
 			this._itemInstances[id] = new ProtipItemClass(id, el, this, override);
+			el.data(this.namespaced(C.PROP_IDENTIFIER), id);
 			return this._itemInstances[id];
 		},
 
