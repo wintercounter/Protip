@@ -11472,7 +11472,8 @@ if (typeof module !== 'undefined' && module.exports) {
 				target:      C.SELECTOR_BODY,
 				skin:        undefined,
 				size:        undefined,
-				animate:     undefined
+				animate:     undefined,
+				autoHide:    false
 			};
 
 			/** @type {object}    Object storing jQuery elements */
@@ -11591,6 +11592,7 @@ if (typeof module !== 'undefined' && module.exports) {
 			// Clear timeouts
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
+			this._task.autoHide && clearTimeout(this._task.autoHide);
 
 			// Set new timeout task if needed
 			if (!force && this.data.delayIn) {
@@ -11600,6 +11602,13 @@ if (typeof module !== 'undefined' && module.exports) {
 
 				// Return, our timeout will again later...
 				return;
+			}
+
+			// Auto hide
+			if (!isNaN(this.data.autoHide)) {
+				this._task.autoHide = setTimeout(function(){
+					this.hide(true);
+				}.bind(this), this.data.autoHide);
 			}
 
 			var style;
@@ -11646,6 +11655,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
+			this._task.autoHide && clearTimeout(this._task.autoHide);
 
 			// Set new timeout task if needed
 			if (!force && this.data.delayOut) {
