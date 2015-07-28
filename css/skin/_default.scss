@@ -202,6 +202,7 @@ $_protipDefaultSkinSizes: (
                 font-family: sans-serif;
                 opacity: 0;
                 transition: opacity 0.2s ease-out;
+                -webkit-transform: translateZ(0px); // Against Safari's font aliasing bug whil doing transition
 
                 > i {
                     font-size: 1.2em;
