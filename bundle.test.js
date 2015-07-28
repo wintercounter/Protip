@@ -10697,7 +10697,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		 */
 		_fetchElements: function(){
 			$(this.settings.selector).each($.proxy(function(index, el){
-				this.createItemInstance($(el));
+				this.getItemInstance($(el));
 			}, this));
 		},
 
