@@ -1,11 +1,12 @@
 .protip-container {
   display: table;
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
-  z-index: -2;
+  z-index: 50;
   visibility: hidden;
-  line-height: 1.3; }
+  line-height: 1.3;
+  pointer-events: none; }
   .protip-container > i {
     position: absolute;
     top: 10px;
@@ -21,9 +22,8 @@
   border-style: solid;
   border-color: transparent; }
 .protip-show {
-  position: absolute;
   visibility: visible;
-  z-index: 50; }
+  pointer-events: auto; }
 
 .protip-skin-default--scheme-pro.protip-container {
   color: #fff;

@@ -200,6 +200,8 @@
 		 */
 		show: function(force){
 
+			console.log('show', !isNaN(this.data.autoHide));
+
 			// No title? Why tooltip?
 			if (!this.data.title) {
 				return;
@@ -221,7 +223,7 @@
 			}
 
 			// Auto hide
-			if (!isNaN(this.data.autoHide)) {
+			if (this.data.autoHide !== false) {
 				this._task.autoHide = setTimeout(function(){
 					this.hide(true);
 				}.bind(this), this.data.autoHide);
@@ -244,7 +246,7 @@
 				.addClass(C.SELECTOR_SHOW);
 
 			// If we need animation
-			(this.data.animate || this.classInstance.settings.animate) &&
+			(this.data.animate || (this.classInstance.settings.animate && !this.data.animate)) &&
 				this.el.protip
 					.addClass(C.SELECTOR_ANIMATE)
 					.addClass(this.data.animate || this.classInstance.settings.animate);
@@ -268,6 +270,8 @@
 		 * @param force [boolean]  If 'true' there will be no timeouts.
 		 */
 		hide: function(force){
+
+			console.log('hide');
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);

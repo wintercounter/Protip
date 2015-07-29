@@ -19,7 +19,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants'),
 			require('./Item')
 		);
@@ -558,7 +558,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants')
 		);
 	} else {
@@ -731,7 +731,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants'),
 			require('./GravityParser'),
 			require('./PositionCalculator')
@@ -938,7 +938,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants'),
 			require('./GravityTester'),
 			require('./PositionCalculator')
@@ -989,6 +989,7 @@ require('./src/Plugin');
 
 			/** @type {object} Override data-pt-* values. */
 			this._override = override || {};
+			this._override.identifier = id;
 
 			/** @type {object} List of data-* properties and their default values. */
 			this._prop = {
@@ -1020,9 +1021,6 @@ require('./src/Plugin');
 
 			/** @type {jQuery}    The source element. */
 			this.el.source        = el;
-
-			// Set identifier
-			this._prop.identifier = id;
 
 			/** @type {object}    All the data-* properties gathered from the source element. */
 			this.data             = {};
@@ -1123,6 +1121,8 @@ require('./src/Plugin');
 		 */
 		show: function(force){
 
+			console.log('show', !isNaN(this.data.autoHide));
+
 			// No title? Why tooltip?
 			if (!this.data.title) {
 				return;
@@ -1144,7 +1144,7 @@ require('./src/Plugin');
 			}
 
 			// Auto hide
-			if (!isNaN(this.data.autoHide)) {
+			if (this.data.autoHide !== false) {
 				this._task.autoHide = setTimeout(function(){
 					this.hide(true);
 				}.bind(this), this.data.autoHide);
@@ -1167,7 +1167,7 @@ require('./src/Plugin');
 				.addClass(C.SELECTOR_SHOW);
 
 			// If we need animation
-			(this.data.animate || this.classInstance.settings.animate) &&
+			(this.data.animate || (this.classInstance.settings.animate && !this.data.animate)) &&
 				this.el.protip
 					.addClass(C.SELECTOR_ANIMATE)
 					.addClass(this.data.animate || this.classInstance.settings.animate);
@@ -1191,6 +1191,8 @@ require('./src/Plugin');
 		 * @param force [boolean]  If 'true' there will be no timeouts.
 		 */
 		hide: function(force){
+
+			console.log('hide');
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
@@ -1531,7 +1533,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Class')
 		);
 	} else {
@@ -1659,7 +1661,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants')
 		);
 	} else {

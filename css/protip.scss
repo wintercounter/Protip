@@ -1,22 +1,21 @@
 @import "_config";
 @import "_mixins";
 
-$arrow-size: protipConfig(arrow-size);
-
 .protip {
 	&-container {
 		display: table;
-		position: fixed;
+		position: absolute;
 		left: 0;
 		top: 0;
-		z-index: -2;
+		z-index: 50;
 		visibility: hidden;
 		line-height: 1.3;
+		pointer-events: none;
 
 		> i {
 			position: absolute;
-            top: 10px;
-            left: 10px;
+			top: 10px;
+			left: 10px;
 
 			// If there is an icon in the tooltip (warning, ok, etc.) the content has different style
 			+ div {
@@ -25,22 +24,20 @@ $arrow-size: protipConfig(arrow-size);
 		}
 	}
 
-    &-arrow {
-        content: '';
-        display: block;
-        position: absolute;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-color: transparent;
-    }
+	&-arrow {
+		content: '';
+		display: block;
+		position: absolute;
+		width: 0;
+		height: 0;
+		border-style: solid;
+		border-color: transparent;
+	}
 
 	&-show {
-		position: absolute;
 		visibility: visible;
-        z-index: 50;
+		pointer-events: auto;
 	}
 }
 
 @import "skin/all";
-/////////////
