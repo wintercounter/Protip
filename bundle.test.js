@@ -1981,8 +1981,8 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-}).call(this,require("Zbi7gb"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":7,"Zbi7gb":6,"inherits":5}],9:[function(require,module,exports){
+}).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./support/isBuffer":7,"FWaASH":6,"inherits":5}],9:[function(require,module,exports){
 module.exports = require('./lib/chai');
 
 },{"./lib/chai":10}],10:[function(require,module,exports){
@@ -7463,8 +7463,8 @@ var sinon = (function (formatio) {
     }
 }(typeof sinon == "object" && sinon || null));
 
-}).call(this,require("Zbi7gb"))
-},{"../sinon":41,"Zbi7gb":6}],44:[function(require,module,exports){
+}).call(this,require("FWaASH"))
+},{"../sinon":41,"FWaASH":6}],44:[function(require,module,exports){
 /**
   * @depend ../sinon.js
   * @depend match.js
@@ -10480,7 +10480,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./Item')
 		);
@@ -11019,7 +11019,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
@@ -11192,7 +11192,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityParser'),
 			require('./PositionCalculator')
@@ -11399,7 +11399,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityTester'),
 			require('./PositionCalculator')
@@ -11990,7 +11990,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Class')
 		);
 	} else {
@@ -12118,7 +12118,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
@@ -12348,7 +12348,7 @@ require('../src/Plugin.js');
 
 var assert = require('chai').assert,
 	sinon = require('sinon'),
-	$ = (typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 	testContent = require('./testcontent.html');
 
 var protipInstance;
@@ -12446,8 +12446,8 @@ setTimeout(function(){
 }, 500);
 
 
-}).call(this,require("Zbi7gb"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../src/Plugin.js":61,"./testcontent.html":64,"Zbi7gb":6,"chai":9,"sinon":41}],64:[function(require,module,exports){
+}).call(this,require("FWaASH"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../src/Plugin.js":61,"./testcontent.html":64,"FWaASH":6,"chai":9,"sinon":41}],64:[function(require,module,exports){
 module.exports = '<style type="text/css">\n' +
     '	.protip {box-shadow: 0 0 5px green;}\n' +
     '\n' +
