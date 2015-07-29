@@ -1121,8 +1121,6 @@ require('./src/Plugin');
 		 */
 		show: function(force){
 
-			console.log('show', !isNaN(this.data.autoHide));
-
 			// No title? Why tooltip?
 			if (!this.data.title) {
 				return;
@@ -1191,8 +1189,6 @@ require('./src/Plugin');
 		 * @param force [boolean]  If 'true' there will be no timeouts.
 		 */
 		hide: function(force){
-
-			console.log('hide');
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
