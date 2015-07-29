@@ -8,8 +8,8 @@
 		left: 0;
 		top: 0;
 		z-index: 50;
-		visibility: hidden;
 		line-height: 1.3;
+		opacity: 0;
 		pointer-events: none;
 
 		> i {
@@ -35,7 +35,7 @@
 	}
 
 	&-show {
-		visibility: visible;
+		opacity: 1;
 		pointer-events: auto;
 	}
 }
