@@ -68,6 +68,7 @@
 
 			/** @type {object} Override data-pt-* values. */
 			this._override = override || {};
+			this._override.identifier = id;
 
 			/** @type {object} List of data-* properties and their default values. */
 			this._prop = {
@@ -99,9 +100,6 @@
 
 			/** @type {jQuery}    The source element. */
 			this.el.source        = el;
-
-			// Set identifier
-			this._prop.identifier = id;
 
 			/** @type {object}    All the data-* properties gathered from the source element. */
 			this.data             = {};
