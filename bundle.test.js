@@ -11320,7 +11320,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * @private
 		 */
 		_bottomOk: function(){
-			return (((this._dimensions.offset.top - this._windowDimensions.scrollTop) + this._dimensions.height) < (this._windowDimensions.height + this._windowDimensions.scrollTop));
+			return (((this._dimensions.offset.top - this._windowDimensions.scrollTop) + this._dimensions.height) < this._windowDimensions.height);
 		},
 
 		/**
@@ -11344,13 +11344,6 @@ if (typeof module !== 'undefined' && module.exports) {
 				height: this._item.el.protip.outerHeight(),
 				offset: this._item.el.protip.offset()
 			};
-
-			if (this._item.data.target !== C.SELECTOR_BODY) {
-				var parentOffset = this._item.el.source.offset();
-
-				this._dimensions.offset.top += parentOffset.top;
-				this._dimensions.offset.left += parentOffset.left;
-			}
 		},
 
 		/**
