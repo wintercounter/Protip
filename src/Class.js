@@ -55,7 +55,7 @@
 		 * @private
 		 */
 		_defaults: {
-			/** @type String    Selector for clickable protips */
+			/** @type String    Selector for protips */
 			selector:           C.DEFAULT_SELECTOR,
 			/** @type String    Namespace of the data attributes */
 			namespace:          C.DEFAULT_NAMESPACE,

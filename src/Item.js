@@ -49,7 +49,7 @@
 		return this._Construct(id, el, classInstance, override);
 	};
 
-// Define the ProtipItemClass members
+	// Define the ProtipItemClass members
 	$.extend(true, ProtipItemClass.prototype, {
 
 		/**
@@ -124,8 +124,10 @@
 			this._initSticky();
 			this._bind();
 
-			// Tell the source that we are ready to go!
-			this.el.source.data(this._namespaced(C.PROP_INITED), true);
+			// Tell the source that we are ready to go and add protip class if it didn't have.
+			this.el.source
+				.addClass(this.classInstance.settings.selector.replace('.', ''))
+				.data(this._namespaced(C.PROP_INITED), true);
 
 			return this;
 		},
