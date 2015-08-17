@@ -10520,7 +10520,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * @private
 		 */
 		_defaults: {
-			/** @type String    Selector for clickable protips */
+			/** @type String    Selector for protips */
 			selector:           C.DEFAULT_SELECTOR,
 			/** @type String    Namespace of the data attributes */
 			namespace:          C.DEFAULT_NAMESPACE,
@@ -11424,7 +11424,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		return this._Construct(id, el, classInstance, override);
 	};
 
-// Define the ProtipItemClass members
+	// Define the ProtipItemClass members
 	$.extend(true, ProtipItemClass.prototype, {
 
 		/**
@@ -11499,8 +11499,10 @@ if (typeof module !== 'undefined' && module.exports) {
 			this._initSticky();
 			this._bind();
 
-			// Tell the source that we are ready to go!
-			this.el.source.data(this._namespaced(C.PROP_INITED), true);
+			// Tell the source that we are ready to go and add protip class if it didn't have.
+			this.el.source
+				.addClass(this.classInstance.settings.selector.replace('.', ''))
+				.data(this._namespaced(C.PROP_INITED), true);
 
 			return this;
 		},
