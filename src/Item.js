@@ -92,7 +92,7 @@
 				skin:        undefined,
 				size:        undefined,
 				scheme:      undefined,
-				animate:     undefined
+				animate:     undefined,
 				autoHide:    false
 			};
 
