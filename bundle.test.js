@@ -11732,9 +11732,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * @private
 		 */
 		_initSticky: function(){
-			if (this.data.trigger === C.TRIGGER_STICKY) {
-				this.show();
-			}
+			(this.data.trigger === C.TRIGGER_STICKY) && this.show();
 		},
 
 		/**
@@ -11770,9 +11768,9 @@ if (typeof module !== 'undefined' && module.exports) {
 		 */
 		_getClassList: function(){
 			var classList = [];
-			var skin = this.data.skin || this.classInstance.settings.skin;
-			var size = this.data.size || this.classInstance.settings.size;
-			var scheme = this.data.scheme || this.classInstance.settings.scheme;
+			var skin      = this.data.skin || this.classInstance.settings.skin;
+			var size      = this.data.size || this.classInstance.settings.size;
+			var scheme    = this.data.scheme || this.classInstance.settings.scheme;
 
 			// Main container class
 			classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
@@ -11847,14 +11845,14 @@ if (typeof module !== 'undefined' && module.exports) {
 		_setTarget: function(){
 			var target = this._getData(C.PROP_TARGET);
 
-			// Target is self
+			// Target is itself
 			if (target === true) {
 				target = this.el.source;
 			}
 
 			// If has target container
-			else if (target === C.SELECTOR_BODY && this.el.source.parents(C.SELECTOR_TARGET).size()) {
-				target = this.el.source.parents(C.SELECTOR_TARGET);
+			else if (target === C.SELECTOR_BODY && this.el.source.closest(C.SELECTOR_TARGET).size()) {
+				target = this.el.source.closest(C.SELECTOR_TARGET);
 			}
 
 			// Target is a selector
@@ -11912,9 +11910,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * @private
 		 */
 		_onProtipMouseleave: function(){
-			if (this.data.trigger === C.TRIGGER_HOVER) {
-				this.hide();
-			}
+			(this.data.trigger === C.TRIGGER_HOVER) && this.hide();
 		},
 
 		/**
