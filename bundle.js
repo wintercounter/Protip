@@ -35,7 +35,12 @@ require('./src/Plugin');
 	'use strict';
 
 	// Lower the interval time, we don't need that much accuracy.
-	window.MutationObserver._period = 100;
+	try {
+		window.MutationObserver._period = 100;
+	} catch(e){
+		console.error("Protip: MutationObserver polyfill haven't been loaded!");
+		window.MutationObserver = function(){this.disconnect=this.observe=function(){}};
+	}
 
 	/**
 	 * The Protip main class
