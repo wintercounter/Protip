@@ -1,4 +1,5 @@
 ![TravisCI Build Status](https://travis-ci.org/DoclerLabs/Protip.svg)
+![Dependency Status](https://david-dm.org/DoclerLabs/Protip.svg)
 
 ---
 # Features in Brief
