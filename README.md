@@ -3,6 +3,8 @@
 
 ---
 # Features in Brief
+
+[![Join the chat at https://gitter.im/DoclerLabs/Protip](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DoclerLabs/Protip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 - 16 position.
 - Live refresh of tooltip options.
 - Live element checking (element removed? -> tooltip should disappear)
