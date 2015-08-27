@@ -1522,20 +1522,23 @@ require('./src/Plugin');
 	if (typeof define === 'function' && define.amd) {
 		define([
 			'jquery',
-			'./Class'
+			'./Class',
+			'./Constants'
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
 			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
-			require('./Class')
+			require('./Class'),
+			require('./Constants')
 		);
 	} else {
 		factory(
 			root.jQuery,
-			root.ProtipClass
+			root.ProtipClass,
+			root.ProtipContants
 		);
 	}
-}(this, function ($, ProtipClass) {
+}(this, function ($, ProtipClass, C) {
 
     'use strict';
 
@@ -1545,6 +1548,7 @@ require('./src/Plugin');
 		protip: function(settings){
 			if (!this._protipClassInstance) {
 				this._protipClassInstance = new ProtipClass(settings);
+				this.protip.C = C;
 			}
 			return this._protipClassInstance;
 		}
@@ -1636,7 +1640,7 @@ require('./src/Plugin');
 
 }));
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Class":2}],8:[function(require,module,exports){
+},{"./Class":2,"./Constants":3}],8:[function(require,module,exports){
 (function (global){
 /**
  * PositionCalculator Class
