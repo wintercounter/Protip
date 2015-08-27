@@ -5,20 +5,23 @@
 	if (typeof define === 'function' && define.amd) {
 		define([
 			'jquery',
-			'./Class'
+			'./Class',
+			'./Constants'
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
 			require('jquery'),
-			require('./Class')
+			require('./Class'),
+			require('./Constants')
 		);
 	} else {
 		factory(
 			root.jQuery,
-			root.ProtipClass
+			root.ProtipClass,
+			root.ProtipContants
 		);
 	}
-}(this, function ($, ProtipClass) {
+}(this, function ($, ProtipClass, C) {
 
     'use strict';
 
@@ -28,6 +31,7 @@
 		protip: function(settings){
 			if (!this._protipClassInstance) {
 				this._protipClassInstance = new ProtipClass(settings);
+				this.protip.C = C;
 			}
 			return this._protipClassInstance;
 		}
