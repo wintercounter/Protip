@@ -1,5 +1,6 @@
 ![TravisCI Build Status](https://travis-ci.org/DoclerLabs/Protip.svg)
 ![Dependency Status](https://david-dm.org/DoclerLabs/Protip.svg)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DoclerLabs/Protip)
 
 ---
 # Features in Brief
