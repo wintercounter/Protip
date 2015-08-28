@@ -35,7 +35,8 @@
 		window.MutationObserver._period = 100;
 	} catch(e){
 		console.error("Protip: MutationObserver polyfill haven't been loaded!");
-		window.MutationObserver = function(){this.disconnect=this.observe=function(){}};
+		// "Polyfill" for MutationObserver so Protip won't break if the real polyfill not included
+		window.MutationObserver = window.MutationObserver || function(){this.disconnect=this.observe=function(){}};
 	}
 
 	/**
