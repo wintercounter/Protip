@@ -1,0 +1,5 @@
+.protip-mixin--css {
+    &-no-transition {
+        transition: all 0s !important;
+    }
+}

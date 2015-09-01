@@ -101,6 +101,7 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 | **scheme**      | 'pro'     | *String*       | Default color scheme to use (provided by the Default skin only)                                                                                                                             |
 | **animate**     | undefined | *Bool, String* | Animation type based on Animate.css. See: Animations                                                                                                                                    |
 | **auto-hide**   | false     | *Bool, Number* | Tooltip will hide itself automatically after this timeout (milliseconds).                                                                                                                                    |
+| **mixin**       | undefined | *String*       | Tooltip mixins to use separated by spaces.                                                                                                                                    |
 
 ## jQuery Helpers
 ```javascript

@@ -131,7 +131,7 @@ $_protipDefaultSkinSizes: (
 	/////////////
 
 	///////////// CORNERS
-	.#{$skin}[data-pt-position="corner-left-top"] {
+	.#{$skin}[data-pt-position="top-left-corner"] {
 		@if $cornerRadiusFix {
 			border-bottom-right-radius: 0;
 		}
@@ -145,7 +145,7 @@ $_protipDefaultSkinSizes: (
 		}
 	}
 
-	.#{$skin}[data-pt-position="corner-right-top"] {
+	.#{$skin}[data-pt-position="top-right-corner"] {
 		@if $cornerRadiusFix {
 			border-bottom-left-radius: 0;
 		}
@@ -159,7 +159,7 @@ $_protipDefaultSkinSizes: (
 		}
 	}
 
-	.#{$skin}[data-pt-position="corner-left-bottom"] {
+	.#{$skin}[data-pt-position="bottom-left-corner"] {
 		@if $cornerRadiusFix {
 			border-top-right-radius: 0;
 		}
@@ -173,7 +173,7 @@ $_protipDefaultSkinSizes: (
 		}
 	}
 
-	.#{$skin}[data-pt-position="corner-right-bottom"] {
+	.#{$skin}[data-pt-position="bottom-right-corner"] {
 		@if $cornerRadiusFix {
 			border-top-left-radius: 0;
 		}
@@ -201,7 +201,6 @@ $_protipDefaultSkinSizes: (
 				background: $color;
 				font-family: sans-serif;
 				transition: opacity 0.2s ease-out;
-				-webkit-transform: translateZ(0px); // Against Safari's font aliasing bug while doing transition
 
 				> i {
 					font-size: 1.2em;

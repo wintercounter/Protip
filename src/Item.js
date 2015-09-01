@@ -93,7 +93,8 @@
 				size:        undefined,
 				scheme:      undefined,
 				animate:     undefined,
-				autoHide:    false
+				autoHide:    false,
+				mixin:       undefined
 			};
 
 			/** @type {object}    Object storing jQuery elements */
@@ -173,6 +174,9 @@
 				.data(this._namespaced(C.PROP_IDENTIFIER), false)
 				.removeData();
 			this.classInstance.onItemDestoryed(this.data.identifier);
+			$.each(this._task, function(k, task){
+				clearTimeout(task);
+			});
 		},
 
 		/**
@@ -296,6 +300,7 @@
 		},
 
 		/**
+		 * Returns arrow offset (width/height)
 		 *
 		 * @returns {{width: number, height: number}}
 		 */
@@ -407,8 +412,21 @@
 			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
 			// Custom classes
 			this.data.classes && classList.push(this.data.classes);
+			// Mixin classes
+			this.data.mixin && classList.push(this._parseMixins());
 
 			return classList.join(' ');
+		},
+
+
+		_parseMixins: function(){
+			var mixin = [];
+
+			this.data.mixin && this.data.mixin.split(' ').forEach(function(val){
+				val && mixin.push(C.SELECTOR_MIXIN_PREFIX + val);
+			}, this);
+
+			return mixin.join(' ');
 		},
 
 		/**

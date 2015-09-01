@@ -27,10 +27,10 @@
 		POSITION_LEFT_TOP: 'left-top',
 		POSITION_LEFT: 'left',
 		POSITION_LEFT_BOTTOM: 'left-bottom',
-		POSITION_CORNER_LEFT_TOP: 'corner-left-top',
-		POSITION_CORNER_RIGHT_TOP: 'corner-right-top',
-		POSITION_CORNER_LEFT_BOTTOM: 'corner-left-bottom',
-		POSITION_CORNER_RIGHT_BOTTOM: 'corner-right-bottom',
+		POSITION_CORNER_LEFT_TOP: 'top-left-corner',
+		POSITION_CORNER_RIGHT_TOP: 'top-right-corner',
+		POSITION_CORNER_LEFT_BOTTOM: 'bottom-left-corner',
+		POSITION_CORNER_RIGHT_BOTTOM: 'bottom-right-corner',
 
 		TRIGGER_CLICK: 'click',
 		TRIGGER_HOVER: 'hover',
@@ -77,8 +77,9 @@
         SELECTOR_SCHEME_PREFIX: '--scheme-',
         SELECTOR_ANIMATE: 'animated',
 		SELECTOR_TARGET: '.protip-target',
+		SELECTOR_MIXIN_PREFIX: 'protip-mixin--',
 
-		TEMPLATE_PROTIP: '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
+		TEMPLATE_PROTIP: '<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div class="protip-content">{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
 
 		ATTR_WIDTH: 'width',
