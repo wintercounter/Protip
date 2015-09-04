@@ -245,6 +245,9 @@
 				style = new PositionCalculator(this);
 			}
 
+			// Fire show event
+			this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+
 			// Apply styles, classes
 			this.el.protip
 				.css(style)
@@ -289,6 +292,9 @@
 				// Return, our timeout will call again later...
 				return;
 			}
+
+			// Fire show event
+			this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
 
 			// Remove classes and set visibility
 			this.el.protip
