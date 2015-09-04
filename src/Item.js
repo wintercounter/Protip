@@ -82,6 +82,7 @@
 				offsetTop:   0,
 				offsetLeft:  0,
 				position:    C.POSITION_RIGHT,
+				placement: 	 C.PLACEMENT_OUTSIDE,
 				classes:     null,
 				arrow:       true,
 				width:       300,

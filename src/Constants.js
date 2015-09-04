@@ -15,6 +15,11 @@
 	"use strict";
 
 	var ProtipConstants = {
+		PLACEMENT_CENTER: 'center',
+		PLACEMENT_INSIDE: 'inside',
+		PLACEMENT_OUTSIDE: 'outside',
+		PLACEMENT_BORDER: 'border',
+
 		POSITION_TOP_LEFT: 'top-left',
 		POSITION_TOP: 'top',
 		POSITION_TOP_RIGHT: 'top-right',
