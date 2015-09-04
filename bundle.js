@@ -512,6 +512,8 @@ require('./src/Plugin');
 		EVENT_MOUSELEAVE: 'mouseleave',
 		EVENT_CLICK: 'click',
 		EVENT_RESIZE: 'resize',
+		EVENT_PROTIP_SHOW: 'protipshow',
+		EVENT_PROTIP_HIDE: 'protiphide',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
@@ -1166,6 +1168,9 @@ require('./src/Plugin');
 				style = new PositionCalculator(this);
 			}
 
+			// Fire show event
+			this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+
 			// Apply styles, classes
 			this.el.protip
 				.css(style)
@@ -1210,6 +1215,9 @@ require('./src/Plugin');
 				// Return, our timeout will call again later...
 				return;
 			}
+
+			// Fire show event
+			this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
 
 			// Remove classes and set visibility
 			this.el.protip
