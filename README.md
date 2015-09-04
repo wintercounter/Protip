@@ -124,6 +124,12 @@ el.protipShowInside();
 
 // Toggle all tooltips inside of this element.
 el.protipToggleInside();
+
+// Custom show event
+el.on('protipshow', function(ItemInstance){});
+
+// Custom hide event
+el.on('protiphide', function(ItemInstance){});
 ```
 
 ---

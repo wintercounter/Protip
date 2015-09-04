@@ -478,10 +478,10 @@ require('./src/Plugin');
 		POSITION_LEFT_TOP: 'left-top',
 		POSITION_LEFT: 'left',
 		POSITION_LEFT_BOTTOM: 'left-bottom',
-		POSITION_CORNER_LEFT_TOP: 'corner-left-top',
-		POSITION_CORNER_RIGHT_TOP: 'corner-right-top',
-		POSITION_CORNER_LEFT_BOTTOM: 'corner-left-bottom',
-		POSITION_CORNER_RIGHT_BOTTOM: 'corner-right-bottom',
+		POSITION_CORNER_LEFT_TOP: 'top-left-corner',
+		POSITION_CORNER_RIGHT_TOP: 'top-right-corner',
+		POSITION_CORNER_LEFT_BOTTOM: 'bottom-left-corner',
+		POSITION_CORNER_RIGHT_BOTTOM: 'bottom-right-corner',
 
 		TRIGGER_CLICK: 'click',
 		TRIGGER_HOVER: 'hover',
@@ -512,6 +512,8 @@ require('./src/Plugin');
 		EVENT_MOUSELEAVE: 'mouseleave',
 		EVENT_CLICK: 'click',
 		EVENT_RESIZE: 'resize',
+		EVENT_PROTIP_SHOW: 'protipshow',
+		EVENT_PROTIP_HIDE: 'protiphide',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
@@ -528,8 +530,9 @@ require('./src/Plugin');
         SELECTOR_SCHEME_PREFIX: '--scheme-',
         SELECTOR_ANIMATE: 'animated',
 		SELECTOR_TARGET: '.protip-target',
+		SELECTOR_MIXIN_PREFIX: 'protip-mixin--',
 
-		TEMPLATE_PROTIP: '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
+		TEMPLATE_PROTIP: '<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div class="protip-content">{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
 
 		ATTR_WIDTH: 'width',
@@ -1013,7 +1016,8 @@ require('./src/Plugin');
 				size:        undefined,
 				scheme:      undefined,
 				animate:     undefined,
-				autoHide:    false
+				autoHide:    false,
+				mixin:       undefined
 			};
 
 			/** @type {object}    Object storing jQuery elements */
@@ -1093,6 +1097,9 @@ require('./src/Plugin');
 				.data(this._namespaced(C.PROP_IDENTIFIER), false)
 				.removeData();
 			this.classInstance.onItemDestoryed(this.data.identifier);
+			$.each(this._task, function(k, task){
+				clearTimeout(task);
+			});
 		},
 
 		/**
@@ -1161,6 +1168,9 @@ require('./src/Plugin');
 				style = new PositionCalculator(this);
 			}
 
+			// Fire show event
+			this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+
 			// Apply styles, classes
 			this.el.protip
 				.css(style)
@@ -1206,6 +1216,9 @@ require('./src/Plugin');
 				return;
 			}
 
+			// Fire show event
+			this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
+
 			// Remove classes and set visibility
 			this.el.protip
 				.removeClass(C.SELECTOR_SHOW)
@@ -1216,6 +1229,7 @@ require('./src/Plugin');
 		},
 
 		/**
+		 * Returns arrow offset (width/height)
 		 *
 		 * @returns {{width: number, height: number}}
 		 */
@@ -1327,8 +1341,21 @@ require('./src/Plugin');
 			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
 			// Custom classes
 			this.data.classes && classList.push(this.data.classes);
+			// Mixin classes
+			this.data.mixin && classList.push(this._parseMixins());
 
 			return classList.join(' ');
+		},
+
+
+		_parseMixins: function(){
+			var mixin = [];
+
+			this.data.mixin && this.data.mixin.split(' ').forEach(function(val){
+				val && mixin.push(C.SELECTOR_MIXIN_PREFIX + val);
+			}, this);
+
+			return mixin.join(' ');
 		},
 
 		/**

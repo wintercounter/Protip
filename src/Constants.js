@@ -61,6 +61,8 @@
 		EVENT_MOUSELEAVE: 'mouseleave',
 		EVENT_CLICK: 'click',
 		EVENT_RESIZE: 'resize',
+		EVENT_PROTIP_SHOW: 'protipshow',
+		EVENT_PROTIP_HIDE: 'protiphide',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
