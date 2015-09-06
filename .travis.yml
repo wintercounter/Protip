@@ -18,6 +18,7 @@ before_deploy:
   - mkdir tmp
   - cd tmp
   - git clone -b gh-pages "https://${GH_TOKEN}:@github.com/DoclerLabs/Protip.git"
+  - git fetch
   - git rebase master
   - git push -q origin HEAD:gh-pages
 env:
