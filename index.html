@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Protip - Yet another jQuery tooltip plugin</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,300,400italic,700italic">
+    <link rel="stylesheet" href="./demo/scss/site.css">
+    <link rel="stylesheet" href="//cdn.rawgit.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css">
+    <link rel="stylesheet" href="//cdn.rawgit.com/daneden/animate.css/master/animate.min.css">
+    <link rel="stylesheet" href="./protip.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="protip-target">
+            <ul>
+                <li class="align-left">
+                    <a href="./protip.min.js"
+                       class="link link--js protip"
+                       data-pt-title=".download-js-tooltip"
+                       data-pt-position="bottom-left"
+                       data-pt-interactive="true"
+                       data-pt-classes="download-tooltip download-tooltip--js">
+                        Download JS
+                    </a>
+                    <div class="download-js-tooltip hide">
+                        <div class="markdown-body">
+                            <p>Download minified JS for production use.</p>
+                            <p>Or include the following line before your closing &lt;/body&gt; tag.</p>
+                            <pre><code>&#x3C;script src=&#x22;//cdn.rawgit.com/DoclerLabs/Protip/master/protip.min.js&#x22;&#x3E;&#x3C;/script&#x3E;</code></pre>
+                            <small>Don't forget: you need to have jQuery also.</small>
+                        </div>
+                    </div>
+                </li>
+                <li class="align-left">
+                    <a href="./protip.min.css"
+                       class="link link--css protip"
+                       data-pt-title=".download-css-tooltip"
+                       data-pt-position="bottom-left"
+                       data-pt-interactive="true"
+                       data-pt-classes="download-tooltip download-tooltip--css">
+                        Download CSS
+                    </a>
+                    <div class="download-css-tooltip hide">
+                        <div class="markdown-body">
+                            <p>Download minified CSS for production use.</p>
+                            <p>Or include the following line between your &lt;head&gt; tag.</p>
+                            <pre><code>&#x3C;link rel=&#x22;stylesheet&#x22; href=&#x22;//cdn.rawgit.com/DoclerLabs/Protip/master/protip.min.css&#x22;&#x3E;</code></pre>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="http://doclerlabs.com" target="_blank">
+                        <img src="./demo/img/docler-labs-mini.png" alt="Invented at Docler Labs">
+                    </a>
+                </li>
+                <li class="align-right">
+                    <a href="http://badge.fury.io/js/protip"><img src="https://badge.fury.io/js/protip.svg" alt="npm version" height="18"></a>
+                </li>
+                <li class="align-right">
+                    <a href="https://www.npmjs.com/package/protip"><img src="https://img.shields.io/npm/dm/protip.svg" alt="npm downloads" height="18"></a>
+                </li>
+            </ul>
+        </nav>
+        <a class="header__logo" href="http://protip.rocks">
+            <img src="./demo/img/logo.png" alt="Protip"><br>
+            <h1>Protip</h1>
+        </a>
+        <h2>
+            Yet another jQuery <strong>tooltip plugin</strong> for <em>any situation</em><span class="protip"
+                                                                                        data-pt-title="almost"
+                                                                                        data-pt-position="top"
+                                                                                        data-pt-gravity="false"
+                                                                                        data-pt-trigger="sticky"
+                                                                                        data-pt-size="tiny"
+                                                                                        data-pt-scheme="black"
+                                                                                        data-pt-offset-left="1">*</span>!
+        </h2>
+        <a class="github-button" href="https://github.com/DoclerLabs/Protip" data-style="mega" data-count-href="/DoclerLabs/Protip/stargazers" data-count-api="/repos/DoclerLabs/Protip#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star DoclerLabs/Protip on GitHub">Star</a>
+        <a class="github-ribbon" href="https://github.com/DoclerLabs/Protip" target="_blank">
+            <img src="https://camo.githubusercontent.com/52760788cde945287fbb584134c4cbc2bc36f904/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png">
+        </a>
+    </header>
+
+    <section class="demo">
+        <div class="demo__tooltip">
+            <div class="protip js-demo-tip" data-pt-title="">
+                <span>I have my own tooltip</span>
+            </div>
+        </div>
+        <div class="demo__form">
+            <form class="js-demo-form"></form>
+        </div>
+    </section>
+
+    <div class="markdown-body">
+        <md-content url="./README.md"></md-content>
+    </div>
+
+    <footer>
+        <ul>
+            <li class="left">
+                <p>
+                    <span>Invented at</span>
+                    <a href="http://doclerlabs.com" target="_blank" class="dl">
+                        <img src="./demo/img/docler-labs.png" alt="DoclerLabs">
+                    </a>
+                    <span>by</span>
+                    <a href="http://wintercounter.me" target="_blank" class="w">
+                        <img src="./demo/img/winter.png" alt="Victor Vincent - wintercounter">
+                    </a>
+                    <span>Victor Vincent</span>
+                </p>
+            </li>
+            <li class="right">
+                <p>Protip is released under <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT License</a></p>
+            </li>
+        </ul>
+    </footer>
+
+    <div class="js-loading-overlay"></div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="//cdn.rawgit.com/chjj/marked/master/marked.min.js"></script>
+    <script src="//cdn.rawgit.com/riot/riot/master/riot.min.js"></script>
+    <script src="//cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script src="./bundle.js"></script>
+    <script src="./demo/js/tags.js"></script>
+    <script src="./demo/js/form.js"></script>
+    <script src="./demo/js/site.js"></script>
+    <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
