@@ -65,7 +65,8 @@
         
         .link {
             padding: 8px 16px;
-            display: inline-block;
+            display: block;
+            float: left;
             border: 2px solid #fff; border-radius: 5px;
             color: #fff;
             text-decoration: none;
@@ -90,6 +91,11 @@
                 border-color: #ffcc7b;
                 color: #fff;
             }
+        }
+        
+        .align-right a {
+            display: block;
+            float: right;
         }
     }
 

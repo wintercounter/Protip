@@ -264,7 +264,8 @@ input[type=range]::-ms-tooltip {
       height: 100%; }
     .header nav .link {
       padding: 8px 16px;
-      display: inline-block;
+      display: block;
+      float: left;
       border: 2px solid #fff;
       border-radius: 5px;
       color: #fff;
@@ -284,6 +285,9 @@ input[type=range]::-ms-tooltip {
         background-color: #FFA200;
         border-color: #ffcc7b;
         color: #fff; }
+    .header nav .align-right a {
+      display: block;
+      float: right; }
   .header .github-ribbon {
     position: absolute;
     top: 0;
