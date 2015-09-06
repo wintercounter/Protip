@@ -71,7 +71,7 @@
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
-		DEFAULT_DELAY_OUT: 250,
+		DEFAULT_DELAY_OUT: 100,
 
 		SELECTOR_PREFIX: 'protip-',
 		SELECTOR_BODY: 'body',
@@ -85,6 +85,7 @@
         SELECTOR_ANIMATE: 'animated',
 		SELECTOR_TARGET: '.protip-target',
 		SELECTOR_MIXIN_PREFIX: 'protip-mixin--',
+		SELECTOR_OPEN: 'protip-open',
 
 		TEMPLATE_PROTIP: '<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div class="protip-content">{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',

@@ -246,8 +246,10 @@
 				style = new PositionCalculator(this);
 			}
 
-			// Fire show event
-			this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+			// Fire show event and add open class
+			this.el.source
+				.addClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_SHOW, this);
 
 			// Apply styles, classes
 			this.el.protip
@@ -294,8 +296,10 @@
 				return;
 			}
 
-			// Fire show event
-			this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
+			// Fire show event and remove open class
+			this.el.source
+				.removeClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_HIDE, this);
 
 			// Remove classes and set visibility
 			this.el.protip
@@ -476,7 +480,7 @@
 		 * @private
 		 */
 		_detectTitle: function(){
-			if (this.data.title && this.data.title.charAt(0) === '#') {
+			if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
 			}

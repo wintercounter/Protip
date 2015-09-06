@@ -5,24 +5,26 @@
 ---
 # Features in Brief
 
-- 16 position.
+- 49 position
 - Live refresh of tooltip options.
-- Live element checking (element removed? -> tooltip should disappear)
+- Live element checking (element removed? -> tooltip should disappear).
 - Gravity: find a better position if it won't fit to the screen.
-- Placement: into the root or into another target element.
+- DOM targets: append into the root or into another target element.
+- Placements: outside, inside, border, center
 - Click activated and sticky tooltips.
-- Custom HTML content.
-- Interactive tooltips.
-- In/Out delays.
-- Icon support.
+- Custom HTML content
+- Interactive tooltips
+- In/Out delays
+- Auto-hide
+- Icon support
+- Skins, sizes, schemes
+- Animations support
+- Mixins (CSS only, JS based coming soon)
+- Custom event callbacks
 
 ---
 # Introduction
 At the company I working for we use many tooltips for several purposes. Especially our admin area/control panel side has heavy tooltip usage. There were several unusual requests which always required to develop new features into our existing plugin. Now I've created Protip, a new generation of tooltips. It's not so lightweight but it doesn't intends to be. We needed a solution which can fit into every scenario we face with.
-
----
-# Warning!
-Development of the plugin is still in progress. While it's mostly seems stable, there are still some tests need to be written and need to expand the documentation more.
 
 ---
 # Installation
@@ -82,7 +84,7 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 | Attribute   | Default  | Type         | Details                                                                                                                                                                                                                                 |
 |-------------|----------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **trigger**     | 'hover'   | *String*       | How you want to trigger this tooltip? Available values: **hover**, **click**, **sticky** (sticky will be shown on load)                                                                                                                                   |
-| **title**       | null      | *String*       | The tooltip content. Provide an ID starting with **#** to get data (*even whole HTML*) from another DOM element's content. Example: `<div id="tooltipContent"><em>This is my tooltips content</em></div>`                                       |
+| **title**       | null      | *String*       | The tooltip content text. Alternatively you may provide a selector (ID or class) starting with **#** or **.** to get data (*even whole HTML*) from another DOM element's content. Example: `<div id="tooltipContent"><em>This is my tooltips content</em></div>`                                       |
 | **delay-in**    | 0         | *Number*       | Delay of showing a tooltip. Handy in cases when you want to prevent tooltips on quick mouseovers.                                                                                                                                       |
 | **delay-out**   | 0         | *Number*       | Delay of hiding the tooltip. Handy in cases you have clickable content in the tooltip for example.                                                                                                                                      |
 | **interactive** | false     | *Bool*         | If **true**, protip will use a default **250ms** as *delayOut* for clickable contents.                                                                                                                                                            |
@@ -102,7 +104,7 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 | **scheme**      | 'pro'     | *String*       | Default color scheme to use (provided by the Default skin only)                                                                                                                             |
 | **animate**     | undefined | *Bool, String* | Animation type based on Animate.css. See: Animations                                                                                                                                    |
 | **auto-hide**   | false     | *Bool, Number* | Tooltip will hide itself automatically after this timeout (milliseconds).                                                                                                                                    |
-| **mixin**       | undefined | *String*       | Tooltip mixins to use separated by spaces.                                                                                                                                    |
+| **mixin**       | undefined | *String*       | Tooltip mixins to use. Separated by spaces.                                                                                                                                    |
 
 ## jQuery Helpers
 ```javascript
@@ -131,6 +133,8 @@ el.on('protipshow', function(ItemInstance){});
 
 // Custom hide event
 el.on('protiphide', function(ItemInstance){});
+
+// Use console.log(ItemInstance) in the callback to check what options you have.
 ```
 
 ---
@@ -182,9 +186,21 @@ Sometimes you may need to have certain tooltips to have only 3 or 5 number of po
 
 *Mix as you want :)*
 
+## data-pt-placement
+
+The placement attribute allows you to change the positioning behavior of the tooltip.
+
+- **outside**: This is the default behavior. It will place the tooltip outside the specified element.
+- **inside**: It will place the tooltip inside the specified element.
+- **border**: It will place the tooltip right onto the border of the specified element.
+- **center**: It's a special placement. It will place the tooltip to the exact center. No other positions applied.
+
+**Please note that you will probably want to disable arrows for other placements than `outside`.**
+
 ---
 # Animations
 Protip has built-in support for **Animate.css** (https://daneden.github.io/animate.css/).
+You simply need to use the same name found on the linked website.
 
 Usage:
 ```html
@@ -195,19 +211,57 @@ Usage:
 
 ---
 # Skins
-Built in, docs are coming soon...
+Skins are a little bit difficult at the moment and I'm looking forward to implement a much cleaner way.
+Anyway the markup won't change too drastic so the currently made skins should work in the future as well.
+Please check Protip's SCSS files for more details. There are configurable maps,
+so you can easily add your own styles (schemes and sizes also).
 
 ---
-# TODO
-- Docs:
-  - Skins
-  - Schemes
-  - Sizes
-  - About .protip-target class
-  - Auto-interactive link detection
-  - Gravity vs. Offset relation
-- Demo (almost done)
-  
+# Good to know stuff
+
+## .protip-target class
+
+In case there is no `data-pt-title` specified, Protip will try to search a `.protip-target` class in the parents.
+If it founds, the tooltip will be appended there else it will append right into the `body` (if nothing else is specified).
+This is useful for example when using tooltips in overlays. Add `protip-target` class to your overlay container element
+which will solve `z-index` issues and tooltip removals when closing the overlay.
+
+## .protip-open class
+
+While a tooltip is opened, Protip will add `protip-open` class to your element to enable you to add custom styles for example.
+
+## .protip-close class
+
+In case you need an element to close your tooltip (inside your tooltip, like an `X` or something), just add an element
+with the class of `protip-close` which will trigger close on clicking it.
+
+## Auto-interactive link detection
+
+Protip will try to detect if your tooltip contains a link (by searching for `a` tags in it). If it does founds one, your
+tooltip will automatically become interactive so your users will be able to click the link inside the tooltip instead of closing it.
+
+## Why offset(top/left) is not working?
+
+The `data-pt-offset-(left/top)` attributes are only have effect on the default position tooltip. If it gets re-positioned
+by Gravity it won't be added to the calculations. In case you need to position re-positioned tooltips, specify it in the
+`data-pt-gravity` tag using it's own syntax.
+
+```
+data-pt-gravity="top 0 -15; bottom 0 15"
+```
+
+## MutationObserver (IE8-10 Support)
+
+Internet Explorer supports Mutation Observers only from version 11. In case you need IE8-10 support you need to include a
+Mutation Observer Polyfill. Simply include this script before Protip is loaded https://github.com/megawac/MutationObserver.js
+
+# Contribution, bugs, feature requests and suggestions
+
+Contributions are always welcome. Just fork the repository, commit your changes and create a **Pull Request**.
+
+For bugs, requests, suggestions, etc. please use the GitHub issue tracker at the Protip repository.
+
+---
 # Credits
 - nano template "engine" https://github.com/trix/nano
 - MutationObserver polyfill https://github.com/megawac/MutationObserver.js
