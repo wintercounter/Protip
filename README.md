@@ -95,9 +95,11 @@ $.protip({
 ## Attach tooltips to elements
 Tooltips are controlled over data attributes. Seriously, you can control every aspect of your tooltip from the markup, no additional JavaScript code is required.
 
-    <a href="#bar" class="protip" data-pt-title="You must be at least 18!">
-        Go to the bar!
-    </a>
+```html
+<a href="#bar" class="protip" data-pt-title="You must be at least 18!">
+    Go to the bar!
+</a>
+```
 
 What I did here was that added a protip class to my element, then defined a tooltip text in the in the data-pt-title attribute.
 Protip related attributes will always get a pt namespace so Protip won't conflict with your existing data attributes.
