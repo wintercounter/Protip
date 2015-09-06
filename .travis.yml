@@ -15,8 +15,8 @@ before_deploy:
   - npm version patch --no-git-tag-version
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
+  - git fetch
   - git checkout origin/gh-pages
-  - git fetch origin
   - git merge origin/master
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:gh-pages
