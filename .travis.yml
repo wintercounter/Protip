@@ -16,7 +16,7 @@ before_deploy:
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
   - git fetch
-  - git checkout origin/gh-pages
+  - git checkout -b gh-pages
   - git merge origin/master
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:gh-pages
