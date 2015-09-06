@@ -16,9 +16,11 @@ before_deploy:
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
   - mkdir gh-pages
+  - cd gh-pages
   - git init
   - git remote add upstream "https://${GH_TOKEN}:@github.com/DoclerLabs/Protip.git"
-  - git checkout upstream/gh-pages
+  - git fetch upstream
+  - git checkout gh-pages
   - git merge upstream master
   - git commit -a -m "Auto Build [ci skip]"
   - git push -q upstream HEAD:gh-pages
