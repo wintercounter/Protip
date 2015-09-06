@@ -522,7 +522,7 @@ require('./src/Plugin');
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
-		DEFAULT_DELAY_OUT: 250,
+		DEFAULT_DELAY_OUT: 100,
 
 		SELECTOR_PREFIX: 'protip-',
 		SELECTOR_BODY: 'body',
@@ -536,6 +536,7 @@ require('./src/Plugin');
         SELECTOR_ANIMATE: 'animated',
 		SELECTOR_TARGET: '.protip-target',
 		SELECTOR_MIXIN_PREFIX: 'protip-mixin--',
+		SELECTOR_OPEN: 'protip-open',
 
 		TEMPLATE_PROTIP: '<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div class="protip-content">{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
@@ -1174,8 +1175,10 @@ require('./src/Plugin');
 				style = new PositionCalculator(this);
 			}
 
-			// Fire show event
-			this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+			// Fire show event and add open class
+			this.el.source
+				.addClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_SHOW, this);
 
 			// Apply styles, classes
 			this.el.protip
@@ -1222,8 +1225,10 @@ require('./src/Plugin');
 				return;
 			}
 
-			// Fire show event
-			this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
+			// Fire show event and remove open class
+			this.el.source
+				.removeClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_HIDE, this);
 
 			// Remove classes and set visibility
 			this.el.protip
@@ -1404,7 +1409,7 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_detectTitle: function(){
-			if (this.data.title && this.data.title.charAt(0) === '#') {
+			if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
 			}
