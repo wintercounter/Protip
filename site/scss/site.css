@@ -288,6 +288,8 @@ input[type=range]::-ms-tooltip {
     .header nav .align-right a {
       display: block;
       float: right; }
+      .header nav .align-right a img {
+        display: block; }
   .header .github-ribbon {
     position: absolute;
     top: 0;
