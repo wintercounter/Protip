@@ -327,11 +327,8 @@ require('./src/Plugin');
 		 */
 		_onBodyClick: function(ev){
 			var el = $(ev.target);
-			var parent = el.parents('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-			var selector = C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER;
-			var container = el.hasClass(selector) ? el : parent.size() ? parent : false;
-
-			var instance = this._isInited(el) ? this.getItemInstance(el) : false;
+			var container = el.closest(C.DEFAULT_SELECTOR) || el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false;
+			var instance = this._isInited(container) ? this.getItemInstance(container) : false;
 
 			if (!instance || (instance.data.trigger !== C.TRIGGER_CLICK)) {
 				$.each(this._itemInstances, function (index, item) {
@@ -1595,6 +1592,19 @@ require('./src/Plugin');
 
 	// Public element methods
 	$.fn.extend({
+
+		/**
+		 * Simply sets tooltip to the element but it won't show.
+		 *
+		 * @returns {*}
+		 */
+		protipSet: function(override) {
+			return this.each(function(index, el) {
+				el = $(el);
+				$._protipClassInstance.getItemInstance(el).destroy();
+				$._protipClassInstance.getItemInstance(el, override);
+			});
+		},
 
 		/**
 		 * Shows the protip on an element.
