@@ -16,7 +16,7 @@ before_deploy:
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
   - mkdir tmp
-  - git clone "https://${GH_TOKEN}:@github.com"
+  - git clone "https://${GH_TOKEN}:@github.com/DoclerLabs/Protip.git"
   - git checkout gh-pages
   - git merge master
   - git commit -a -m "Auto Build [ci skip]"
