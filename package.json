@@ -1,6 +1,6 @@
 {
   "name": "protip",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A new generation jQuery Tooltip plugin.",
   "main": "main.js",
   "scripts": {
