@@ -212,7 +212,7 @@ input[type=range]::-ms-tooltip {
 
 .header {
   height: 500px;
-  margin-top: 60px;
+  margin-top: 61px;
   text-align: center;
   background: #8300FF;
   background: -moz-radial-gradient(center, ellipse cover, #8300FF 0%, #000 100%);
@@ -248,7 +248,7 @@ input[type=range]::-ms-tooltip {
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px;
+    height: 61px;
     background-color: rgba(44, 0, 85, 0.98);
     border-bottom: 1px solid #3B0073; }
     .header nav ul {

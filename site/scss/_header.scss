@@ -1,6 +1,6 @@
 .header {
     height: 500px;
-    margin-top: 60px;
+    margin-top: 61px;
     //background-color: #BCC1D8;
     text-align: center;
 
@@ -45,7 +45,7 @@
 
         position: fixed; z-index: 100;
         top: 0; left: 0;
-        width: 100%; height: 60px;
+        width: 100%; height: 61px;
         //background-color: #2C0055;
         background-color: $nav-bg;
         border-bottom: 1px solid #3B0073;
@@ -96,7 +96,7 @@
         .align-right a {
             display: block;
             float: right;
-            
+
             img {
                 display: block;
             }
