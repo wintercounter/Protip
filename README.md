@@ -57,29 +57,31 @@ $(document).ready(function(){
 ## Configuration
 You may need some global configurations on the behaviors of your tooltips. You can pass some configuration options at initialization as an object.
 
-    // Available options with default values
-    $.protip({
-        /** @type String    Selector for clickable protips */
-        selector:           C.DEFAULT_SELECTOR,
-        /** @type String    Namespace of the data attributes */
-        namespace:          C.DEFAULT_NAMESPACE,
-        /** @type String    Template of protip element */
-        protipTemplate:     C.TEMPLATE_PROTIP,
-        /** @type String    Template of the arrow element */
-        arrowTemplate:      C.TEMPLATE_ARROW,
-        /** @type String    Template of protip icon */
-        iconTemplate:       C.TEMPLATE_ICON,
-        /** @type Boolean   Should we observe whole document for assertions and removals */
-        observer:           true,
-        /** @type String    Default skin to use */
-        skin:               C.SKIN_DEFAULT,
-        /** @type String    Default size to use (provided by the Default skin only) */
-        size:               C.SIZE_DEFAULT,
-        /** @type String    Default color scheme to use (provided by the Default skin only) */
-        scheme:             C.SCHEME_DEFAULT,
-        /** @type Boolean   Global animation? */
-        animate:            false
-    });
+```javascript
+// Available options with default values
+$.protip({
+    /** @type String    Selector for protips */
+    selector:           C.DEFAULT_SELECTOR,
+    /** @type String    Namespace of the data attributes */
+    namespace:          C.DEFAULT_NAMESPACE,
+    /** @type String    Template of protip element */
+    protipTemplate:     C.TEMPLATE_PROTIP,
+    /** @type String    Template of the arrow element */
+    arrowTemplate:      C.TEMPLATE_ARROW,
+    /** @type String    Template of protip icon */
+    iconTemplate:       C.TEMPLATE_ICON,
+    /** @type Boolean   Should we observe whole document for assertions and removals */
+    observer:           true,
+    /** @type String    Default skin to use */
+    skin:               C.SKIN_DEFAULT,
+    /** @type String    Default size to use (provided by the Default skin only) */
+    size:               C.SIZE_DEFAULT,
+    /** @type String    Default color scheme to use (provided by the Default skin only) */
+    scheme:             C.SCHEME_DEFAULT,
+    /** @type Boolean   Global animation? */
+    animate:            false
+});
+```
 
 | Property       | Default  | Details   |
 |----------------|----------|-----------|
