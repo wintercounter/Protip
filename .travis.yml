@@ -15,7 +15,8 @@ before_deploy:
   - npm version patch --no-git-tag-version
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
-  - git fetch
+  - mkdir tmp
+  - git clone "https://${GH_TOKEN}:@github.com"
   - git checkout gh-pages
   - git merge master
   - git commit -a -m "Auto Build [ci skip]"
