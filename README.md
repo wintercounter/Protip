@@ -28,9 +28,29 @@ At the company I working for we use many tooltips for several purposes. Especial
 
 ---
 # Installation
-Simply just include the **protip.min.js** and **protip.min.css** files and insert `$.protip();` after the page has been loaded (probably in `$(document).ready()`).
 
-*Be sure jQuery is included.*
+Include the **protip.min.css** file in your `<head>` tag:
+
+```html
+<link rel="stylesheet" href="//cdn.rawgit.com/DoclerLabs/Protip/master/protip.min.css">
+```
+
+Include the **protip.min.js** file before your closing `</body>` tag (but after jQuery is included):
+
+```html
+<script src="//cdn.rawgit.com/DoclerLabs/Protip/master/protip.min.js"></script>
+```
+
+To initialize the plugin just insert `$.protip();` in your `$(document).ready();` section in case you already have.
+If you don't then create one:
+
+```javascript
+$(document).ready(function(){
+    $.protip();
+});
+```
+
+**You may pass a configuration object here also:** `$.protip([configObject]);`
 
 ---
 # Usage
@@ -110,8 +130,11 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 ```javascript
 var el = $('.el');
 
-// Show the tooltip of this element.
-el.protipShow();
+// Set tooltip to the element.
+el.protipSet([options]);
+
+// Show the tooltip of this element. Same as set, but it won't show.
+el.protipShow([options]);
 
 // Hide the tooltip of this element.
 el.protipHide();
@@ -135,6 +158,33 @@ el.on('protipshow', function(ItemInstance){});
 el.on('protiphide', function(ItemInstance){});
 
 // Use console.log(ItemInstance) in the callback to check what options you have.
+```
+
+### Example
+```html
+<div class="my-el protip" data-pt-title="My element"></div>
+```
+
+```javascript
+var el = $('.my-el');
+
+// Shows tooltip with title: "My element"
+el.protipShow();
+
+// Shows tooltip with title: "My new title"
+el.protipShow({
+    title: 'My new title'
+});
+
+// Changed trigger from hover to click
+el.protipSet({
+    trigger: 'click'
+});
+
+// Changed trigger from hover to click and also show it
+el.protipShow({
+    trigger: 'click'
+});
 ```
 
 ---

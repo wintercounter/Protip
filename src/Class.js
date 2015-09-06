@@ -323,11 +323,8 @@
 		 */
 		_onBodyClick: function(ev){
 			var el = $(ev.target);
-			var parent = el.parents('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-			var selector = C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER;
-			var container = el.hasClass(selector) ? el : parent.size() ? parent : false;
-
-			var instance = this._isInited(el) ? this.getItemInstance(el) : false;
+			var container = el.closest(C.DEFAULT_SELECTOR) || el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false;
+			var instance = this._isInited(container) ? this.getItemInstance(container) : false;
 
 			if (!instance || (instance.data.trigger !== C.TRIGGER_CLICK)) {
 				$.each(this._itemInstances, function (index, item) {

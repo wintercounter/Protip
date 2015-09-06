@@ -41,6 +41,19 @@
 	$.fn.extend({
 
 		/**
+		 * Simply sets tooltip to the element but it won't show.
+		 *
+		 * @returns {*}
+		 */
+		protipSet: function(override) {
+			return this.each(function(index, el) {
+				el = $(el);
+				$._protipClassInstance.getItemInstance(el).destroy();
+				$._protipClassInstance.getItemInstance(el, override);
+			});
+		},
+
+		/**
 		 * Shows the protip on an element.
 		 *
 		 * @returns {*}
