@@ -15,12 +15,11 @@ before_deploy:
   - npm version patch --no-git-tag-version
   - git commit -a -m "Auto Build [ci skip]"
   - git push origin HEAD:master
+  - mkdir tmp
+  - cd tmp
   - git remote add upstream "https://${GH_TOKEN}:@github.com/DoclerLabs/Protip.git"
-  - git fetch upstream
-  - git reset --hard upstream/master
-  - touch .
-  - git add -A .
-  - git commit -a -m "Auto Build [ci skip]"
+  - git checkout upstream/gh-pages
+  - git rebase upstream/master
   - git push -q upstream HEAD:gh-pages
 env:
   global:
