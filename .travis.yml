@@ -21,6 +21,7 @@ before_deploy:
   - git remote add upstream "https://${GH_TOKEN}:@github.com/DoclerLabs/Protip.git"
   - git fetch upstream
   - git reset upstream/gh-pages
+  - git merge master
   - touch .
   - git add -A .
   - git commit -a -m "Auto Build [ci skip]"
