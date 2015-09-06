@@ -82,6 +82,7 @@
 				offsetTop:   0,
 				offsetLeft:  0,
 				position:    C.POSITION_RIGHT,
+				placement: 	 C.PLACEMENT_OUTSIDE,
 				classes:     null,
 				arrow:       true,
 				width:       300,
@@ -245,6 +246,11 @@
 				style = new PositionCalculator(this);
 			}
 
+			// Fire show event and add open class
+			this.el.source
+				.addClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_SHOW, this);
+
 			// Apply styles, classes
 			this.el.protip
 				.css(style)
@@ -289,6 +295,11 @@
 				// Return, our timeout will call again later...
 				return;
 			}
+
+			// Fire show event and remove open class
+			this.el.source
+				.removeClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_HIDE, this);
 
 			// Remove classes and set visibility
 			this.el.protip
@@ -469,7 +480,7 @@
 		 * @private
 		 */
 		_detectTitle: function(){
-			if (this.data.title && this.data.title.charAt(0) === '#') {
+			if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
 			}

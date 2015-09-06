@@ -10788,11 +10788,8 @@ if (typeof module !== 'undefined' && module.exports) {
 		 */
 		_onBodyClick: function(ev){
 			var el = $(ev.target);
-			var parent = el.parents('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-			var selector = C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER;
-			var container = el.hasClass(selector) ? el : parent.size() ? parent : false;
-
-			var instance = this._isInited(el) ? this.getItemInstance(el) : false;
+			var container = el.closest(C.DEFAULT_SELECTOR) || el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false;
+			var instance = this._isInited(container) ? this.getItemInstance(container) : false;
 
 			if (!instance || (instance.data.trigger !== C.TRIGGER_CLICK)) {
 				$.each(this._itemInstances, function (index, item) {
@@ -10927,6 +10924,11 @@ if (typeof module !== 'undefined' && module.exports) {
 	"use strict";
 
 	var ProtipConstants = {
+		PLACEMENT_CENTER: 'center',
+		PLACEMENT_INSIDE: 'inside',
+		PLACEMENT_OUTSIDE: 'outside',
+		PLACEMENT_BORDER: 'border',
+
 		POSITION_TOP_LEFT: 'top-left',
 		POSITION_TOP: 'top',
 		POSITION_TOP_RIGHT: 'top-right',
@@ -10939,10 +10941,10 @@ if (typeof module !== 'undefined' && module.exports) {
 		POSITION_LEFT_TOP: 'left-top',
 		POSITION_LEFT: 'left',
 		POSITION_LEFT_BOTTOM: 'left-bottom',
-		POSITION_CORNER_LEFT_TOP: 'corner-left-top',
-		POSITION_CORNER_RIGHT_TOP: 'corner-right-top',
-		POSITION_CORNER_LEFT_BOTTOM: 'corner-left-bottom',
-		POSITION_CORNER_RIGHT_BOTTOM: 'corner-right-bottom',
+		POSITION_CORNER_LEFT_TOP: 'top-left-corner',
+		POSITION_CORNER_RIGHT_TOP: 'top-right-corner',
+		POSITION_CORNER_LEFT_BOTTOM: 'bottom-left-corner',
+		POSITION_CORNER_RIGHT_BOTTOM: 'bottom-right-corner',
 
 		TRIGGER_CLICK: 'click',
 		TRIGGER_HOVER: 'hover',
@@ -10973,10 +10975,12 @@ if (typeof module !== 'undefined' && module.exports) {
 		EVENT_MOUSELEAVE: 'mouseleave',
 		EVENT_CLICK: 'click',
 		EVENT_RESIZE: 'resize',
+		EVENT_PROTIP_SHOW: 'protipshow',
+		EVENT_PROTIP_HIDE: 'protiphide',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
-		DEFAULT_DELAY_OUT: 250,
+		DEFAULT_DELAY_OUT: 100,
 
 		SELECTOR_PREFIX: 'protip-',
 		SELECTOR_BODY: 'body',
@@ -10989,8 +10993,10 @@ if (typeof module !== 'undefined' && module.exports) {
         SELECTOR_SCHEME_PREFIX: '--scheme-',
         SELECTOR_ANIMATE: 'animated',
 		SELECTOR_TARGET: '.protip-target',
+		SELECTOR_MIXIN_PREFIX: 'protip-mixin--',
+		SELECTOR_OPEN: 'protip-open',
 
-		TEMPLATE_PROTIP: '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
+		TEMPLATE_PROTIP: '<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div class="protip-content">{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
 
 		ATTR_WIDTH: 'width',
@@ -11463,6 +11469,7 @@ if (typeof module !== 'undefined' && module.exports) {
 				offsetTop:   0,
 				offsetLeft:  0,
 				position:    C.POSITION_RIGHT,
+				placement: 	 C.PLACEMENT_OUTSIDE,
 				classes:     null,
 				arrow:       true,
 				width:       300,
@@ -11474,7 +11481,8 @@ if (typeof module !== 'undefined' && module.exports) {
 				size:        undefined,
 				scheme:      undefined,
 				animate:     undefined,
-				autoHide:    false
+				autoHide:    false,
+				mixin:       undefined
 			};
 
 			/** @type {object}    Object storing jQuery elements */
@@ -11554,6 +11562,9 @@ if (typeof module !== 'undefined' && module.exports) {
 				.data(this._namespaced(C.PROP_IDENTIFIER), false)
 				.removeData();
 			this.classInstance.onItemDestoryed(this.data.identifier);
+			$.each(this._task, function(k, task){
+				clearTimeout(task);
+			});
 		},
 
 		/**
@@ -11622,6 +11633,11 @@ if (typeof module !== 'undefined' && module.exports) {
 				style = new PositionCalculator(this);
 			}
 
+			// Fire show event and add open class
+			this.el.source
+				.addClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_SHOW, this);
+
 			// Apply styles, classes
 			this.el.protip
 				.css(style)
@@ -11667,6 +11683,11 @@ if (typeof module !== 'undefined' && module.exports) {
 				return;
 			}
 
+			// Fire show event and remove open class
+			this.el.source
+				.removeClass(C.SELECTOR_OPEN)
+				.trigger(C.EVENT_PROTIP_HIDE, this);
+
 			// Remove classes and set visibility
 			this.el.protip
 				.removeClass(C.SELECTOR_SHOW)
@@ -11677,6 +11698,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		},
 
 		/**
+		 * Returns arrow offset (width/height)
 		 *
 		 * @returns {{width: number, height: number}}
 		 */
@@ -11788,8 +11810,21 @@ if (typeof module !== 'undefined' && module.exports) {
 			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
 			// Custom classes
 			this.data.classes && classList.push(this.data.classes);
+			// Mixin classes
+			this.data.mixin && classList.push(this._parseMixins());
 
 			return classList.join(' ');
+		},
+
+
+		_parseMixins: function(){
+			var mixin = [];
+
+			this.data.mixin && this.data.mixin.split(' ').forEach(function(val){
+				val && mixin.push(C.SELECTOR_MIXIN_PREFIX + val);
+			}, this);
+
+			return mixin.join(' ');
 		},
 
 		/**
@@ -11832,7 +11867,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * @private
 		 */
 		_detectTitle: function(){
-			if (this.data.title && this.data.title.charAt(0) === '#') {
+			if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
 			}
@@ -12020,6 +12055,19 @@ if (typeof module !== 'undefined' && module.exports) {
 	$.fn.extend({
 
 		/**
+		 * Simply sets tooltip to the element but it won't show.
+		 *
+		 * @returns {*}
+		 */
+		protipSet: function(override) {
+			return this.each(function(index, el) {
+				el = $(el);
+				$._protipClassInstance.getItemInstance(el).destroy();
+				$._protipClassInstance.getItemInstance(el, override);
+			});
+		},
+
+		/**
 		 * Shows the protip on an element.
 		 *
 		 * @returns {*}
@@ -12201,6 +12249,14 @@ if (typeof module !== 'undefined' && module.exports) {
 			this._position     = position || this._itemInstance.data.position;
 
 			/**
+			 * Placement.
+			 *
+			 * @type {string}
+			 * @private
+			 */
+			this._placement    = this._itemInstance.data.placement;
+
+			/**
 			 * Offset of the tooltip.
 			 *
 			 * @type {{top: number, left: number}}
@@ -12249,88 +12305,137 @@ if (typeof module !== 'undefined' && module.exports) {
 			var arrowOffset = this._itemInstance.getArrowOffset();
 			var globalOffset = this._itemInstance.classInstance.settings.offset;
 
-			switch(this._position){
-				case C.POSITION_TOP:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = ((this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left) + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_TOP_LEFT:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_TOP_RIGHT:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_RIGHT:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_RIGHT_TOP:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_RIGHT_BOTTOM:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_BOTTOM_LEFT:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_BOTTOM_RIGHT:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_LEFT:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_LEFT_TOP:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_LEFT_BOTTOM:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_LEFT_TOP:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_LEFT_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_RIGHT_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_RIGHT_TOP:
-                    this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				default: break;
+			if (this._placement !== C.PLACEMENT_CENTER) {
+				switch (this._position) {
+					case C.POSITION_TOP:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = ((this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left) + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
+						break;
+					case C.POSITION_TOP_LEFT:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
+						break;
+					case C.POSITION_TOP_RIGHT:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
+						break;
+					case C.POSITION_RIGHT:
+						this._offset.left += (globalOffset + arrowOffset.width);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						break;
+					case C.POSITION_RIGHT_TOP:
+						this._offset.left += (globalOffset + arrowOffset.width);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						break;
+					case C.POSITION_RIGHT_BOTTOM:
+						this._offset.left += (globalOffset + arrowOffset.width);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						break;
+					case C.POSITION_BOTTOM:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
+						break;
+					case C.POSITION_BOTTOM_LEFT:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
+						break;
+					case C.POSITION_BOTTOM_RIGHT:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
+						break;
+					case C.POSITION_LEFT:
+						this._offset.left += (globalOffset + arrowOffset.width) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						break;
+					case C.POSITION_LEFT_TOP:
+						this._offset.left += (globalOffset + arrowOffset.width) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						break;
+					case C.POSITION_LEFT_BOTTOM:
+						this._offset.left += (globalOffset + arrowOffset.width) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						break;
+					case C.POSITION_CORNER_LEFT_TOP:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  += this._protip.height / 2;
+						break;
+					case C.POSITION_CORNER_LEFT_BOTTOM:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  -= this._protip.height / 2;
+						break;
+					case C.POSITION_CORNER_RIGHT_BOTTOM:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  -= this._protip.height / 2;
+						break;
+					case C.POSITION_CORNER_RIGHT_TOP:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  += this._protip.height / 2;
+						break;
+					default:
+						break;
+				}
+			}
+
+			// Center Placement
+			else {
+				position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
+				position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
 			}
 
 			position.left = position.left + 'px';

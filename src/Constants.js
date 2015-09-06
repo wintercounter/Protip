@@ -15,6 +15,11 @@
 	"use strict";
 
 	var ProtipConstants = {
+		PLACEMENT_CENTER: 'center',
+		PLACEMENT_INSIDE: 'inside',
+		PLACEMENT_OUTSIDE: 'outside',
+		PLACEMENT_BORDER: 'border',
+
 		POSITION_TOP_LEFT: 'top-left',
 		POSITION_TOP: 'top',
 		POSITION_TOP_RIGHT: 'top-right',
@@ -61,10 +66,12 @@
 		EVENT_MOUSELEAVE: 'mouseleave',
 		EVENT_CLICK: 'click',
 		EVENT_RESIZE: 'resize',
+		EVENT_PROTIP_SHOW: 'protipshow',
+		EVENT_PROTIP_HIDE: 'protiphide',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
-		DEFAULT_DELAY_OUT: 250,
+		DEFAULT_DELAY_OUT: 100,
 
 		SELECTOR_PREFIX: 'protip-',
 		SELECTOR_BODY: 'body',
@@ -78,6 +85,7 @@
         SELECTOR_ANIMATE: 'animated',
 		SELECTOR_TARGET: '.protip-target',
 		SELECTOR_MIXIN_PREFIX: 'protip-mixin--',
+		SELECTOR_OPEN: 'protip-open',
 
 		TEMPLATE_PROTIP: '<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div class="protip-content">{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
