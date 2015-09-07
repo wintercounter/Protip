@@ -10498,7 +10498,7 @@ if (typeof module !== 'undefined' && module.exports) {
 	// Lower the interval time, we don't need that much accuracy.
 	try {
 		window.MutationObserver._period = 100;
-	} catch(e){
+	} catch(e) {
 		console.error("Protip: MutationObserver polyfill haven't been loaded!");
 		// "Polyfill" for MutationObserver so Protip won't break if the real polyfill not included
 		window.MutationObserver = window.MutationObserver || function(){this.disconnect=this.observe=function(){}};
