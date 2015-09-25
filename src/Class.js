@@ -82,7 +82,9 @@
 			/** @type Boolean   Global animation? */
 			animate:            false,
 			/** @type Number    Global offset of all tooltips. */
-			offset:             0
+			offset:             0,
+			/** @type Boolean   Forces the tooltip to have min-width by it's width calculation. */
+			forceMinWidth:      true
 		},
 
 		/**

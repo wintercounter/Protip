@@ -165,6 +165,21 @@
 		 * @private
 		 */
 		_setProtipDimensions: function(){
+			if (this._item.classInstance.settings.forceMinWidth) {
+				this._item.el.protip.css({
+					position: 'fixed',
+					left: 0,
+					top: 0
+				});
+
+				var minWidth = this._item.el.protip.outerWidth();
+				this._item.el.protip
+					.css('position', '')
+					.css('left', '')
+					.css('top', '')
+					.css('min-width', minWidth + 'px');
+			}
+
 			this._dimensions = {
 				width:  this._item.el.protip.outerWidth(),
 				height: this._item.el.protip.outerHeight(),
