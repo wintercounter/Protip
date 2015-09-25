@@ -11892,7 +11892,7 @@ if (typeof module !== 'undefined' && module.exports) {
 			}
 
 			// If has target container
-			else if (target === C.SELECTOR_BODY && this.el.source.closest(C.SELECTOR_TARGET).size()) {
+			else if (target === C.SELECTOR_BODY && this.el.source.closest(C.SELECTOR_TARGET).length) {
 				target = this.el.source.closest(C.SELECTOR_TARGET);
 			}
 
