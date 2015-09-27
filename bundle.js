@@ -896,15 +896,17 @@ require('./src/Plugin');
 				this._item.el.protip.css({
 					position: 'fixed',
 					left: 0,
-					top: 0
+					top: 0,
+					minWidth: 0
 				});
 
-				var minWidth = this._item.el.protip.outerWidth();
-				this._item.el.protip
-					.css('position', '')
-					.css('left', '')
-					.css('top', '')
-					.css('min-width', minWidth + 'px');
+				var minWidth = this._item.el.protip.width();
+				this._item.el.protip.css({
+					position: '',
+					left: '',
+					top: '',
+					minWidth: minWidth + 'px'
+				});
 			}
 
 			this._dimensions = {
