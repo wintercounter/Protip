@@ -19,7 +19,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./Item')
 		);
@@ -575,7 +575,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
@@ -683,14 +683,10 @@ require('./src/Plugin');
 			// Else parse our syntax.
 			else {
 				var keys = [],
-					hasRest = false,
-					iter = -1,
-					firstPos,
-					res;
+					hasRest = false;
 
 				// Split at ; and check each values.
 				this._finals = this._input.split(';').map(function (a) {
-					iter++;
 					a = a.trim();
 
 					// Attach all others
@@ -705,17 +701,11 @@ require('./src/Plugin');
 						});
 						keys.push(value[0]);
 
-						res = {
+						return {
 							lvl:  1, key: value[0],
 							left: parseInt(value[1], 10) || 0,
 							top:  parseInt(value[2], 10) || 0
 						};
-
-						if (iter === 0) {
-							firstPos = res;
-						}
-
-						return res;
 					}
 				}).filter(function (a) {
 					return !!a;
@@ -758,7 +748,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityParser'),
 			require('./PositionCalculator')
@@ -829,10 +819,13 @@ require('./src/Plugin');
 			var i;
 			for (i = 0; i < this._positionList.length; i++) {
 				// We had a successful test, break the loop.
-				if (this._test(this._positionList[i])){
+				if (this._test(this._positionList[i])) {
 					break;
 				}
 			}
+
+			// Set first for prior
+			this._item.data.position = this._positionList[0].key;
 
 			// Return the result if we had one. Return values for the default position if not.
 			return this._result || new PositionCalculator(this._item);
@@ -983,7 +976,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityTester'),
 			require('./PositionCalculator')
@@ -1603,7 +1596,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Class'),
 			require('./Constants')
 		);
@@ -1747,7 +1740,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
