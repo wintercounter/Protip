@@ -11361,7 +11361,7 @@ if (typeof module !== 'undefined' && module.exports) {
 					minWidth: 0
 				});
 
-				var minWidth = this._item.el.protip.width();
+				var minWidth = this._item.el.protip.width() + 1; // Thanks Firefox
 				this._item.el.protip.css({
 					position: '',
 					left: '',
