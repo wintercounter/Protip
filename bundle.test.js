@@ -11359,16 +11359,12 @@ if (typeof module !== 'undefined' && module.exports) {
 			if (this._item.classInstance.settings.forceMinWidth) {
 				this._item.el.protip.css({
 					position: 'fixed',
-					left: 0,
-					top: 0,
 					minWidth: 0
 				});
 
 				var minWidth = this._item.el.protip.width() + 1; // Thanks Firefox
 				this._item.el.protip.css({
 					position: '',
-					left: '',
-					top: '',
 					minWidth: minWidth + 'px'
 				});
 			}
