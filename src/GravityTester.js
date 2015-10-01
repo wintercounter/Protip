@@ -89,10 +89,13 @@
 			var i;
 			for (i = 0; i < this._positionList.length; i++) {
 				// We had a successful test, break the loop.
-				if (this._test(this._positionList[i])){
+				if (this._test(this._positionList[i])) {
 					break;
 				}
 			}
+
+			// Set first for prior
+			this._item.data.position = this._positionList[0].key;
 
 			// Return the result if we had one. Return values for the default position if not.
 			return this._result || new PositionCalculator(this._item);

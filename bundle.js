@@ -19,7 +19,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants'),
 			require('./Item')
 		);
@@ -575,7 +575,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants')
 		);
 	} else {
@@ -683,10 +683,14 @@ require('./src/Plugin');
 			// Else parse our syntax.
 			else {
 				var keys = [],
-					hasRest = false;
+					hasRest = false,
+					iter = -1,
+					firstPos,
+					res;
 
 				// Split at ; and check each values.
 				this._finals = this._input.split(';').map(function (a) {
+					iter++;
 					a = a.trim();
 
 					// Attach all others
@@ -701,14 +705,20 @@ require('./src/Plugin');
 						});
 						keys.push(value[0]);
 
-						return {
+						res = {
 							lvl:  1, key: value[0],
 							left: parseInt(value[1], 10) || 0,
 							top:  parseInt(value[2], 10) || 0
 						};
+
+						if (iter === 0) {
+							firstPos = res;
+						}
+
+						return res;
 					}
 				}).filter(function (a) {
-					return !!a
+					return !!a;
 				});
 
 				if (hasRest) {
@@ -748,7 +758,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants'),
 			require('./GravityParser'),
 			require('./PositionCalculator')
@@ -973,7 +983,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants'),
 			require('./GravityTester'),
 			require('./PositionCalculator')
@@ -1593,7 +1603,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Class'),
 			require('./Constants')
 		);
@@ -1737,7 +1747,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
+			(typeof window !== "undefined" ? window.jQuery : typeof global !== "undefined" ? global.jQuery : null),
 			require('./Constants')
 		);
 	} else {
