@@ -107,8 +107,8 @@
 		 * @private
 		 */
 		_test: function(position){
-			var result = new PositionCalculator(this._item, position.key, position);
 			this._setProtipMinWidth();
+			var result = new PositionCalculator(this._item, position.key, position);
 			this._item.el.protip.css(result);
 			this._setProtipDimensions();
 
