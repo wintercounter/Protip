@@ -837,6 +837,7 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_test: function(position){
+			this._setProtipMinWidth();
 			var result = new PositionCalculator(this._item, position.key, position);
 			this._item.el.protip.css(result);
 			this._setProtipDimensions();
@@ -890,24 +891,35 @@ require('./src/Plugin');
 		},
 
 		/**
-		 * Gets/sets initial protip dimensions to caclulate with.
+		 * Sets the min width of the tooltip.
 		 *
 		 * @private
 		 */
-		_setProtipDimensions: function(){
+		_setProtipMinWidth: function() {
 			if (this._item.classInstance.settings.forceMinWidth) {
 				this._item.el.protip.css({
 					position: 'fixed',
+					left: 0,
+					top: 0,
 					minWidth: 0
 				});
 
 				var minWidth = this._item.el.protip.width() + 1; // Thanks Firefox
 				this._item.el.protip.css({
 					position: '',
+					left: '',
+					top: '',
 					minWidth: minWidth + 'px'
 				});
 			}
+		},
 
+		/**
+		 * Gets/sets initial protip dimensions to caclulate with.
+		 *
+		 * @private
+		 */
+		_setProtipDimensions: function(){
 			this._dimensions = {
 				width:  this._item.el.protip.outerWidth(),
 				height: this._item.el.protip.outerHeight(),
