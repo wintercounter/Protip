@@ -10789,15 +10789,18 @@ if (typeof module !== 'undefined' && module.exports) {
 		 * @private
 		 */
 		_onBodyClick: function(ev){
-			var el = $(ev.target);
-			var container = el.closest(C.DEFAULT_SELECTOR) || el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false;
-			var instance = this._isInited(container) ? this.getItemInstance(container) : false;
+			var el                = $(ev.target);
+			var container         = el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false;
+			var source            = el.closest(C.DEFAULT_SELECTOR);
+			var sourceInstance    = this._isInited(source) ? this.getItemInstance(source) : false;
+			var containerInstance = this._isInited(container) ? this.getItemInstance(container) : false;
 
-			if (!instance || (instance.data.trigger !== C.TRIGGER_CLICK)) {
+			if (!containerInstance || containerInstance && containerInstance.data.trigger !== C.TRIGGER_CLICK) {
 				$.each(this._itemInstances, function (index, item) {
 					item.isVisible()
 					&& item.data.trigger === C.TRIGGER_CLICK
 					&& (!container || item.el.protip.get(0) !== container.get(0))
+					&& (!source || item.el.source.get(0) !== source.get(0))
 					&& item.hide();
 				});
 			}
