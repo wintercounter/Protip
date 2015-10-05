@@ -1,7 +1,7 @@
-.protip-mixin--css {
-    &-no-transition {transition: all 0s !important}
-    &-bold          {font-weight: bold !important}
-    &-italic        {font-style: italic !important}
+body .protip-container.protip-mixin--css {
+    &-no-transition {transition: all 0s}
+    &-bold          {font-weight: bold}
+    &-italic        {font-style: italic}
     &-no-style      {
         background: none;
         color: inherit;
