@@ -95,7 +95,10 @@
 
         SKIN_DEFAULT: 'default',
         SIZE_DEFAULT: 'normal',
-        SCHEME_DEFAULT: 'pro'
+        SCHEME_DEFAULT: 'pro',
+
+		PSEUDO_NEXT: 'next',
+		PSEUDO_PREV: 'prev'
 	};
 
 	ProtipConstants.TEMPLATE_ARROW = '<span class="' + ProtipConstants.SELECTOR_PREFIX + ProtipConstants.SELECTOR_ARROW + '"></span>';
