@@ -548,7 +548,10 @@ require('./src/Plugin');
 
         SKIN_DEFAULT: 'default',
         SIZE_DEFAULT: 'normal',
-        SCHEME_DEFAULT: 'pro'
+        SCHEME_DEFAULT: 'pro',
+
+		PSEUDO_NEXT: 'next',
+		PSEUDO_PREV: 'prev'
 	};
 
 	ProtipConstants.TEMPLATE_ARROW = '<span class="' + ProtipConstants.SELECTOR_PREFIX + ProtipConstants.SELECTOR_ARROW + '"></span>';
@@ -1442,6 +1445,18 @@ require('./src/Plugin');
 			if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
+			}
+			else if (this.data.title && this.data.title.charAt(0) === ':') {
+				var which = this.data.title.substring(1);
+				switch (which) {
+					case C.PSEUDO_NEXT:
+						this.data.title = this.el.source.next().html();
+						break;
+					case C.PSEUDO_PREV:
+						this.data.title = this.el.source.prev().html();
+						break;
+					default: break;
+				}
 			}
 
 			// Set to interactive if detects link
