@@ -2,4 +2,12 @@
     &-no-transition {transition: all 0s !important}
     &-bold          {font-weight: bold !important}
     &-italic        {font-style: italic !important}
+    &-no-style      {
+        background: none;
+        color: inherit;
+
+        .protip-arrow {
+            display: none;
+        }
+    }
 }
