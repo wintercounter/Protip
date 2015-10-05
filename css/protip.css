@@ -1,16 +1,16 @@
-.protip-mixin--css-no-transition {
-  transition: all 0s !important; }
+body .protip-container.protip-mixin--css-no-transition {
+  transition: all 0s; }
 
-.protip-mixin--css-bold {
-  font-weight: bold !important; }
+body .protip-container.protip-mixin--css-bold {
+  font-weight: bold; }
 
-.protip-mixin--css-italic {
-  font-style: italic !important; }
+body .protip-container.protip-mixin--css-italic {
+  font-style: italic; }
 
-.protip-mixin--css-no-style {
+body .protip-container.protip-mixin--css-no-style {
   background: none;
   color: inherit; }
-  .protip-mixin--css-no-style .protip-arrow {
+  body .protip-container.protip-mixin--css-no-style .protip-arrow {
     display: none; }
 
 .protip-container {
