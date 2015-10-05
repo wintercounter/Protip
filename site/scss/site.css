@@ -425,6 +425,9 @@ input[type=range]::-ms-tooltip {
 md-content > div > div:nth-child(even) {
   background-color: #efefef; }
 
+md-content > div > div:nth-child(odd) {
+  background-color: #fff; }
+
 md-content > div > div {
   float: left;
   clear: both;
