@@ -7,6 +7,12 @@
 .protip-mixin--css-italic {
   font-style: italic !important; }
 
+.protip-mixin--css-no-style {
+  background: none;
+  color: inherit; }
+  .protip-mixin--css-no-style .protip-arrow {
+    display: none; }
+
 .protip-container {
   position: absolute;
   left: 0;
