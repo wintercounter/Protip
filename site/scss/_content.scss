@@ -18,6 +18,10 @@ md-content {
             background-color: #efefef;
         }
 
+        > div:nth-child(odd) {
+            background-color: #fff;
+        }
+
         > div {
             float: left; clear: both;
             width: 100%;

@@ -21,6 +21,8 @@
 - Animations support
 - Mixins (CSS only, JS based coming soon)
 - Custom event callbacks
+- UMD Support
+
 
 ---
 # Introduction
