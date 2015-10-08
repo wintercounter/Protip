@@ -81,7 +81,9 @@ $.protip({
     /** @type String    Default color scheme to use (provided by the Default skin only) */
     scheme:             C.SCHEME_DEFAULT,
     /** @type Boolean   Global animation? */
-    animate:            false
+    animate:            false,
+    /** @type Number    Default time for onResize event timeout. */
+    delayResize:        100
 });
 ```
 
