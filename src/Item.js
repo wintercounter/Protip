@@ -249,7 +249,7 @@
 
 			// Fire show event and add open class
 			this.el.source.addClass(C.SELECTOR_OPEN);
-			!preventTrigger && this.el.trigger(C.EVENT_PROTIP_SHOW, this);
+			!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
 
 			// Apply styles, classes
 			this.el.protip
