@@ -10549,7 +10549,9 @@ if (typeof module !== 'undefined' && module.exports) {
 			/** @type Number    Global offset of all tooltips. */
 			offset:             0,
 			/** @type Boolean   Forces the tooltip to have min-width by it's width calculation. */
-			forceMinWidth:      true
+			forceMinWidth:      true,
+			/** @type Number    Default time for OnResize event Timeout. */
+			delayResize:        100
 		},
 
 		/**
@@ -10781,7 +10783,7 @@ if (typeof module !== 'undefined' && module.exports) {
 				this._showAll(true, true);
 				this._task.resize = undefined;
 				this._visibleBeforeResize = [];
-			}.bind(this), 100);
+			}.bind(this), this.settings.delayResize);
 		},
 
 		/**
