@@ -267,23 +267,25 @@
 
 		/**
 		 * Method to hide all protips.
-		 *
+		 * @param force          [boolean] Force hide?
+		 * @param preventTrigger [boolean] Prevent hide event from triggering?
 		 * @private
 		 */
-		_hideAll: function(){
+		_hideAll: function(force, preventTrigger){
 			$.each(this._itemInstances, $.proxy(function(index, item){
-				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide();
+				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide(force, preventTrigger);
 			}, this));
 		},
 
 		/**
 		 * Method to show all protips.
-		 *
+		 * @param force          [boolean] Force show?
+		 * @param preventTrigger [boolean] Prevent show event from triggering?
 		 * @private
 		 */
-		_showAll: function(){
+		_showAll: function(force, preventTrigger){
 			this._visibleBeforeResize.forEach(function(item){
-				item.show();
+				item.show(force, preventTrigger);
 			});
 		},
 
@@ -308,10 +310,10 @@
 		 * @private
 		 */
 		_onResize: function(){
-			!this._task.resize && this._hideAll();
+			!this._task.resize && this._hideAll(true, true);
 			this._task.resize && clearTimeout(this._task.resize);
 			this._task.resize = setTimeout(function () {
-				this._showAll();
+				this._showAll(true, true);
 				this._task.resize = undefined;
 				this._visibleBeforeResize = [];
 			}.bind(this), 100);

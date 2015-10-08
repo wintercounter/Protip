@@ -204,9 +204,10 @@
 		/**
 		 * Make a tooltip visible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipShow won't be triggered.
 		 */
-		show: function(force){
+		show: function(force, preventTrigger){
 
 			// No title? Why tooltip?
 			if (!this.data.title) {
@@ -247,9 +248,8 @@
 			}
 
 			// Fire show event and add open class
-			this.el.source
-				.addClass(C.SELECTOR_OPEN)
-				.trigger(C.EVENT_PROTIP_SHOW, this);
+			this.el.source.addClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.trigger(C.EVENT_PROTIP_SHOW, this);
 
 			// Apply styles, classes
 			this.el.protip
@@ -278,9 +278,10 @@
 		/**
 		 * Make a tooltip invisible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipHide event won't be triggered.
 		 */
-		hide: function(force){
+		hide: function(force, preventTrigger) {
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
@@ -297,9 +298,8 @@
 			}
 
 			// Fire show event and remove open class
-			this.el.source
-				.removeClass(C.SELECTOR_OPEN)
-				.trigger(C.EVENT_PROTIP_HIDE, this);
+			this.el.source.removeClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
 
 			// Remove classes and set visibility
 			this.el.protip
