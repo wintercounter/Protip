@@ -271,23 +271,25 @@ require('./src/Plugin');
 
 		/**
 		 * Method to hide all protips.
-		 *
+		 * @param force          [boolean] Force hide?
+		 * @param preventTrigger [boolean] Prevent hide event from triggering?
 		 * @private
 		 */
-		_hideAll: function(){
+		_hideAll: function(force, preventTrigger){
 			$.each(this._itemInstances, $.proxy(function(index, item){
-				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide();
+				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide(force, preventTrigger);
 			}, this));
 		},
 
 		/**
 		 * Method to show all protips.
-		 *
+		 * @param force          [boolean] Force show?
+		 * @param preventTrigger [boolean] Prevent show event from triggering?
 		 * @private
 		 */
-		_showAll: function(){
+		_showAll: function(force, preventTrigger){
 			this._visibleBeforeResize.forEach(function(item){
-				item.show();
+				item.show(force, preventTrigger);
 			});
 		},
 
@@ -312,10 +314,10 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_onResize: function(){
-			!this._task.resize && this._hideAll();
+			!this._task.resize && this._hideAll(true, true);
 			this._task.resize && clearTimeout(this._task.resize);
 			this._task.resize = setTimeout(function () {
-				this._showAll();
+				this._showAll(true, true);
 				this._task.resize = undefined;
 				this._visibleBeforeResize = [];
 			}.bind(this), 100);
@@ -1166,9 +1168,10 @@ require('./src/Plugin');
 		/**
 		 * Make a tooltip visible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipShow won't be triggered.
 		 */
-		show: function(force){
+		show: function(force, preventTrigger){
 
 			// No title? Why tooltip?
 			if (!this.data.title) {
@@ -1209,9 +1212,8 @@ require('./src/Plugin');
 			}
 
 			// Fire show event and add open class
-			this.el.source
-				.addClass(C.SELECTOR_OPEN)
-				.trigger(C.EVENT_PROTIP_SHOW, this);
+			this.el.source.addClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.trigger(C.EVENT_PROTIP_SHOW, this);
 
 			// Apply styles, classes
 			this.el.protip
@@ -1240,9 +1242,10 @@ require('./src/Plugin');
 		/**
 		 * Make a tooltip invisible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipHide event won't be triggered.
 		 */
-		hide: function(force){
+		hide: function(force, preventTrigger) {
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
@@ -1259,9 +1262,8 @@ require('./src/Plugin');
 			}
 
 			// Fire show event and remove open class
-			this.el.source
-				.removeClass(C.SELECTOR_OPEN)
-				.trigger(C.EVENT_PROTIP_HIDE, this);
+			this.el.source.removeClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
 
 			// Remove classes and set visibility
 			this.el.protip
