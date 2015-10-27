@@ -20,7 +20,8 @@ body .protip-container.protip-mixin--css-no-style {
   z-index: 50;
   line-height: 1;
   opacity: 0;
-  pointer-events: none; }
+  pointer-events: none;
+  box-sizing: border-box; }
   .protip-container > i {
     position: absolute;
     left: 10px; }
