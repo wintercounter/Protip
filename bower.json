@@ -1,0 +1,37 @@
+{
+  "name": "protip",
+  "description": "A new generation jQuery Tooltip plugin.",
+  "main": "protip.min.js",
+  "authors": [
+    "Victor Vincent <wintercounter@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "tooltip",
+    "jquery",
+    "plugin",
+    "observer",
+    "live",
+    "gravity",
+    "auto"
+  ],
+  "homepage": "http://protip.rocks",
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "img",
+    "site",
+    "src",
+    "CNAME",
+    "bundle.test.js",
+    "index.html",
+    "main.js"
+  ]
+}
