@@ -90,7 +90,7 @@ $.protip({
     /** @type Number    Default time for onResize event timeout. */
     delayResize:        100,
     /** @type Object    Default data-pt-* values for a tooltip */
-    defaults: {...}
+    defaults:           {...}
 });
 ```
 
