@@ -31,6 +31,8 @@ At the company I working for we use many tooltips for several purposes. Especial
 ---
 # Installation
 
+## The simple way 
+
 Include the **protip.min.css** file in your `<head>` tag:
 
 ```html
@@ -43,6 +45,17 @@ Include the **protip.min.js** file before your closing `</body>` tag (but after 
 <script src="//cdn.rawgit.com/DoclerLabs/Protip/master/protip.min.js"></script>
 ```
 
+## Get files using npm
+```
+npm install protip --save
+```
+
+## Get files using bower
+```
+bower install protip
+```
+
+## Initialize plugin
 To initialize the plugin just insert `$.protip();` in your `$(document).ready();` section in case you already have.
 If you don't then create one:
 
@@ -74,16 +87,10 @@ $.protip({
     iconTemplate:       C.TEMPLATE_ICON,
     /** @type Boolean   Should we observe whole document for assertions and removals */
     observer:           true,
-    /** @type String    Default skin to use */
-    skin:               C.SKIN_DEFAULT,
-    /** @type String    Default size to use (provided by the Default skin only) */
-    size:               C.SIZE_DEFAULT,
-    /** @type String    Default color scheme to use (provided by the Default skin only) */
-    scheme:             C.SCHEME_DEFAULT,
-    /** @type Boolean   Global animation? */
-    animate:            false,
     /** @type Number    Default time for onResize event timeout. */
-    delayResize:        100
+    delayResize:        100,
+    /** @type Object    Default data-pt-* values for a tooltip */
+    defaults: {...}
 });
 ```
 
@@ -95,6 +102,8 @@ $.protip({
 | **arrowTemplate**  | See code | Template of a protip arrow. |
 | **iconTemplate**   | See code | Template of a protip with icon. |
 | **observer**       | true     | If true, we will watch for changes in the DOM and check if a protip needs to be showed or removed. |
+| **delayResize**    | 100      | Default time for onResize event timeout. After a resize, we need to reposition the tooltips, but don't want to run on every fired resize event. |
+| **defaults**       | {...}    | Default (global) values for a tooltip. Override any available `data-pt-*` attributes. |
 
 ## Attach tooltips to elements
 Tooltips are controlled over data attributes. Seriously, you can control every aspect of your tooltip from the markup, no additional JavaScript code is required.
@@ -141,7 +150,7 @@ var el = $('.el');
 // Set tooltip to the element.
 el.protipSet([options]);
 
-// Show the tooltip of this element. Same as set, but it won't show.
+// Show the tooltip of this element. Same as set, but it will also show.
 el.protipShow([options]);
 
 // Hide the tooltip of this element.

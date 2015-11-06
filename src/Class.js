@@ -34,7 +34,7 @@
 	try {
 		window.MutationObserver._period = 100;
 	} catch(e) {
-		console.error("Protip: MutationObserver polyfill haven't been loaded!");
+		console.warn("Protip: MutationObserver polyfill haven't been loaded!");
 		// "Polyfill" for MutationObserver so Protip won't break if the real polyfill not included
 		window.MutationObserver = window.MutationObserver || function(){this.disconnect=this.observe=function(){}};
 	}
@@ -73,20 +73,39 @@
 			iconTemplate:       C.TEMPLATE_ICON,
 			/** @type Boolean   Should we observe whole document for assertions and removals */
 			observer:           true,
-			/** @type String    Default skin to use */
-			skin:               C.SKIN_DEFAULT,
-			/** @type String    Default size to use (provided by the Default skin only) */
-			size:               C.SIZE_DEFAULT,
-			/** @type String    Default color scheme to use (provided by the Default skin only) */
-			scheme:             C.SCHEME_DEFAULT,
-			/** @type Boolean   Global animation? */
-			animate:            false,
 			/** @type Number    Global offset of all tooltips. */
 			offset:             0,
 			/** @type Boolean   Forces the tooltip to have min-width by it's width calculation. */
 			forceMinWidth:      true,
 			/** @type Number    Default time for OnResize event Timeout. */
-			delayResize:        100
+			delayResize:        100,
+			/** @type Object    Default data-pt-* values for a tooltip */
+			defaults: {
+				trigger:     C.TRIGGER_HOVER,
+				title:       null,
+				inited:      false,
+				delayIn:     0,
+				delayOut:    0,
+				interactive: false,
+				gravity:     true,
+				offsetTop:   0,
+				offsetLeft:  0,
+				position:    C.POSITION_RIGHT,
+				placement: 	 C.PLACEMENT_OUTSIDE,
+				classes:     null,
+				arrow:       true,
+				width:       300,
+				identifier:  false,
+				icon:        false,
+				observer:    false,
+				target:      C.SELECTOR_BODY,
+				skin:        C.SKIN_DEFAULT,
+				size:        C.SIZE_DEFAULT,
+				scheme:      C.SCHEME_DEFAULT,
+				animate:     false,
+				autoHide:    false,
+				mixin:       undefined
+			}
 		},
 
 		/**
@@ -101,7 +120,7 @@
 			 *
 			 * @type Object
 			 */
-			this.settings = $.extend({}, this._defaults, settings);
+			this.settings = $.extend(true, {}, this._defaults, settings);
 
 			/**
 			 * Object storing the Item Class Instances
