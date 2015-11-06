@@ -38,7 +38,7 @@ require('./src/Plugin');
 	try {
 		window.MutationObserver._period = 100;
 	} catch(e) {
-		console.error("Protip: MutationObserver polyfill haven't been loaded!");
+		console.warn("Protip: MutationObserver polyfill haven't been loaded!");
 		// "Polyfill" for MutationObserver so Protip won't break if the real polyfill not included
 		window.MutationObserver = window.MutationObserver || function(){this.disconnect=this.observe=function(){}};
 	}
@@ -77,20 +77,39 @@ require('./src/Plugin');
 			iconTemplate:       C.TEMPLATE_ICON,
 			/** @type Boolean   Should we observe whole document for assertions and removals */
 			observer:           true,
-			/** @type String    Default skin to use */
-			skin:               C.SKIN_DEFAULT,
-			/** @type String    Default size to use (provided by the Default skin only) */
-			size:               C.SIZE_DEFAULT,
-			/** @type String    Default color scheme to use (provided by the Default skin only) */
-			scheme:             C.SCHEME_DEFAULT,
-			/** @type Boolean   Global animation? */
-			animate:            false,
 			/** @type Number    Global offset of all tooltips. */
 			offset:             0,
 			/** @type Boolean   Forces the tooltip to have min-width by it's width calculation. */
 			forceMinWidth:      true,
 			/** @type Number    Default time for OnResize event Timeout. */
-			delayResize:        100
+			delayResize:        100,
+			/** @type Object    Default data-pt-* values for a tooltip */
+			defaults: {
+				trigger:     C.TRIGGER_HOVER,
+				title:       null,
+				inited:      false,
+				delayIn:     0,
+				delayOut:    0,
+				interactive: false,
+				gravity:     true,
+				offsetTop:   0,
+				offsetLeft:  0,
+				position:    C.POSITION_RIGHT,
+				placement: 	 C.PLACEMENT_OUTSIDE,
+				classes:     null,
+				arrow:       true,
+				width:       300,
+				identifier:  false,
+				icon:        false,
+				observer:    false,
+				target:      C.SELECTOR_BODY,
+				skin:        C.SKIN_DEFAULT,
+				size:        C.SIZE_DEFAULT,
+				scheme:      C.SCHEME_DEFAULT,
+				animate:     false,
+				autoHide:    false,
+				mixin:       undefined
+			}
 		},
 
 		/**
@@ -105,7 +124,7 @@ require('./src/Plugin');
 			 *
 			 * @type Object
 			 */
-			this.settings = $.extend({}, this._defaults, settings);
+			this.settings = $.extend(true, {}, this._defaults, settings);
 
 			/**
 			 * Object storing the Item Class Instances
@@ -1036,34 +1055,6 @@ require('./src/Plugin');
 			this._override = override || {};
 			this._override.identifier = id;
 
-			/** @type {object} List of data-* properties and their default values. */
-			this._prop = {
-				trigger:     C.TRIGGER_HOVER,
-				title:       null,
-				inited:      false,
-				delayIn:     0,
-				delayOut:    0,
-				interactive: false,
-				gravity:     true,
-				offsetTop:   0,
-				offsetLeft:  0,
-				position:    C.POSITION_RIGHT,
-				placement: 	 C.PLACEMENT_OUTSIDE,
-				classes:     null,
-				arrow:       true,
-				width:       300,
-				identifier:  false,
-				icon:        false,
-				observer:    false,
-				target:      C.SELECTOR_BODY,
-				skin:        undefined,
-				size:        undefined,
-				scheme:      undefined,
-				animate:     undefined,
-				autoHide:    false,
-				mixin:       undefined
-			};
-
 			/** @type {object}    Object storing jQuery elements */
 			this.el               = {};
 
@@ -1223,7 +1214,7 @@ require('./src/Plugin');
 				.addClass(C.SELECTOR_SHOW);
 
 			// If we need animation
-			(this.data.animate || (this.classInstance.settings.animate && !this.data.animate)) &&
+			this.data.animate &&
 				this.el.protip
 					.addClass(C.SELECTOR_ANIMATE)
 					.addClass(this.data.animate || this.classInstance.settings.animate);
@@ -1271,7 +1262,7 @@ require('./src/Plugin');
 			this.el.protip
 				.removeClass(C.SELECTOR_SHOW)
 				.removeClass(C.SELECTOR_ANIMATE)
-				.removeClass(this.data.animate || this.classInstance.settings.animate);
+				.removeClass(this.data.animate);
 
 			this._isVisible = false;
 		},
@@ -1297,12 +1288,12 @@ require('./src/Plugin');
 		_fetchData: function(){
 
 			// Fetch
-			$.each(this._prop, $.proxy(function(key){
+			$.each(this.classInstance.settings.defaults, $.proxy(function(key){
 				this.data[key] = this.el.source.data(this._namespaced(key));
 			}, this));
 
 			// Merge/Extend
-			this.data = $.extend({}, this._prop, this.data);
+			this.data = $.extend({}, this.classInstance.settings.defaults, this.data);
 			this.data = $.extend({}, this.data, this._override);
 
 			// Now apply back to the element
@@ -1375,9 +1366,9 @@ require('./src/Plugin');
 		 */
 		_getClassList: function(){
 			var classList = [];
-			var skin      = this.data.skin || this.classInstance.settings.skin;
-			var size      = this.data.size || this.classInstance.settings.size;
-			var scheme    = this.data.scheme || this.classInstance.settings.scheme;
+			var skin      = this.data.skin;
+			var size      = this.data.size;
+			var scheme    = this.data.scheme;
 
 			// Main container class
 			classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
