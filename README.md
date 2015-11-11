@@ -317,6 +317,11 @@ by Gravity it won't be added to the calculations. In case you need to position r
 data-pt-gravity="top 0 -15; bottom 0 15"
 ```
 
+## Command Buffer
+
+You are allowed to call jQuery helpers (like protipShow/protipHide) before initialization of protip. This solves the problem with JavaScript file orders
+and calls before Protip is initialized, your commands will run after everything is done.
+
 ## MutationObserver (IE8-10 Support)
 
 Internet Explorer supports Mutation Observers only from version 11. In case you need IE8-10 support you need to include a

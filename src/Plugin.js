@@ -6,28 +6,32 @@
 		define([
 			'jquery',
 			'./Class',
+			'./Class',
 			'./Constants'
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
 			require('jquery'),
 			require('./Class'),
+			require('./Buffer'),
 			require('./Constants')
 		);
 	} else {
 		factory(
 			root.jQuery,
 			root.ProtipClass,
+			root.ProtipBuffer,
 			root.ProtipContants
 		);
 	}
-}(this, function ($, ProtipClass, C) {
+}(this, function ($, ProtipClass, ProtipBuffer, C) {
 
     'use strict';
 
 	// Extend the jQuery object with singleton members
 	$ = $.extend($, {
 		_protipClassInstance: undefined,
+		_protipBuffer: new ProtipBuffer(),
 		protip: function(settings){
 			if (!this._protipClassInstance) {
 				this._protipClassInstance = new ProtipClass(settings);
@@ -46,11 +50,15 @@
 		 * @returns {*}
 		 */
 		protipSet: function(override) {
-			return this.each(function(index, el) {
-				el = $(el);
-				$._protipClassInstance.getItemInstance(el).destroy();
-				$._protipClassInstance.getItemInstance(el, override);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+					$._protipClassInstance.getItemInstance(el, override);
+				});
+			}
+			$._protipBuffer.add('protipSet', this, arguments);
+			return this;
 		},
 
 		/**
@@ -59,11 +67,15 @@
 		 * @returns {*}
 		 */
 		protipShow: function(override) {
-			return this.each(function(index, el) {
-				el = $(el);
-				$._protipClassInstance.getItemInstance(el).destroy();
-				$._protipClassInstance.getItemInstance(el, override).show(true);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+					$._protipClassInstance.getItemInstance(el, override).show(true);
+				});
+			}
+			$._protipBuffer.add('protipShow', this, arguments);
+			return this;
 		},
 
 		/**
@@ -72,9 +84,13 @@
 		 * @returns {*}
 		 */
 		protipHide: function() {
-			return this.each(function(index, el) {
-				$._protipClassInstance.getItemInstance($(el)).hide(true);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$._protipClassInstance.getItemInstance($(el)).hide(true);
+				});
+			}
+			$._protipBuffer.add('protipHide', this, arguments);
+			return this;
 		},
 
 		/**
@@ -83,12 +99,15 @@
 		 * @returns {*}
 		 */
 		protipToggle: function() {
-			var instance;
-
-			return this.each(function(index, el) {
-				instance = $._protipClassInstance.getItemInstance($(el));
-				instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
-			}.bind(this));
+			if ($._protipBuffer.isReady()) {
+				var instance;
+				return this.each(function (index, el) {
+					instance = $._protipClassInstance.getItemInstance($(el));
+					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+				}.bind(this));
+			}
+			$._protipBuffer.add('protipToggle', this, arguments);
+			return this;
 		},
 
 		/**
@@ -97,11 +116,15 @@
 		 * @returns {*}
 		 */
 		protipHideInside: function(){
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					$._protipClassInstance.getItemInstance($(el2)).hide(true);
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						$._protipClassInstance.getItemInstance($(el2)).hide(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipHideInside', this, arguments);
+			return this;
 		},
 
 		/**
@@ -110,11 +133,15 @@
 		 * @returns {*}
 		 */
 		protipShowInside: function(){
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					$._protipClassInstance.getItemInstance($(el2)).show(true);
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						$._protipClassInstance.getItemInstance($(el2)).show(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipShowInside', this, arguments);
+			return this;
 		},
 
 		/**
@@ -123,14 +150,18 @@
 		 * @returns {*}
 		 */
 		protipToggleInside: function(){
-			var instance;
+			if ($._protipBuffer.isReady()) {
+				var instance;
 
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					instance = $._protipClassInstance.getItemInstance($(el2));
-					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						instance = $._protipClassInstance.getItemInstance($(el2));
+						instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipToggleInside', this, arguments);
+			return this;
 		}
 	});
 
