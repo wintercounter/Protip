@@ -1,6 +1,137 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require('./src/Plugin');
-},{"./src/Plugin":7}],2:[function(require,module,exports){
+},{"./src/Plugin":8}],2:[function(require,module,exports){
+(function (global){
+/**
+ * Buffer Class
+ *
+ * It will create a buffer of called protip jQuery helper methods
+ * and recalls them after protip initialization is done.
+ */
+
+(function (root, factory) {
+
+	'use strict';
+
+	if (typeof define === 'function' && define.amd) {
+		define([
+			'jquery'
+		], factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory(
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null)
+		);
+	} else {
+		factory(
+			root.jQuery
+		);
+	}
+}(this, function ($) {
+
+	'use strict';
+
+	/**
+	 * Buffer Class
+	 *
+	 * @returns {Buffer}
+	 * @constructor
+	 */
+	var Buffer = function () {
+		return this._Construct();
+	};
+
+	// Define the GravityParser members
+	Buffer.prototype = {
+		/**
+		 * Constructor
+		 *
+		 * @memberOf Buffer
+		 * @returns {Buffer}
+		 * @private
+		 */
+		_Construct: function () {
+
+			/**
+			 * List of commands called.
+			 *
+			 * @type {[]}
+			 * @private
+			 */
+			this._commandList = [];
+
+			/**
+			 * Tells if Protip is ready.
+			 *
+			 * @type {boolean}
+			 * @private
+			 */
+			this._isReady = false;
+
+			/**
+			 * Starts interval timer for checks.
+			 *
+			 * @type {number}
+			 * @private
+			 */
+			this._timer = setInterval(this._check.bind(this), 10);
+
+			return this;
+		},
+
+		/**
+		 * Add cmd to buffer
+		 *
+		 * @param {cmd}     cmd     The command called.
+		 * @param {jQuery}  el      The jQuery element the item is called on.
+		 * @param {cmdArgs} cmdArgs The arguments the command was called with.
+		 */
+		add: function (cmd, el, cmdArgs) {
+			this._commandList.push({
+				cmd: cmd,
+				el: el,
+				cmdArgs: cmdArgs
+			});
+			this.isReady() && this._run();
+		},
+
+		/**
+		 * Public getter for isReady.
+		 *
+		 * @returns {boolean}
+		 */
+		isReady: function(){
+			return this._isReady;
+		},
+
+		/**
+		 * Check interval callback.
+		 *
+		 * @private
+		 */
+		_check: function(){
+			$._protipClassInstance
+			&& (this._isReady = true)
+			&& this._run()
+			&& clearInterval(this._timer);
+		},
+
+		/**
+		 * Add cmd to buffer.
+		 *
+		 * @private
+		 */
+		_run: function () {
+			var call = this._commandList.shift();
+			call.el[call.cmd].apply(call.el, call.cmdArgs);
+			this._commandList.length && this._run();
+			return true;
+		}
+	};
+
+	return Buffer;
+}));
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
 (function (global){
 /**
  * Main Class of the tooltip plugin.
@@ -473,7 +604,7 @@ require('./src/Plugin');
 }));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3,"./Item":6}],3:[function(require,module,exports){
+},{"./Constants":4,"./Item":7}],4:[function(require,module,exports){
 /**
  * Just contants
  */
@@ -581,7 +712,7 @@ require('./src/Plugin');
 
 	return ProtipConstants;
 }));
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 /**
  * GravityParser Class
@@ -752,7 +883,7 @@ require('./src/Plugin');
 
 }));
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3}],5:[function(require,module,exports){
+},{"./Constants":4}],6:[function(require,module,exports){
 (function (global){
 /**
  * GravityTester Class
@@ -981,7 +1112,7 @@ require('./src/Plugin');
 
 }));
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3,"./GravityParser":4,"./PositionCalculator":8}],6:[function(require,module,exports){
+},{"./Constants":4,"./GravityParser":5,"./PositionCalculator":9}],7:[function(require,module,exports){
 (function (global){
 /**
  * Item Class.
@@ -1592,7 +1723,7 @@ require('./src/Plugin');
 	return ProtipItemClass;
 }));
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3,"./GravityTester":5,"./PositionCalculator":8}],7:[function(require,module,exports){
+},{"./Constants":4,"./GravityTester":6,"./PositionCalculator":9}],8:[function(require,module,exports){
 (function (global){
 (function (root, factory) {
 
@@ -1602,28 +1733,32 @@ require('./src/Plugin');
 		define([
 			'jquery',
 			'./Class',
+			'./Class',
 			'./Constants'
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
 			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Class'),
+			require('./Buffer'),
 			require('./Constants')
 		);
 	} else {
 		factory(
 			root.jQuery,
 			root.ProtipClass,
+			root.ProtipBuffer,
 			root.ProtipContants
 		);
 	}
-}(this, function ($, ProtipClass, C) {
+}(this, function ($, ProtipClass, ProtipBuffer, C) {
 
     'use strict';
 
 	// Extend the jQuery object with singleton members
 	$ = $.extend($, {
 		_protipClassInstance: undefined,
+		_protipBuffer: new ProtipBuffer(),
 		protip: function(settings){
 			if (!this._protipClassInstance) {
 				this._protipClassInstance = new ProtipClass(settings);
@@ -1642,11 +1777,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipSet: function(override) {
-			return this.each(function(index, el) {
-				el = $(el);
-				$._protipClassInstance.getItemInstance(el).destroy();
-				$._protipClassInstance.getItemInstance(el, override);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+					$._protipClassInstance.getItemInstance(el, override);
+				});
+			}
+			$._protipBuffer.add('protipSet', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1655,11 +1794,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipShow: function(override) {
-			return this.each(function(index, el) {
-				el = $(el);
-				$._protipClassInstance.getItemInstance(el).destroy();
-				$._protipClassInstance.getItemInstance(el, override).show(true);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+					$._protipClassInstance.getItemInstance(el, override).show(true);
+				});
+			}
+			$._protipBuffer.add('protipShow', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1668,9 +1811,13 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipHide: function() {
-			return this.each(function(index, el) {
-				$._protipClassInstance.getItemInstance($(el)).hide(true);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$._protipClassInstance.getItemInstance($(el)).hide(true);
+				});
+			}
+			$._protipBuffer.add('protipHide', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1679,12 +1826,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipToggle: function() {
-			var instance;
-
-			return this.each(function(index, el) {
-				instance = $._protipClassInstance.getItemInstance($(el));
-				instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
-			}.bind(this));
+			if ($._protipBuffer.isReady()) {
+				var instance;
+				return this.each(function (index, el) {
+					instance = $._protipClassInstance.getItemInstance($(el));
+					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+				}.bind(this));
+			}
+			$._protipBuffer.add('protipToggle', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1693,11 +1843,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipHideInside: function(){
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					$._protipClassInstance.getItemInstance($(el2)).hide(true);
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						$._protipClassInstance.getItemInstance($(el2)).hide(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipHideInside', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1706,11 +1860,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipShowInside: function(){
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					$._protipClassInstance.getItemInstance($(el2)).show(true);
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						$._protipClassInstance.getItemInstance($(el2)).show(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipShowInside', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1719,20 +1877,24 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipToggleInside: function(){
-			var instance;
+			if ($._protipBuffer.isReady()) {
+				var instance;
 
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					instance = $._protipClassInstance.getItemInstance($(el2));
-					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						instance = $._protipClassInstance.getItemInstance($(el2));
+						instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipToggleInside', this, arguments);
+			return this;
 		}
 	});
 
 }));
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Class":2,"./Constants":3}],8:[function(require,module,exports){
+},{"./Buffer":2,"./Class":3,"./Constants":4}],9:[function(require,module,exports){
 (function (global){
 /**
  * PositionCalculator Class
@@ -2031,4 +2193,4 @@ require('./src/Plugin');
 
 }));
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3}]},{},[1])
+},{"./Constants":4}]},{},[1])
