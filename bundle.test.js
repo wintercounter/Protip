@@ -10552,7 +10552,6 @@ if (typeof module !== 'undefined' && module.exports) {
 				el: el,
 				cmdArgs: cmdArgs
 			});
-			this.isReady() && this._run();
 		},
 
 		/**
@@ -10572,7 +10571,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		_check: function(){
 			$._protipClassInstance
 			&& (this._isReady = true)
-			&& this._run()
+			&& (!this._commandList.length && this._run())
 			&& clearInterval(this._timer);
 		},
 

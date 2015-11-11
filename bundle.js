@@ -91,7 +91,6 @@ require('./src/Plugin');
 				el: el,
 				cmdArgs: cmdArgs
 			});
-			this.isReady() && this._run();
 		},
 
 		/**
@@ -111,7 +110,7 @@ require('./src/Plugin');
 		_check: function(){
 			$._protipClassInstance
 			&& (this._isReady = true)
-			&& this._run()
+			&& (!this._commandList.length && this._run())
 			&& clearInterval(this._timer);
 		},
 
