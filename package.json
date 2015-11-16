@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run-script build-test",
     "build-test": "browserify -t html2js-browserify test/test.js -o bundle.test.js && npm run-script sass",
-    "build-prod": "browserify -t html2js-browserify main.js -o bundle.js && npm run-script sass && minify --output protip.min.js bundle.js && minify --output protip.min.css css/protip.css",
+    "build-prod": "browserify -t html2js-browserify main.js -o bundle.js && npm run-script sass && node minify.js",
     "build": "npm run build-prod",
     "build-all": "npm run build-test && npm run build-prod",
     "sass": "node-sass css/protip.scss css/protip.css",
