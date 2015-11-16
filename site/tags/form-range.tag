@@ -2,14 +2,15 @@
     <label>
         <span>{ opts.name }</span>
         <div>
-            <input type=range name={ opts.name } value={ values[0] } min={ values[1] } max={ values[2] } step=1 onchange={ change } oninput={ change }>
+            <input type=range name=range value={ values[0] } min={ values[1] } max={ values[2] } step=1 onchange={ change } oninput={ change }>
             <input type=text name=input value={ values[0] } readonly>
         </div>
     </label>
 
     var form = this.opts.api.form
     this.values = form.getDefault(opts.name)
-    this.input.defaultValue = this['{ opts.name }'].defaultValue = this.values[0]
+    this.range.name = opts.name
+    this.input.defaultValue = this.range.defaultValue = this.values[0]
 
     change(ev){
         var target = $(ev.target)
