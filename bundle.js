@@ -238,7 +238,7 @@ require('./src/Plugin');
 				scheme:      C.SCHEME_DEFAULT,
 				animate:     false,
 				autoHide:    false,
-				mixin:       undefined
+				mixin:       null
 			}
 		},
 
