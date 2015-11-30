@@ -96,6 +96,7 @@
 			this._prepareInternals();
 			this._appendProtip();
 			this._initSticky();
+			this._initAutoShow();
 			this._bind();
 
 			// Tell the source that we are ready to go and add protip class if it didn't have.
@@ -349,6 +350,15 @@
 		 */
 		_initSticky: function(){
 			(this.data.trigger === C.TRIGGER_STICKY) && this.show();
+		},
+
+		/**
+		 * Initializes autoShow protips.
+		 *
+		 * @private
+		 */
+		_initAutoShow: function(){
+			this.data.autoShow && this.show();
 		},
 
 		/**

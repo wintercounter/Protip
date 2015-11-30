@@ -58,7 +58,7 @@
 		PROP_WIDTH: 'width',
 		PROP_IDENTIFIER: 'identifier',
 		PROP_ICON: 'icon',
-		PROP_AUTO: 'auto',
+		PROP_AUTOSHOW: 'autoShow',
 		PROP_TARGET: 'target',
 
 		EVENT_MOUSEOVER: 'mouseover',
