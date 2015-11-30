@@ -10699,6 +10699,7 @@ if (typeof module !== 'undefined' && module.exports) {
 				scheme:      C.SCHEME_DEFAULT,
 				animate:     false,
 				autoHide:    false,
+				autoShow:    false,
 				mixin:       null
 			}
 		},
@@ -11125,7 +11126,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		PROP_WIDTH: 'width',
 		PROP_IDENTIFIER: 'identifier',
 		PROP_ICON: 'icon',
-		PROP_AUTO: 'auto',
+		PROP_AUTOSHOW: 'autoShow',
 		PROP_TARGET: 'target',
 
 		EVENT_MOUSEOVER: 'mouseover',
@@ -11673,6 +11674,7 @@ if (typeof module !== 'undefined' && module.exports) {
 			this._prepareInternals();
 			this._appendProtip();
 			this._initSticky();
+			this._initAutoShow();
 			this._bind();
 
 			// Tell the source that we are ready to go and add protip class if it didn't have.
@@ -11926,6 +11928,15 @@ if (typeof module !== 'undefined' && module.exports) {
 		 */
 		_initSticky: function(){
 			(this.data.trigger === C.TRIGGER_STICKY) && this.show();
+		},
+
+		/**
+		 * Initializes autoShow protips.
+		 *
+		 * @private
+		 */
+		_initAutoShow: function(){
+			this.data.autoShow && this.show();
 		},
 
 		/**
