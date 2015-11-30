@@ -38,6 +38,7 @@
 		POSITION_CORNER_RIGHT_BOTTOM: 'bottom-right-corner',
 
 		TRIGGER_CLICK: 'click',
+		TRIGGER_CLICK2: 'click2',
 		TRIGGER_HOVER: 'hover',
 		TRIGGER_STICKY: 'sticky',
 

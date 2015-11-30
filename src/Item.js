@@ -117,7 +117,10 @@
 				// No handler needed for sticky
 			}
 			// Handling clicky protips
-			else if (eventType === C.EVENT_CLICK && this.data.trigger === C.TRIGGER_CLICK) {
+			else if (
+					eventType === C.EVENT_CLICK
+					&& (this.data.trigger === C.TRIGGER_CLICK || this.data.trigger === C.TRIGGER_CLICK2)
+			) {
 				this.toggle();
 			}
 			// Handling mouseover protips
