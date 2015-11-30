@@ -124,7 +124,7 @@
 				this.toggle();
 			}
 			// Handling mouseover protips
-			else if (this.data.trigger !== C.TRIGGER_CLICK) {
+			else if (this.data.trigger !== C.TRIGGER_CLICK && this.data.trigger !== C.TRIGGER_CLICK2) {
 				switch(eventType){
 					case C.EVENT_MOUSEOUT:
 						this.hide();
