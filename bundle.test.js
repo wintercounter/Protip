@@ -11105,6 +11105,7 @@ if (typeof module !== 'undefined' && module.exports) {
 		POSITION_CORNER_RIGHT_BOTTOM: 'bottom-right-corner',
 
 		TRIGGER_CLICK: 'click',
+		TRIGGER_CLICK2: 'click2',
 		TRIGGER_HOVER: 'hover',
 		TRIGGER_STICKY: 'sticky',
 
@@ -11693,7 +11694,10 @@ if (typeof module !== 'undefined' && module.exports) {
 				// No handler needed for sticky
 			}
 			// Handling clicky protips
-			else if (eventType === C.EVENT_CLICK && this.data.trigger === C.TRIGGER_CLICK) {
+			else if (
+					eventType === C.EVENT_CLICK
+					&& (this.data.trigger === C.TRIGGER_CLICK || this.data.trigger === C.TRIGGER_CLICK2)
+			) {
 				this.toggle();
 			}
 			// Handling mouseover protips
