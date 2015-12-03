@@ -8,7 +8,7 @@ $_protipSquareSkinColors: (
 	'purple': #613399,
 	'pink': #D457AA,
 	'orange': #E64426
-);
+) !default;
 
 $_protipSquareSkinSizes: (
 
@@ -51,7 +51,7 @@ $_protipSquareSkinSizes: (
 						font-size: 18px
 				)
 		)
-);
+) !default;
 
 @mixin protipSquareSkinArrowGenerator($skin, $arrow-size, $offset, $color, $cornerRadiusFix) {
 
