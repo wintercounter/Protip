@@ -99,7 +99,8 @@
         SCHEME_DEFAULT: 'pro',
 
 		PSEUDO_NEXT: 'next',
-		PSEUDO_PREV: 'prev'
+		PSEUDO_PREV: 'prev',
+		PSEUDO_THIS: 'this'
 	};
 
 	ProtipConstants.TEMPLATE_ARROW = '<span class="' + ProtipConstants.SELECTOR_PREFIX + ProtipConstants.SELECTOR_ARROW + '"></span>';

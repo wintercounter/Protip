@@ -478,6 +478,9 @@
 					case C.PSEUDO_PREV:
 						this.data.title = this.el.source.prev().html();
 						break;
+					case C.PSEUDO_THIS:
+						this.data.title = this.el.source.html();
+						break;
 					default: break;
 				}
 			}
