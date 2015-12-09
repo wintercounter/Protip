@@ -8,7 +8,7 @@ $_protipDefaultSkinColors: (
 	'purple': #613399,
 	'pink': #D457AA,
 	'orange': #E64426
-);
+) !default;
 
 $_protipDefaultSkinSizes: (
 
@@ -56,7 +56,7 @@ $_protipDefaultSkinSizes: (
 						border-radius: 8px
 				)
 		)
-);
+) !default;
 
 @mixin protipDefaultSkinArrowGenerator($skin, $arrow-size, $offset, $color, $cornerRadiusFix) {
 
