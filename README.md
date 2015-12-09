@@ -36,13 +36,13 @@ At the company I working for we use many tooltips for several purposes. Especial
 Include the **protip.min.css** file in your `<head>` tag:
 
 ```html
-<link rel="stylesheet" href="//cdn.rawgit.com/DoclerLabs/Protip/master/protip.min.css">
+<link rel="stylesheet" href="//min.gitcdn.xyz/repo/DoclerLabs/Protip/master/protip.min.css">
 ```
 
 Include the **protip.min.js** file before your closing `</body>` tag (but after jQuery is included):
 
 ```html
-<script src="//cdn.rawgit.com/DoclerLabs/Protip/master/protip.min.js"></script>
+<script src="//min.gitcdn.xyz/repo/DoclerLabs/Protip/master/protip.min.js"></script>
 ```
 
 ## Get files using npm
@@ -275,7 +275,7 @@ Usage:
 <div class="protip" data-pt-animate="bounceIn"></div>
 ```
 
-**Protip's CSS doesn't include Animate.css. Download from here: https://rawgit.com/daneden/animate.css/master/animate.css**
+**Protip's CSS doesn't include Animate.css. Download from here: //min.gitcdn.xyz/repo/daneden/animate.css/master/animate.css**
 
 ---
 # Skins

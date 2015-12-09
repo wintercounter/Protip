@@ -261,9 +261,12 @@
 		 * @private
 		 */
 		_fetchElements: function(){
-			$(this.settings.selector).each($.proxy(function(index, el){
-				this.getItemInstance($(el));
-			}, this));
+			// Prevent early fetches
+			setTimeout(function(){
+				$(this.settings.selector).each($.proxy(function(index, el){
+					this.getItemInstance($(el));
+				}, this));
+			}.bind(this));
 		},
 
 		/**
