@@ -11170,7 +11170,8 @@ if (typeof module !== 'undefined' && module.exports) {
         SCHEME_DEFAULT: 'pro',
 
 		PSEUDO_NEXT: 'next',
-		PSEUDO_PREV: 'prev'
+		PSEUDO_PREV: 'prev',
+		PSEUDO_THIS: 'this'
 	};
 
 	ProtipConstants.TEMPLATE_ARROW = '<span class="' + ProtipConstants.SELECTOR_PREFIX + ProtipConstants.SELECTOR_ARROW + '"></span>';
@@ -12058,6 +12059,9 @@ if (typeof module !== 'undefined' && module.exports) {
 						break;
 					case C.PSEUDO_PREV:
 						this.data.title = this.el.source.prev().html();
+						break;
+					case C.PSEUDO_THIS:
+						this.data.title = this.el.source.html();
 						break;
 					default: break;
 				}
