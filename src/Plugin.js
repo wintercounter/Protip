@@ -1,147 +1,147 @@
 (function (root, factory) {
 
-    'use strict';
+    'use strict'
 
 	if (typeof define === 'function' && define.amd) {
 		define([
-			'jquery',
+			root,
 			'./Class',
 			'./Class',
 			'./Constants'
-		], factory);
+		], factory)
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery'),
+			root,
 			require('./Class'),
 			require('./Buffer'),
 			require('./Constants')
-		);
+		)
 	} else {
 		factory(
-			root.jQuery,
+			root,
 			root.ProtipClass,
 			root.ProtipBuffer,
 			root.ProtipContants
-		);
+		)
 	}
-}(this, function ($, ProtipClass, ProtipBuffer, C) {
+}(this, function (window, ProtipClass, ProtipBuffer, C) {
 
-    'use strict';
+    'use strict'
 
-	// Extend the jQuery object with singleton members
-	$ = $.extend($, {
-		_protipClassInstance: undefined,
-		_protipBuffer: new ProtipBuffer(),
-		protip: function(settings){
-			if (!this._protipClassInstance) {
-				this._protipClassInstance = new ProtipClass(settings);
-				this.protip.C = C;
-			}
-			return this._protipClassInstance;
-		}
-	});
+	var Protip = function(settings){
+		var classInstance = undefined
+		var buffer        = undefined
+		Protip.Instance = new ProtipClass(settings)
+	}
 
-	// Public element methods
-	$.fn.extend({
+	// Buffer instance
+	Protip.Buffer = new ProtipBuffer()
 
+	// Shorthand for constants
+	Protip.C = C
+
+	// API constructor
+	Protip.API = function(el){
+		this.el = el
+	}
+
+	// API methods
+	Protip.API.prototype = {
 		/**
 		 * Simply sets tooltip to the element but it won't show.
 		 *
-		 * @returns {*}
+		 * @param override [Object] Pass custom settings to this tooltip.
+		 * @returns {Element}
 		 */
-		protipSet: function(override) {
-			if ($._protipBuffer.isReady()) {
-				return this.each(function (index, el) {
-					el = $(el);
-					$._protipClassInstance.getItemInstance(el).destroy();
-					$._protipClassInstance.getItemInstance(el, override);
-				});
+		set: function(override) {
+			if (Protip.Buffer.isReady()) {
+				this.el.protip.destroy()
+				Protip.Instance.get(this.el, override)
 			}
-			$._protipBuffer.add('protipSet', this, arguments);
-			return this;
+			else {
+				Protip.Buffer.add('set', this.el, arguments)
+			}
+			return this.el
 		},
 
 		/**
 		 * Shows the protip on an element.
 		 *
-		 * @returns {*}
+		 * @param override [Object] Pass custom settings to this tooltip.
+		 * @returns {Element}
 		 */
-		protipShow: function(override) {
-			if ($._protipBuffer.isReady()) {
-				return this.each(function (index, el) {
-					el = $(el);
-					$._protipClassInstance.getItemInstance(el).destroy();
-					$._protipClassInstance.getItemInstance(el, override).show(true);
-				});
+		show: function(override) {
+			if (Protip.Buffer.isReady()) {
+				this.el.protip.destroy()
+				Protip.Instance.get(this.el, override).show(true)
 			}
-			$._protipBuffer.add('protipShow', this, arguments);
-			return this;
+			else {
+				Protip.Buffer.add('show', this.el, arguments)
+			}
+			return this.el
 		},
 
 		/**
 		 * Hides a protip on an element.
 		 *
-		 * @returns {*}
+		 * @returns {Element}
 		 */
-		protipHide: function() {
-			if ($._protipBuffer.isReady()) {
-				return this.each(function (index, el) {
-					$._protipClassInstance.getItemInstance($(el)).hide(true);
-				});
+		hide: function() {
+			if (Protip.Buffer.isReady()) {
+				Protip.Instance.get(this.el).hide(true)
 			}
-			$._protipBuffer.add('protipHide', this, arguments);
-			return this;
+			else {
+				Protip.Buffer.add('hide', this.el, arguments)
+			}
+			return this.el
 		},
 
 		/**
 		 * Toggles protip on an element.
 		 *
-		 * @returns {*}
+		 * @returns {Element}
 		 */
-		protipToggle: function() {
-			if ($._protipBuffer.isReady()) {
-				var instance;
-				return this.each(function (index, el) {
-					instance = $._protipClassInstance.getItemInstance($(el));
-					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
-				}.bind(this));
+		toggle: function() {
+			if (Protip.Buffer.isReady()) {
+				var instance = Protip.Instance.get(this.el)
+				instance.isVisible()
+					? instance.hide(true)
+					: instance.show(true)
 			}
-			$._protipBuffer.add('protipToggle', this, arguments);
-			return this;
+			else {
+				Protip.Buffer.add('toggle', this.el, arguments)
+			}
+			return this.el
 		},
 
 		/**
-		 * Hides protips inside another element.
+		 * Hides all tooltips inside this element.
 		 *
-		 * @returns {*}
+		 * @returns {Element}
 		 */
-		protipHideInside: function(){
-			if ($._protipBuffer.isReady()) {
-				return this.each(function (index, el) {
-					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
-						$._protipClassInstance.getItemInstance($(el2)).hide(true);
-					});
-				});
+		hideInside: function(){
+			if (Protip.Buffer.isReady()) {
+				this._findAll(this.hide);
 			}
-			$._protipBuffer.add('protipHideInside', this, arguments);
-			return this;
+			else {
+				Protip.Buffer.add('hideInside', this.el, arguments)
+			}
+			return this.el
 		},
 
 		/**
-		 * Shows protips inside another element.
+		 * Shows all tooltips inside this element.
 		 *
-		 * @returns {*}
+		 * @returns {Element}
 		 */
-		protipShowInside: function(){
-			if ($._protipBuffer.isReady()) {
-				return this.each(function (index, el) {
-					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
-						$._protipClassInstance.getItemInstance($(el2)).show(true);
-					});
-				});
+		showInside: function(){
+			if (Protip.Buffer.isReady()) {
+				this._findAll(this.show);
 			}
-			$._protipBuffer.add('protipShowInside', this, arguments);
-			return this;
+			else {
+				Protip.Buffer.add('showInside', this.el, arguments)
+			}
+			return this.el
 		},
 
 		/**
@@ -149,20 +149,37 @@
 		 *
 		 * @returns {*}
 		 */
-		protipToggleInside: function(){
-			if ($._protipBuffer.isReady()) {
-				var instance;
-
-				return this.each(function (index, el) {
-					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
-						instance = $._protipClassInstance.getItemInstance($(el2));
-						instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
-					});
-				});
+		toggleInside: function(){
+			if (Protip.Buffer.isReady()) {
+				this._findAll(this.toggle)
 			}
-			$._protipBuffer.add('protipToggleInside', this, arguments);
-			return this;
-		}
-	});
+			else {
+				Protip.Buffer.add('toggleInside', this, arguments)
+			}
+			return this.el
+		},
 
-}));
+		/**
+		 * Finds all tooltips inside an element and applies a callback to them.
+		 * @private
+		 */
+		_findAll: function(callback){
+			[].forEach.call(
+				this.el.querySelectorAll(Protip.Instance.settings.selector),
+				callback.bind(this.el)
+			)
+		}
+	}
+
+	// Apply Protip on Element.prototype
+	Object.defineProperty(window.Element.prototype, 'protip', {
+		get: function () {
+			return Protip.API(this)
+		},
+		configurable: true,
+		writeable: false
+	})
+
+	return Protip
+
+}))
