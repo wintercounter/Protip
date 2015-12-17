@@ -42,7 +42,9 @@ export const PROP_WIDTH       = 'width'
 export const PROP_IDENTIFIER  = 'identifier'
 export const PROP_ICON        = 'icon'
 export const PROP_AUTOSHOW    = 'autoShow'
+export const PROP_AUTOHIDE    = 'autoHide'
 export const PROP_TARGET      = 'target'
+export const PROP_ANIMATE     = 'animate'
 
 export const EVENT_MOUSEOVER   = 'mouseover'
 export const EVENT_MOUSEOUT    = 'mouseout'
@@ -52,6 +54,8 @@ export const EVENT_CLICK       = 'click'
 export const EVENT_RESIZE      = 'resize'
 export const EVENT_PROTIP_SHOW = 'protipshow'
 export const EVENT_PROTIP_HIDE = 'protiphide'
+
+export const ITEM_EVENT_DESTROY = 'item-destroy'
 
 export const DEFAULT_SELECTOR  = '.protip'
 export const DEFAULT_NAMESPACE = 'pt'

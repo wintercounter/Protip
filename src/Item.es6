@@ -6,46 +6,43 @@ import * as C from 'Constants'
 import GravityTester from 'GravityTester'
 import PositionCalculator from 'PositionCalculator'
 import Observer from 'Observer'
+import Util from 'Util'
 
 export default class extends Observer {
+
+	/* jshint ignore:start */
+	Override = undefined
+	/** @type {object}    Object storing some DOM elements */
+	El = {}
+	/** @type {object}    All the data-* properties gathered from the source element. */
+	Data = {}
+	/** @type {boolean}   Tells us of our protip is currently visible or not. */
+	IsVisible = false
+	/** @type {object}    Object storing setTimeout tasks */
+	Task = {
+		delayIn: undefined,
+		delayOut: undefined
+	}
+	/* jshint ignore:end */
 
 	/**
 	 * Constructor
 	 * @param id            {String}      Identifier of the protip.
 	 * @param el            {Element}     Source element we are creating the instance for.
-	 * @param classInstance {ProtipClass} The main protip class instance.
 	 * @param override      [Object]      Override data-pt-* values.
 	 * @returns {Item}
 	 */
-	constructor(id, el, classInstance, override) {
+	constructor(id, el, override) {
 
 		// Attaches observer event handlers
 		super.constructor(el)
 
 		/** @type {object} Override data-pt-* values. */
-		this._override = override || {}
-		this._override.identifier = id
-
-		/** @type {object}    Object storing jQuery elements */
-		this.el = {}
+		this.Override = override || {}
+		this.Override.identifier = id
 
 		/** @type {jQuery}    The source element. */
-		this.el.source = el
-
-		/** @type {object}    All the data-* properties gathered from the source element. */
-		this._data = {}
-
-		/** @type {ProtipClass} Saving the ProtipClass instance. */
-		this.classInstance = classInstance
-
-		/** @type {boolean}   Tells us of our protip is currently visible or not. */
-		this._isVisible = false
-
-		/** @type {object}    Object storing setTimeout tasks */
-		this._task = {
-			delayIn: undefined,
-			delayOut: undefined
-		}
+		this.$source = el
 
 		// Prepare class
 		this._fetchData()
@@ -56,9 +53,14 @@ export default class extends Observer {
 		this._bind()
 
 		// Add protip class if it didn't have.
-		this.el.source.classList.add(this.classInstance.settings.selector.replace('.', ''))
+		this.$source.classList.add(this.Class.settings.selector.replace('.', ''))
 		// Tell the source that we are ready to go
 		this.set(C.PROP_INITED, true)
+	}
+
+
+	get(key) {
+		return this.$source.protip.get(key)
 	}
 
 	/**
@@ -67,11 +69,39 @@ export default class extends Observer {
 	 * @param value
 	 */
 	set(key, value) {
-		this._data[key] = value
+		return this.$source.protip.set(key, value)
 	}
 
-	get(key) {
-		return this._data[key]
+	get $source() {
+		return this.El.source
+	}
+
+	set $source(el) {
+		this.El.source = el
+	}
+
+	get $protip() {
+		return this.El.source
+	}
+
+	set $protip(el) {
+		this.El.protip = el
+	}
+
+	get $arrow() {
+		return this.El.arrow
+	}
+
+	set $arrow(el) {
+		this.El.arrow = el
+	}
+
+	get isVisible() {
+		return this.IsVisible
+	}
+
+	set isVisible(v) {
+		this.IsVisible = v
 	}
 
 	/**
@@ -82,7 +112,7 @@ export default class extends Observer {
 	actionHandler(eventType) {
 		let trigger = this.get(C.PROP_TRIGGER)
 
-		if (this.get(C.PROP_TRIGGER) === C.TRIGGER_STICKY) {
+		if (this.get(C.PROP_TRIGGER) === C.TRIGGER_STICKY) { /* jshint ignore:line */
 			// No handler needed for sticky
 		}
 		// Handling clicky protips
@@ -116,34 +146,19 @@ export default class extends Observer {
 	destroy() {
 		this.hide(true)
 		this._unbind()
-		this.el.protip.parentNode.removeChild(this.el.protip)
+		this.fire(C.ITEM_EVENT_DESTROY, this.$source.get(C.PROP_IDENTIFIER))
+		this.$protip.parentNode.removeChild(this.$protip)
 		this.set(C.PROP_INITED, false)
 			.set(C.PROP_IDENTIFIER, false)
-		this.classInstance.onItemDestroyed(this.data.identifier);
-		$.each(this._task, function(k, task){
-			clearTimeout(task);
-		});
-	}
-
-	/**
-	 * Tells us if the our tooltip is visible or not.
-	 *
-	 * @returns {boolean}
-	 */
-	isVisible() {
-		return this._isVisible;
+		Object.keys(this.Task).forEach((k, task) => clearTimeout(task))
 	}
 
 	/**
 	 * Toggles the tooltip visibility state.
 	 */
 	toggle() {
-		if (this._isVisible) {
-			this.hide();
-		}
-		else {
-			this.show();
-		}
+		this.isVisible && this.hide()
+		!this.isVisible && this.show()
 	}
 
 	/**
@@ -155,60 +170,54 @@ export default class extends Observer {
 	show(force, preventTrigger) {
 
 		// No title? Why tooltip?
-		if (!this.data.title) {
-			return;
-		}
+		if (!this.get(C.PROP_TITLE)) return
 
 		// Clear timeouts
-		this._task.delayOut && clearTimeout(this._task.delayOut);
-		this._task.delayIn && clearTimeout(this._task.delayIn);
-		this._task.autoHide && clearTimeout(this._task.autoHide);
+		clearTimeout(this.Task.delayOut)
+		clearTimeout(this.Task.delayIn)
+		clearTimeout(this.Task.autoHide)
 
 		// Set new timeout task if needed
-		if (!force && this.data.delayIn) {
-			this._task.delayIn = setTimeout(function(){
-				this.show(true);
-			}.bind(this), this.data.delayIn);
-
-			// Return, our timeout will again later...
-			return;
+		let delayIn = this.get(C.PROP_DELAY_IN)
+		if (!force && delayIn) {
+			this.Task.delayIn = setTimeout(() => this.show(true), delayIn)
+			// Return, our timeout will call again later...
+			return
 		}
 
 		// Auto hide
-		if (this.data.autoHide !== false) {
-			this._task.autoHide = setTimeout(function(){
-				this.hide(true);
-			}.bind(this), this.data.autoHide);
+		let autoHide = this.get(C.PROP_AUTOHIDE)
+		if (autoHide !== false) {
+			this.Task.autoHide = setTimeout(() => this.hide(true), this.data.autoHide)
 		}
 
-		var style;
+		let style;
 
 		// Handle gravity/non-gravity based position calculations
-		if (this.data.gravity) {
-			style = new GravityTester(this);
-			delete style.position;
+		if (this.get(C.PROP_GRAVITY)) {
+			style = new GravityTester(this)
+			delete style.position
 		}
 		else {
-			style = new PositionCalculator(this);
+			style = new PositionCalculator(this)
 		}
 
 		// Fire show event and add open class
-		this.el.source.addClass(C.SELECTOR_OPEN);
-		!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+		this.$source.classList.add(C.SELECTOR_OPEN)
+		!preventTrigger && this.fire(C.EVENT_PROTIP_SHOW, this)
 
 		// Apply styles, classes
-		this.el.protip
-			.css(style)
-			.addClass(C.SELECTOR_SHOW);
+		Util.extend(this.$protip.style, style)
+		this.$protip.classList.add(C.SELECTOR_SHOW)
 
 		// If we need animation
-		this.data.animate &&
-			this.el.protip
-				.addClass(C.SELECTOR_ANIMATE)
-				.addClass(this.data.animate || this.classInstance.settings.animate);
+		let animate = this.get(C.PROP_ANIMATE)
+		animate
+		&& this.$protip.classList.add(C.SELECTOR_ANIMATE)
+		&& this.$protip.classList.add(animate)
 
 		// Set visibility
-		this._isVisible = true;
+		this.isVisible = true
 	}
 
 	/**
@@ -216,8 +225,8 @@ export default class extends Observer {
 	 *
 	 * @param position
 	 */
-	applyPosition(position) {
-		this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
+	applyPosition (position) {
+		this.$protip.setAttribute(C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position)
 	}
 
 	/**
@@ -226,33 +235,30 @@ export default class extends Observer {
 	 * @param force          [boolean]  If 'true' there will be no timeouts.
 	 * @param preventTrigger [boolean]  If 'true' protipHide event won't be triggered.
 	 */
-	hide(force, preventTrigger) {
+	hide (force, preventTrigger) {
 
-		this._task.delayOut && clearTimeout(this._task.delayOut);
-		this._task.delayIn && clearTimeout(this._task.delayIn);
-		this._task.autoHide && clearTimeout(this._task.autoHide);
+		clearTimeout(this.Task.delayOut);
+		clearTimeout(this.Task.delayIn);
+		clearTimeout(this.Task.autoHide);
 
 		// Set new timeout task if needed
-		if (!force && this.data.delayOut) {
-			this._task.delayOut = setTimeout(function(){
-				this.hide(true);
-			}.bind(this), this.data.delayOut);
-
+		let delayOut = this.get(C.PROP_DELAY_OUT)
+		if (!force && delayOut) {
+			this._task.delayOut = setTimeout(() => this.hide(true), delayOut)
 			// Return, our timeout will call again later...
-			return;
+			return
 		}
 
 		// Fire show event and remove open class
-		this.el.source.removeClass(C.SELECTOR_OPEN);
-		!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
+		this.$source.classList.remove(C.SELECTOR_OPEN)
+		!preventTrigger && this.fire(C.EVENT_PROTIP_HIDE, this)
 
 		// Remove classes and set visibility
-		this.el.protip
-			.removeClass(C.SELECTOR_SHOW)
-			.removeClass(C.SELECTOR_ANIMATE)
-			.removeClass(this.data.animate);
+		this.$protip.classList.remove(C.SELECTOR_SHOW)
+		this.$protip.classList.remove(C.SELECTOR_ANIMATE)
+		this.$protip.classList.remove(this.get(C.PROP_ANIMATE))
 
-		this._isVisible = false;
+		this._isVisible = false
 	}
 
 	/**
@@ -262,9 +268,9 @@ export default class extends Observer {
 	 */
 	getArrowOffset() {
 		return {
-			width:  this.el.protipArrow.outerWidth(),
-			height: this.el.protipArrow.outerHeight()
-		};
+			width : this.$arrow.offsetWidth,
+			height: this.$arrow.offsetHeight
+		}
 	}
 
 	/**
@@ -272,12 +278,13 @@ export default class extends Observer {
 	 * It extends the defaults, then it applies back to the element.
 	 *
 	 * @private
+	 * TILL
 	 */
 	_fetchData() {
 
 		// Fetch
 		$.each(this.classInstance.settings.defaults, $.proxy(function(key){
-			this.data[key] = this.el.source.data(this._namespaced(key));
+			this.data[key] = this.El.source.data(this._namespaced(key));
 		}, this));
 
 		// Merge/Extend
@@ -286,7 +293,7 @@ export default class extends Observer {
 
 		// Now apply back to the element
 		$.each(this.data, $.proxy(function(key, value){
-			this.el.source.data(this._namespaced(key), value);
+			this.El.source.data(this._namespaced(key), value);
 		}, this));
 	}
 
@@ -339,7 +346,7 @@ export default class extends Observer {
 	_appendProtip() {
 
 		// Generate HTML from template
-		this.el.protip = nano(this.classInstance.settings.protipTemplate, {
+		this.El.protip = nano(this.classInstance.settings.protipTemplate, {
 			classes: this._getClassList(),
 			widthType: this._getWidthType(),
 			width: this._getWidth(),
@@ -350,9 +357,9 @@ export default class extends Observer {
 		});
 
 		// Convert to jQuery object and append
-		this.el.protip = $(this.el.protip);
-		this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
-		this.el.target.append(this.el.protip);
+		this.El.protip = $(this.El.protip);
+		this.El.protipArrow = this.El.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
+		this.El.target.append(this.El.protip);
 	}
 
 	/**
@@ -422,7 +429,7 @@ export default class extends Observer {
 	 */
 	_getIconTemplate() {
 		return this.data.icon ?
-			nano(this.classInstance.settings.iconTemplate, {
+			Util.nano(this.classInstance.settings.iconTemplate, {
 				icon: this.data.icon
 			})
 			: '';
@@ -442,13 +449,13 @@ export default class extends Observer {
 			var which = this.data.title.substring(1);
 			switch (which) {
 				case C.PSEUDO_NEXT:
-					this.data.title = this.el.source.next().html();
+					this.data.title = this.El.source.next().html();
 					break;
 				case C.PSEUDO_PREV:
-					this.data.title = this.el.source.prev().html();
+					this.data.title = this.El.source.prev().html();
 					break;
 				case C.PSEUDO_THIS:
-					this.data.title = this.el.source.html();
+					this.data.title = this.El.source.html();
 					break;
 				default: break;
 			}
@@ -470,12 +477,12 @@ export default class extends Observer {
 
 		// Target is itself
 		if (target === true) {
-			target = this.el.source;
+			target = this.El.source;
 		}
 
 		// If has target container
-		else if (target === C.SELECTOR_BODY && this.el.source.closest(C.SELECTOR_TARGET).length) {
-			target = this.el.source.closest(C.SELECTOR_TARGET);
+		else if (target === C.SELECTOR_BODY && this.El.source.closest(C.SELECTOR_TARGET).length) {
+			target = this.El.source.closest(C.SELECTOR_TARGET);
 		}
 
 		// Target is a selector
@@ -493,7 +500,7 @@ export default class extends Observer {
 			target.css({position: 'relative'});
 		}
 
-		this.el.target = target;
+		this.El.target = target;
 	}
 
 	/**
@@ -504,7 +511,7 @@ export default class extends Observer {
 	 * @private
 	 */
 	_getData(key) {
-		return this.el.source.data(this._namespaced(key));
+		return this.El.source.data(this._namespaced(key));
 	}
 
 	/**
@@ -543,17 +550,17 @@ export default class extends Observer {
 	 */
 	_bind() {
 		if (this.data.interactive) {
-			this.el.protip
+			this.El.protip
 				.on(C.EVENT_MOUSEENTER, $.proxy(this._onProtipMouseenter, this))
 				.on(C.EVENT_MOUSELEAVE, $.proxy(this._onProtipMouseleave, this));
 		}
 
 		if (this.data.observer) {
 			this._observerInstance = new MutationObserver(function() {
-				this.classInstance.reloadItemInstance(this.el.source);
+				this.classInstance.reloadItemInstance(this.El.source);
 			}.bind(this));
 
-			this._observerInstance.observe(this.el.source.get(0), {
+			this._observerInstance.observe(this.El.source.get(0), {
 				attributes: true,
 				childList: false,
 				characterData: false,
@@ -570,7 +577,7 @@ export default class extends Observer {
 	_unbind() {
 		this.off()
 		if (this.data.interactive) {
-			this.el.protip
+			this.El.protip
 				.off(C.EVENT_MOUSEENTER, $.proxy(this._onProtipMouseenter, this))
 				.off(C.EVENT_MOUSELEAVE, $.proxy(this._onProtipMouseleave, this));
 		}
