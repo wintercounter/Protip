@@ -21,4 +21,14 @@ export default class {
 
 		return out
 	}
+
+	// Nano Templates - https://github.com/trix/nano
+	nano(template, data) {
+		return template.replace(/\{([\w\.]*)}/g, (str, key) => {
+			let keys = key.split(".")
+			let v = data[keys.shift()]
+			for (var i = 0, l = keys.length; i < l; i++) v = v[keys[i]];
+			return (typeof v !== "undefined" && v !== null) ? v : ""
+		})
+	}
 }

@@ -2,7 +2,7 @@
   "name": "protip",
   "version": "1.4.0",
   "description": "A new generation jQuery Tooltip plugin.",
-  "main": "main.js",
+  "main": "",
   "scripts": {
     "test": "npm run-script build-test",
     "build-test": "browserify -t html2js-browserify test/test.js -o bundle.test.js && npm run-script sass",
