@@ -23,21 +23,26 @@ export default class extends Observer {
 		delayIn: undefined,
 		delayOut: undefined
 	}
+	Observer = undefined
+	Global = undefined
 	/* jshint ignore:end */
 
 	/**
 	 * Constructor
 	 * @param id            {String}      Identifier of the protip.
 	 * @param el            {Element}     Source element we are creating the instance for.
+	 * @param global        {Object}      Global settings from the class instance.
 	 * @param override      [Object]      Override data-pt-* values.
 	 * @returns {Item}
 	 */
-	constructor(id, el, override) {
+	constructor(id, el, global, override) {
 
 		// Attaches observer event handlers
 		super.constructor(el)
 
-		/** @type {object} Override data-pt-* values. */
+		this.Global = global
+
+		/** @type {object} Override pt-* values. */
 		this.Override = override || {}
 		this.Override.identifier = id
 
@@ -45,7 +50,7 @@ export default class extends Observer {
 		this.$source = el
 
 		// Prepare class
-		this._fetchData()
+		this._setData()
 		this._prepareInternals()
 		this._appendProtip()
 		this._initSticky()
@@ -53,7 +58,7 @@ export default class extends Observer {
 		this._bind()
 
 		// Add protip class if it didn't have.
-		this.$source.classList.add(this.Class.settings.selector.replace('.', ''))
+		this.$source.classList.add(this.Global.selector.replace('.', ''))
 		// Tell the source that we are ready to go
 		this.set(C.PROP_INITED, true)
 	}
@@ -94,6 +99,14 @@ export default class extends Observer {
 
 	set $arrow(el) {
 		this.El.arrow = el
+	}
+
+	get $target() {
+		return this.El.target
+	}
+
+	set $target(el) {
+		this.El.target = el
 	}
 
 	get isVisible() {
@@ -278,23 +291,19 @@ export default class extends Observer {
 	 * It extends the defaults, then it applies back to the element.
 	 *
 	 * @private
-	 * TILL
 	 */
-	_fetchData() {
-
-		// Fetch
-		$.each(this.classInstance.settings.defaults, $.proxy(function(key){
-			this.data[key] = this.El.source.data(this._namespaced(key));
-		}, this));
-
-		// Merge/Extend
-		this.data = $.extend({}, this.classInstance.settings.defaults, this.data);
-		this.data = $.extend({}, this.data, this._override);
-
-		// Now apply back to the element
-		$.each(this.data, $.proxy(function(key, value){
-			this.El.source.data(this._namespaced(key), value);
-		}, this));
+	_setData() {
+		// 1. Default settings
+		let data = this.Global.settings.defaults
+		// 2. Attribute settings
+		this.$source.attributes.forEach((attr) => {
+			(attr.indexOf(C.DEFAULT_NAMESPACE) === 0)
+			&& (data[attr.replace(C.DEFAULT_NAMESPACE + '-')] = this.$source.getAttribute(attr))
+		})
+		// 3. Overrided settings
+		data = Util.extend(data, this.Override)
+		// 4. Set on element
+		Object.keys(data).forEach(this.set, this)
 	}
 
 	/**
@@ -303,9 +312,9 @@ export default class extends Observer {
 	 * @private
 	 */
 	_prepareInternals() {
-		this._setTarget();
-		this._detectTitle();
-		this._checkInteractive();
+		this._setTarget()
+		this._detectTitle()
+		this._checkInteractive()
 	}
 
 	/**
@@ -314,9 +323,9 @@ export default class extends Observer {
 	 * @private
 	 */
 	_checkInteractive() {
-		if (this.data.interactive) {
-			this.data.delayOut = this.data.delayOut || C.DEFAULT_DELAY_OUT;
-		}
+		this.get(C.PROP_INTERACTIVE)
+		&& this.set(C.PROP_DELAY_OUT, this.get(C.PROP_DELAY_OUT) || C.DEFAULT_DELAY_OUT)
+
 	}
 
 	/**
@@ -325,7 +334,7 @@ export default class extends Observer {
 	 * @private
 	 */
 	_initSticky() {
-		(this.data.trigger === C.TRIGGER_STICKY) && this.show();
+		(this.get(C.PROP_TRIGGER) === C.TRIGGER_STICKY) && this.show()
 	}
 
 	/**
@@ -334,7 +343,7 @@ export default class extends Observer {
 	 * @private
 	 */
 	_initAutoShow() {
-		this.data.autoShow && this.show();
+		this.get(C.PROP_AUTOSHOW) && this.show()
 	}
 
 	/**
@@ -346,20 +355,19 @@ export default class extends Observer {
 	_appendProtip() {
 
 		// Generate HTML from template
-		this.El.protip = nano(this.classInstance.settings.protipTemplate, {
+		let html = Util.nano(this.Global.protipTemplate, {
 			classes: this._getClassList(),
 			widthType: this._getWidthType(),
 			width: this._getWidth(),
-			content: this.data.title,
+			content: this.get(C.PROP_TITLE),
 			icon: this._getIconTemplate(),
-			arrow: this.data.arrow ? C.TEMPLATE_ARROW : '',
-			identifier: this.data.identifier
-		});
+			arrow: this.get(C.PROP_ARROW) ? C.TEMPLATE_ARROW : '',
+			identifier: this.get(C.PROP_IDENTIFIER)
+		})
 
-		// Convert to jQuery object and append
-		this.El.protip = $(this.El.protip);
-		this.El.protipArrow = this.El.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
-		this.El.target.append(this.El.protip);
+		this.$target.insertAdjacentHTML('beforeend', html)
+		this.$protip = this.$target.querySelector('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)
+		this.$arrow = this.$protip.querySelector('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW)
 	}
 
 	/**
@@ -369,34 +377,35 @@ export default class extends Observer {
 	 * @private
 	 */
 	_getClassList() {
-		var classList = [];
-		var skin      = this.data.skin;
-		var size      = this.data.size;
-		var scheme    = this.data.scheme;
+		let classList = []
+		let skin      = this.get(C.PROP_SKIN)
+		let size      = this.get(C.PROP_SIZE)
+		let scheme    = this.get(C.PROP_SCHEME)
 
 		// Main container class
-		classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
+		classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)
 		// Skin class
-		classList.push(C.SELECTOR_SKIN_PREFIX + skin);
+		classList.push(C.SELECTOR_SKIN_PREFIX + skin)
 		// Size class
-		classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
+		classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size)
 		// Scheme class
-		classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
+		classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme)
 		// Custom classes
-		this.data.classes && classList.push(this.data.classes);
+		this.get(C.PROP_CLASS) && classList.push(this.data.classes)
 		// Mixin classes
-		this.data.mixin && classList.push(this._parseMixins());
+		this.get(C.PROP_MIXIN) && classList.push(this._parseMixins())
 
-		return classList.join(' ');
+		return classList.join(' ')
 	}
 
 
 	_parseMixins() {
-		var mixin = [];
+		let mixin = []
+		let mixins = this.get(C.PROP_MIXIN)
 
-		this.data.mixin && this.data.mixin.split(' ').forEach(function(val){
+		mixins && mixins.split(' ').forEach((val) => {
 			val && mixin.push(C.SELECTOR_MIXIN_PREFIX + val);
-		}, this);
+		})
 
 		return mixin.join(' ');
 	}
@@ -408,7 +417,7 @@ export default class extends Observer {
 	 * @private
 	 */
 	_getWidthType() {
-		return !isNaN(this.data.width) ? C.ATTR_MAX_WIDTH : C.ATTR_WIDTH;
+		return !isNaN(this.get(C.PROP_WIDTH)) ? C.ATTR_MAX_WIDTH : C.ATTR_WIDTH;
 	}
 
 	/**
@@ -418,7 +427,7 @@ export default class extends Observer {
 	 * @private
 	 */
 	_getWidth() {
-		return parseInt(this.data.width, 10);
+		return parseInt(this.get(C.PROP_WIDTH), 10);
 	}
 
 	/**
@@ -428,11 +437,10 @@ export default class extends Observer {
 	 * @private
 	 */
 	_getIconTemplate() {
-		return this.data.icon ?
-			Util.nano(this.classInstance.settings.iconTemplate, {
-				icon: this.data.icon
-			})
-			: '';
+		let icon = this.get(C.PROP_ICON)
+		return icon ? Util.nano(this.Global.iconTemplate, {
+			icon: icon
+		}) : ''
 	}
 
 	/**
@@ -441,29 +449,35 @@ export default class extends Observer {
 	 * @private
 	 */
 	_detectTitle() {
-		if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
-			this.data.titleSource = this.data.titleSource || this.data.title;
-			this.data.title = $(this.data.title).html();
+		let title = this.get(C.PROP_TITLE)
+
+		// Selector based
+		if (title && (title.charAt(0) === '#' || title.charAt(0) === '.')) {
+			title = document.querySelector(title)
 		}
-		else if (this.data.title && this.data.title.charAt(0) === ':') {
-			var which = this.data.title.substring(1);
+		// Pseudo based
+		else if (title && title.charAt(0) === ':') {
+			let which = title.substring(1)
 			switch (which) {
 				case C.PSEUDO_NEXT:
-					this.data.title = this.El.source.next().html();
+					title = this.$source.nextElementSibling.innerHTML
 					break;
 				case C.PSEUDO_PREV:
-					this.data.title = this.El.source.prev().html();
+					title = this.$source.previousElementSibling.innerHTML
 					break;
 				case C.PSEUDO_THIS:
-					this.data.title = this.El.source.html();
+					title = this.$source.innerHTML
 					break;
 				default: break;
 			}
 		}
 
+		// Save final title (maybe the original, haha)
+		this.set(C.PROP_TITLE, title)
+
 		// Set to interactive if detects link
-		if (this.data.title && this.data.title.indexOf('<a ')+1) {
-			this.data.interactive = true;
+		if (title && title.indexOf('<a ')+1) {
+			this.set(C.PROP_INTERACTIVE, true)
 		}
 	}
 
@@ -473,74 +487,49 @@ export default class extends Observer {
 	 * @private
 	 */
 	_setTarget() {
-		var target = this._getData(C.PROP_TARGET);
+		let target = this.get(C.PROP_TARGET);
 
 		// Target is itself
 		if (target === true) {
-			target = this.El.source;
+			target = this.$source
 		}
-
 		// If has target container
-		else if (target === C.SELECTOR_BODY && this.El.source.closest(C.SELECTOR_TARGET).length) {
-			target = this.El.source.closest(C.SELECTOR_TARGET);
+		else if (target === C.SELECTOR_BODY && this.$source.closest(C.SELECTOR_TARGET)) {
+			target = this.$source.closest(C.SELECTOR_TARGET)
 		}
-
 		// Target is a selector
 		else if (target) {
-			target = $(target);
+			target = document.querySelector(target)
 		}
-
 		// No target, use body
 		else {
-			target = $(C.SELECTOR_BODY);
+			target = document.body
 		}
 
 		// We need proper position
-		if (target.css('position') === 'static') {
-			target.css({position: 'relative'});
+		if (target.style.position === 'static' && target !== document.body) {
+			target.style.position = 'relative'
 		}
 
-		this.El.target = target;
+		this.$target = target
 	}
 
 	/**
-	 * Data-* property getter. Attaches namespace.
-	 *
-	 * @param key       Data attribute key.
-	 * @returns {*}
-	 * @private
-	 */
-	_getData(key) {
-		return this.El.source.data(this._namespaced(key));
-	}
-
-	/**
-	 * Returns the namespaced version of a data-* property.
-	 *
-	 * @param string {string}
-	 * @returns {string}
-	 * @private
-	 */
-	_namespaced(string) {
-		return this.classInstance.namespaced(string);
-	}
-
-	/**
-	 * Mouseenter event handler.
+	 * When the tooltip itself is hovered.
 	 *
 	 * @private
 	 */
 	_onProtipMouseenter() {
-		clearTimeout(this._task.delayOut);
+		clearTimeout(this.get(C.PROP_DELAY_OUT));
 	}
 
 	/**
-	 * Mouseleave event handler.
+	 * When the tooltip itself is left.
 	 *
 	 * @private
 	 */
 	_onProtipMouseleave() {
-		(this.data.trigger === C.TRIGGER_HOVER) && this.hide();
+		(this.get(C.PROP_TRIGGER) === C.TRIGGER_HOVER) && this.hide()
 	}
 
 	/**
@@ -549,23 +538,22 @@ export default class extends Observer {
 	 * @private
 	 */
 	_bind() {
-		if (this.data.interactive) {
-			this.El.protip
-				.on(C.EVENT_MOUSEENTER, $.proxy(this._onProtipMouseenter, this))
-				.on(C.EVENT_MOUSELEAVE, $.proxy(this._onProtipMouseleave, this));
+		if (this.get(C.PROP_INTERACTIVE)) {
+			this.$protip.addEventListener(C.EVENT_MOUSEENTER, this._onProtipMouseenter.bind(this))
+			this.$protip.addEventListener(C.EVENT_MOUSELEAVE, this._onProtipMouseleave.bind(this))
 		}
 
-		if (this.data.observer) {
-			this._observerInstance = new MutationObserver(function() {
-				this.classInstance.reloadItemInstance(this.El.source);
-			}.bind(this));
+		if (this.get(C.PROP_OBSERVER)) {
+			this.Observer = new MutationObserver(() => {
+				this.classInstance.reloadItemInstance(this.El.source)
+			})
 
-			this._observerInstance.observe(this.El.source.get(0), {
+			this.Observer.observe(this.$source, {
 				attributes: true,
 				childList: false,
 				characterData: false,
 				subtree: false
-			});
+			})
 		}
 	}
 
@@ -576,14 +564,10 @@ export default class extends Observer {
 	 */
 	_unbind() {
 		this.off()
-		if (this.data.interactive) {
-			this.El.protip
-				.off(C.EVENT_MOUSEENTER, $.proxy(this._onProtipMouseenter, this))
-				.off(C.EVENT_MOUSELEAVE, $.proxy(this._onProtipMouseleave, this));
+		if (this.get(C.PROP_INTERACTIVE)) {
+			this.$protip.removeEventListener(C.EVENT_MOUSEENTER, this._onProtipMouseenter.bind(this))
+			this.$protip.removeEventListener(C.EVENT_MOUSELEAVE, this._onProtipMouseleave.bind(this))
 		}
-
-		if (this.data.observer) {
-			this._observerInstance.disconnect();
-		}
+		this.Observer && this.Observer.disconnect()
 	}
 }
