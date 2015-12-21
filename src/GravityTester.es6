@@ -5,10 +5,10 @@
  * Gets positions, does viewport tests.
  */
 
-import * as C from 'Constants'
-import GravityParser from 'GravityParser'
-import PositionCalculator from 'PositionCalculator'
-import Util from 'Util'
+import * as C from './Constants'
+import GravityParser from './GravityParser'
+import PositionCalculator from './PositionCalculator'
+import Util from './Util'
 
 export default class {
 

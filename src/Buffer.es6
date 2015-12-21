@@ -5,34 +5,20 @@
  * and recalls them after protip initialization is done.
  */
 
-import Class from "Class"
-
 export default class Buffer {
 
-	constructor() {
-		/**
-		 * List of commands called.
-		 *
-		 * @type {[]}
-		 * @private
-		 */
-		this._commandList = []
+	/* jshint ignore:start */
+	$ = undefined
+	/** @type {[]} List of commands called. */
+	CommandList = []
+	/** @type {boolean} Tells if Protip is ready. */
+	IsReady = false
+	/** @type {number} Starts interval timer for checks. */
+	Timer
+	/* jshint ignore:end */
 
-		/**
-		 * Tells if Protip is ready.
-		 *
-		 * @type {boolean}
-		 * @private
-		 */
-		this._isReady = false
-
-		/**
-		 * Starts interval timer for checks.
-		 *
-		 * @type {number}
-		 * @private
-		 */
-		this._timer = setInterval(this._check.bind(this), 10)
+	constructor($) {
+		this.Timer = setInterval(this._check.bind(this), 10)
 	}
 
 	/**
@@ -42,20 +28,11 @@ export default class Buffer {
 	 * @param {Element} el      The HTML Element the item is called on.
 	 * @param {cmdArgs} cmdArgs The arguments the command was called with.
 	 */
-	add(cmd, el, cmdArgs) {
-		this._commandList.push({
+	add(cmd, cmdArgs) {
+		this.CommandList.push({
 			cmd: cmd,
-			el: el,
 			cmdArgs: cmdArgs
 		})
-	}
-
-	/**
-	 * Public getter for isReady.
-	 * @returns {boolean}
-	 */
-	get isReady() {
-		return this._isReady;
 	}
 
 	/**
@@ -63,10 +40,10 @@ export default class Buffer {
 	 * @private
 	 */
 	_check() {
-		Class.getInstance()
-		&& (this._isReady = true)
-		&& (!this._commandList.length || this._run())
-		&& clearInterval(this._timer)
+		window.Protip.Ready
+		&& (this.IsReady = true)
+		&& (!this.CommandList.length || this._run())
+		&& clearInterval(this.Timer)
 	}
 
 	/**

@@ -5,7 +5,7 @@
  * generate the position list for gravity testing.
  */
 
-import * as C from 'Constants'
+import * as C from './Constants'
 
 export default class {
 

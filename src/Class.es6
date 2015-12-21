@@ -3,10 +3,10 @@
  * Initalizes and handles the the Item Instances.
  */
 
-import Defaults from 'Defaults'
-import * as C from 'Constants'
-import Util from 'Util'
-import Item from 'Item'
+import Defaults from './Defaults'
+import * as C from './Constants'
+import Util from './Util'
+import Item from './Item'
 
 // Lower the interval time, we don't need that much accuracy.
 try {

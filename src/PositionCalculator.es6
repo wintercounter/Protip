@@ -3,7 +3,7 @@
  * Calculates the proper top/left values for a tooltip.
  */
 
-import * as C from 'Constants'
+import * as C from './Constants'
 
 export default class {
 
@@ -58,7 +58,7 @@ export default class {
 		 * @type {object}
 		 * @private
 		 */
-		this.Target = this._getProto(this.Item.$target);
+		this.Target = this._getProto(this.Item.$target)
 
 		/**
 		 * Position.
@@ -66,7 +66,7 @@ export default class {
 		 * @type {string}
 		 * @private
 		 */
-		this.Position = position || this.Item.get(C.PROP_POSITION);
+		this.Position = position || this.Item.get(C.PROP_POSITION)
 
 		/**
 		 * Placement.
@@ -74,7 +74,7 @@ export default class {
 		 * @type {string}
 		 * @private
 		 */
-		this.Placement = this.Item.get(C.PROP_PLACEMENT);
+		this.Placement = this.Item.get(C.PROP_PLACEMENT)
 
 		/**
 		 * Offset of the tooltip.
@@ -83,8 +83,8 @@ export default class {
 		 * @private
 		 */
 		this.Offset = offset || {
-			top: this._itemInstance.data.offsetTop,
-			left: this._itemInstance.data.offsetLeft
+			top : this.Item.$source.get(C.PROP_OFFSET_TOP),
+			left: this.Item.$source.get(C.PROP_OFFSET_LEFT)
 		}
 
 		return this._getPosition()
@@ -94,180 +94,187 @@ export default class {
 	 * Fetches some initial values for an element.
 	 * width, height, offset
 	 *
-	 * @param el {jQuery} Element we want to get the values for.
+	 * @param el {Element} Element we want to get the values for.
 	 * @returns {object}
 	 * @private
 	 */
-	_getProto:
-
-	function(el) {
-		var proto = {
-			el: undefined,
-			width: undefined,
-			height: undefined,
-			offset: undefined
-		};
-		proto.el = el;
-		proto.width = el.outerWidth();
-		proto.height = el.outerHeight();
-		proto.offset = el.offset();
-		return proto;
+	static _getProto (el) {
+		let rect = el.getBoundingClientRect()
+		return {
+			$el:    el,
+			width:  el.offsetWidth,
+			height: el.offsetHeight,
+			offset: {
+				top:  rect.top + document.body.scrollTop,
+				left: rect.left + document.body.scrollLeft
+			}
+		}
 	}
-
-,
 
 	/**
 	 * Calculates the CSS position.
 	 *
-	 * @returns {{top: number, left: number}}
+	 * @returns {{top: string, left: string}}
 	 * @private
 	 */
-	_getPosition:
+	_getPosition () {
+		this.Item.applyPosition(this._position)
 
-	function() {
-		this._itemInstance.applyPosition(this._position);
+		let left = 0
+		let top = 0
+		let sourceOffsetLeft = this._source.offset.left
+		let sourceOffsetTop = this._source.offset.top
+		let targetOffsetLeft = this._target.offset.left
+		let targetOffsetTop = this._target.offset.top
+		let offsetLeft = this._offset.left
+		let offsetTop = this._offset.top
+		let arrowOffset = this.Item.getArrowOffset()
+		let arrowOffsetWidth = arrowOffset.width
+		let arrowOffsetHeight = arrowOffset.height
+		let protipWidth = this._protip.width
+		let protipHeight = this._protip.height
+		let sourceWidth = this._source.width
+		let sourceHeight = this._source.height
+		let globalOffset = this.Item.Global.offset
+		let placement = this._placement
+		
+		let INSIDE = C.PLACEMENT_INSIDE
+		let BORDER = C.PLACEMENT_BORDER
 
-		var position = {left: 0, top: 0};
-		var arrowOffset = this._itemInstance.getArrowOffset();
-		var globalOffset = this._itemInstance.classInstance.settings.offset;
-
-		if (this._placement !== C.PLACEMENT_CENTER) {
+		if (placement !== C.PLACEMENT_CENTER) {
 			switch (this._position) {
 				case C.POSITION_TOP:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = ((this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left) + this._offset.left;
-					position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight) * -1
+					left = ((sourceOffsetLeft + sourceWidth / 2 - protipWidth / 2) - targetOffsetLeft) + offsetLeft
+					top = (sourceOffsetTop - protipHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) top += protipHeight
+					if (placement === BORDER) top += protipHeight / 2
+					break
 				case C.POSITION_TOP_LEFT:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight) * -1
+					left = (sourceOffsetLeft) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop - protipHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) top += protipHeight
+					if (placement === BORDER) top += protipHeight / 2
+					break
 				case C.POSITION_TOP_RIGHT:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight) * -1
+					left = (sourceOffsetLeft + sourceWidth - protipWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop - protipHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) top += protipHeight
+					if (placement === BORDER) top += protipHeight / 2
+					break
 				case C.POSITION_RIGHT:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
-					if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
-					break;
+					offsetLeft += (globalOffset + arrowOffsetWidth)
+					left = (sourceOffsetLeft + sourceWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight / 2 - protipHeight / 2) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left -= protipWidth
+					if (placement === BORDER) left -= protipWidth / 2
+					break
 				case C.POSITION_RIGHT_TOP:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
-					if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
-					break;
+					offsetLeft += (globalOffset + arrowOffsetWidth)
+					left = (sourceOffsetLeft + sourceWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left -= protipWidth
+					if (placement === BORDER) left -= protipWidth / 2
+					break
 				case C.POSITION_RIGHT_BOTTOM:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
-					if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
-					break;
+					offsetLeft += (globalOffset + arrowOffsetWidth)
+					left = (sourceOffsetLeft + sourceWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight - protipHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left -= protipWidth
+					if (placement === BORDER) left -= protipWidth / 2
+					break
 				case C.POSITION_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight)
+					left = (sourceOffsetLeft + sourceWidth / 2 - protipWidth / 2) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) top -= protipHeight
+					if (placement === BORDER) top -= protipHeight / 2
+					break
 				case C.POSITION_BOTTOM_LEFT:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight)
+					left = (sourceOffsetLeft) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) top -= protipHeight
+					if (placement === BORDER) top -= protipHeight / 2
+					break
 				case C.POSITION_BOTTOM_RIGHT:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight)
+					left = (sourceOffsetLeft + sourceWidth - protipWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) top -= protipHeight
+					if (placement === BORDER) top -= protipHeight / 2
+					break
 				case C.POSITION_LEFT:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
-					if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
-					break;
+					offsetLeft += (globalOffset + arrowOffsetWidth) * -1
+					left = (sourceOffsetLeft - protipWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight / 2 - protipHeight / 2) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left += protipWidth
+					if (placement === BORDER) left += protipWidth / 2
+					break
 				case C.POSITION_LEFT_TOP:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
-					if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
-					break;
+					offsetLeft += (globalOffset + arrowOffsetWidth) * -1
+					left = (sourceOffsetLeft - protipWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left += protipWidth
+					if (placement === BORDER) left += protipWidth / 2
+					break
 				case C.POSITION_LEFT_BOTTOM:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
-					if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
-					break;
+					offsetLeft += (globalOffset + arrowOffsetWidth) * -1
+					left = (sourceOffsetLeft - protipWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight - protipHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left += protipWidth
+					if (placement === BORDER) left += protipWidth / 2
+					break
 				case C.POSITION_CORNER_LEFT_TOP:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
-					if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight) * -1
+					left = (sourceOffsetLeft - protipWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop - protipHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left += protipWidth
+					if (placement === INSIDE) top += protipHeight
+					if (placement === BORDER) left += protipWidth / 2
+					if (placement === BORDER) top += protipHeight / 2
+					break
 				case C.POSITION_CORNER_LEFT_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
-					if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight)
+					left = (sourceOffsetLeft - protipWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left += protipWidth
+					if (placement === INSIDE) top -= protipHeight
+					if (placement === BORDER) left += protipWidth / 2
+					if (placement === BORDER) top -= protipHeight / 2
+					break
 				case C.POSITION_CORNER_RIGHT_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
-					if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
+					offsetTop += (globalOffset + arrowOffsetHeight)
+					left = (sourceOffsetLeft + sourceWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop + sourceHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left -= protipWidth
+					if (placement === INSIDE) top -= protipHeight
+					if (placement === BORDER) left -= protipWidth / 2
+					if (placement === BORDER) top -= protipHeight / 2
 					break;
 				case C.POSITION_CORNER_RIGHT_TOP:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
-					if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
-					if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
-					if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
-					break;
-				default:
-					break;
+					offsetTop += (globalOffset + arrowOffsetHeight) * -1
+					left = (sourceOffsetLeft + sourceWidth) - targetOffsetLeft + offsetLeft
+					top = (sourceOffsetTop - protipHeight) - targetOffsetTop + offsetTop
+					if (placement === INSIDE) left -= protipWidth
+					if (placement === INSIDE) top += protipHeight
+					if (placement === BORDER) left -= protipWidth / 2
+					if (placement === BORDER) top += protipHeight / 2
+					break
+				default: break
 			}
 		}
-
 		// Center Placement
 		else {
-			position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
-			position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+			left = (sourceOffsetLeft + sourceWidth / 2 - protipWidth / 2) - targetOffsetLeft + offsetLeft
+			top = (sourceOffsetTop + sourceHeight / 2 - protipHeight / 2) - targetOffsetTop + offsetTop
 		}
 
-		position.left = position.left + 'px';
-		position.top = position.top + 'px';
-
-		return position;
+		return {
+			left: left + 'px',
+			top : top + 'px'
+		}
 	}
-
 }

@@ -2,11 +2,11 @@
  * The class represents on tooltip's instance.
  */
 
-import * as C from 'Constants'
-import GravityTester from 'GravityTester'
-import PositionCalculator from 'PositionCalculator'
-import Observer from 'Observer'
-import Util from 'Util'
+import * as C from './Constants'
+import GravityTester from './GravityTester'
+import PositionCalculator from './PositionCalculator'
+import Observer from './Observer'
+import Util from './Util'
 
 export default class extends Observer {
 
@@ -38,7 +38,7 @@ export default class extends Observer {
 	constructor(id, el, global, override) {
 
 		// Attaches observer event handlers
-		super.constructor(el)
+		super(el)
 
 		this.Global = global
 
@@ -545,6 +545,7 @@ export default class extends Observer {
 
 		if (this.get(C.PROP_OBSERVER)) {
 			this.Observer = new MutationObserver(() => {
+				// TODO trigger reload event
 				this.classInstance.reloadItemInstance(this.El.source)
 			})
 

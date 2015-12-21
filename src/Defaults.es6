@@ -1,4 +1,4 @@
-import * as C from 'Constants'
+import * as C from './Constants'
 
 export default {
 	/** @type String    Selector for protips */
