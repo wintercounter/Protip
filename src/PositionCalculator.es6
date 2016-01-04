@@ -8,10 +8,10 @@ import * as C from './Constants'
 export default class {
 
 	/* jshint ignore:start */
-	Item      = undefined
 	Protip    = undefined
 	Source    = undefined
 	Target    = undefined
+	Item      = undefined
 	Position  = undefined
 	Placement = undefined
 	Offset    = undefined
@@ -21,20 +21,20 @@ export default class {
 	 * Constructor.
 	 *
 	 * @memberOf PositionCalculator
-	 * @param itemInstance {ProtipItemClass}             ProtipItem instance.
+	 * @param itemInstance {Element}                     ProtipItem instance.
 	 * @param position     {string}                      Position to calculate for.
 	 * @param offset       {{top: number, left: number}} X/Y offset of the tooltip.
 	 * @returns {*}
 	 * @private
 	 */
-	constructor (item, position, offset) {
+	constructor ($, position, offset) {
 		/**
 		 * ProtipItem instance.
 		 *
 		 * @type {ProtipItemClass}
 		 * @private
 		 */
-		this.Item = item
+		this.Item = $.protip.getInstance($)
 
 		/**
 		 * Initial values of of the protip element.
@@ -61,12 +61,20 @@ export default class {
 		this.Target = this._getProto(this.Item.$target)
 
 		/**
+		 * Initial values of of the target element.
+		 *
+		 * @type {object}
+		 * @private
+		 */
+		this.Arrow = this._getProto(this.Item.$arrow)
+
+		/**
 		 * Position.
 		 *
 		 * @type {string}
 		 * @private
 		 */
-		this.Position = position || this.Item.get(C.PROP_POSITION)
+		this.Position = position || this.Protip.$.protip.get(C.PROP_POSITION)
 
 		/**
 		 * Placement.
@@ -74,7 +82,7 @@ export default class {
 		 * @type {string}
 		 * @private
 		 */
-		this.Placement = this.Item.get(C.PROP_PLACEMENT)
+		this.Placement = this.Protip.$.protip.get(C.PROP_PLACEMENT)
 
 		/**
 		 * Offset of the tooltip.
@@ -83,8 +91,8 @@ export default class {
 		 * @private
 		 */
 		this.Offset = offset || {
-			top : this.Item.$source.get(C.PROP_OFFSET_TOP),
-			left: this.Item.$source.get(C.PROP_OFFSET_LEFT)
+			top : this.Source.$.protip.get(C.PROP_OFFSET_TOP),
+			left: this.Source.$.protip.get(C.PROP_OFFSET_LEFT)
 		}
 
 		return this._getPosition()
@@ -98,15 +106,27 @@ export default class {
 	 * @returns {object}
 	 * @private
 	 */
-	static _getProto (el) {
-		let rect = el.getBoundingClientRect()
-		return {
-			$el:    el,
-			width:  el.offsetWidth,
-			height: el.offsetHeight,
-			offset: {
-				top:  rect.top + document.body.scrollTop,
-				left: rect.left + document.body.scrollLeft
+	_getProto ($) {
+		if ($) {
+			let rect = $.getBoundingClientRect()
+			return {
+				$: $,
+				width: $.offsetWidth,
+				height: $.offsetHeight,
+				offset: {
+					top: rect.top + document.body.scrollTop,
+					left: rect.left + document.body.scrollLeft
+				}
+			}
+		}
+		else {
+			return {
+				width: 0,
+				height: 0,
+				offset: {
+					top: 0,
+					left: 0
+				}
 			}
 		}
 	}
@@ -122,27 +142,26 @@ export default class {
 
 		let left = 0
 		let top = 0
-		let sourceOffsetLeft = this._source.offset.left
-		let sourceOffsetTop = this._source.offset.top
-		let targetOffsetLeft = this._target.offset.left
-		let targetOffsetTop = this._target.offset.top
-		let offsetLeft = this._offset.left
-		let offsetTop = this._offset.top
-		let arrowOffset = this.Item.getArrowOffset()
-		let arrowOffsetWidth = arrowOffset.width
-		let arrowOffsetHeight = arrowOffset.height
-		let protipWidth = this._protip.width
-		let protipHeight = this._protip.height
-		let sourceWidth = this._source.width
-		let sourceHeight = this._source.height
-		let globalOffset = this.Item.Global.offset
-		let placement = this._placement
+		let sourceOffsetLeft = this.Source.offset.left
+		let sourceOffsetTop = this.Source.offset.top
+		let targetOffsetLeft = this.Target.offset.left
+		let targetOffsetTop = this.Target.offset.top
+		let offsetLeft = this.Offset.left
+		let offsetTop = this.Offset.top
+		let arrowOffsetWidth = this.Arrow.width
+		let arrowOffsetHeight = this.Arrow.height
+		let protipWidth = this.Protip.width
+		let protipHeight = this.Protip.height
+		let sourceWidth = this.Source.width
+		let sourceHeight = this.Source.height
+		let globalOffset = Protip.Class.settings.offset
+		let placement = this.Placement
 		
 		let INSIDE = C.PLACEMENT_INSIDE
 		let BORDER = C.PLACEMENT_BORDER
 
 		if (placement !== C.PLACEMENT_CENTER) {
-			switch (this._position) {
+			switch (this.Position) {
 				case C.POSITION_TOP:
 					offsetTop += (globalOffset + arrowOffsetHeight) * -1
 					left = ((sourceOffsetLeft + sourceWidth / 2 - protipWidth / 2) - targetOffsetLeft) + offsetLeft

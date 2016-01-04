@@ -7,7 +7,7 @@
 
 export default class {
 	// Deep copy
-	extend(out) {
+	static extend (out) {
 		out = out || {}
 
 		for (var i = 1; i < arguments.length; i++) {
@@ -23,7 +23,7 @@ export default class {
 	}
 
 	// Nano Templates - https://github.com/trix/nano
-	nano(template, data) {
+	static nano (template, data) {
 		return template.replace(/\{([\w\.]*)}/g, (str, key) => {
 			let keys = key.split(".")
 			let v = data[keys.shift()]

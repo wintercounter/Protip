@@ -81,7 +81,8 @@ export default class {
 	}
 
 	_fire(event) {
-		this.events[event].forEach((callback) => {
+		this.events[event]
+		&& this.events[event].forEach((callback) => {
 			callback.call(this, this.data)
 			this.element.dispatchEvent(
 				new CustomEvent(event, {

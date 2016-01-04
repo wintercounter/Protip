@@ -208,7 +208,7 @@ export default class extends Observer {
 
 		// Handle gravity/non-gravity based position calculations
 		if (this.get(C.PROP_GRAVITY)) {
-			style = new GravityTester(this)
+			style = new GravityTester(this.$protip)
 			delete style.position
 		}
 		else {
@@ -275,18 +275,6 @@ export default class extends Observer {
 	}
 
 	/**
-	 * Returns arrow offset (width/height)
-	 *
-	 * @returns {{width: number, height: number}}
-	 */
-	getArrowOffset() {
-		return {
-			width : this.$arrow.offsetWidth,
-			height: this.$arrow.offsetHeight
-		}
-	}
-
-	/**
 	 * Fetches every data-* properties from the source element.
 	 * It extends the defaults, then it applies back to the element.
 	 *
@@ -294,16 +282,16 @@ export default class extends Observer {
 	 */
 	_setData() {
 		// 1. Default settings
-		let data = this.Global.settings.defaults
+		let data = this.Global.defaults
 		// 2. Attribute settings
-		this.$source.attributes.forEach((attr) => {
-			(attr.indexOf(C.DEFAULT_NAMESPACE) === 0)
-			&& (data[attr.replace(C.DEFAULT_NAMESPACE + '-')] = this.$source.getAttribute(attr))
+		Array.prototype.slice.call(this.$source.attributes).forEach((attr) => {
+			(attr.name.indexOf(C.DEFAULT_NAMESPACE) === 0)
+			&& (data[attr.name.replace(C.DEFAULT_NAMESPACE + '-', '')] = attr.value)
 		})
 		// 3. Overrided settings
 		data = Util.extend(data, this.Override)
 		// 4. Set on element
-		Object.keys(data).forEach(this.set, this)
+		Object.keys(data).forEach((key) => this.set(key, data[key]))
 	}
 
 	/**

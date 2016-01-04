@@ -5,6 +5,7 @@ var sourcemaps = require('gulp-sourcemaps')
 var babel = require('gulp-babel')
 var concat = require('gulp-concat')
 var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 
 gulp.task('babel', function () {
 	return gulp.src("src/**/*.es6")
@@ -16,13 +17,13 @@ gulp.task('babel', function () {
 		.pipe(gulp.dest('./temp'));
 });
 
-gulp.task('browserify', function () {
-	return browserify('./temp/Prototype.js')
+gulp.task('browserify', ['babel'], function () {
+	return browserify('./temp/Api.js')
 			.bundle()
 			//Pass desired output filename to vinyl-source-stream
-			//.pipe(source('protip.js'))
+			.pipe(source('dist/protip.js'))
 			// Start piping stream to tasks!
-			.pipe(gulp.dest('./dist/'));
+			.pipe(gulp.dest('.'));
 });
 
 

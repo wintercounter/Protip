@@ -12,36 +12,27 @@ import Util from './Util'
 
 export default class {
 
+	/* jshint ignore:start */
+	/**
+	 * ItemClass instance.
+	 *
+	 * @type {ProtipItemClass}
+	 * @private
+	 */
+	$ = undefined
+	Result = undefined
+	PositionList = undefined
+	/* jshint ignore:end */
+
 	/**
 	 * Constructor.
 	 * @param protipItemInstance {ProtipItemClass} The ProtipItem Instance.
 	 * @returns {<top>:<string>, <left>:<string>}
 	 * @private
 	 */
-	constructor(itemInstance) {
-		/**
-		 * ItemClass instance.
-		 *
-		 * @type {ProtipItemClass}
-		 * @private
-		 */
-		this._item = itemInstance
+	constructor($) {
 
-		/**
-		 * Current itemInstance's protip element
-		 *
-		 * @type {Element}
-		 * @private
-		 */
-		this._protipEl = itemInstance.el.protip
-
-		/**
-		 * Results.
-		 *
-		 * @type {object}
-		 * @private
-		 */
-		this._result = undefined
+		this.$ = $
 
 		// Set some initial values.
 		this._setWindowDimensions()
@@ -52,22 +43,22 @@ export default class {
 		 * @type {array}
 		 * @private
 		 */
-		this._positionList = new GravityParser(
-			this._item.data.gravity,
-			this._item.data.position
+		this.PositionList = new GravityParser(
+			$.protip.get(C.PROP_GRAVITY),
+			$.protip.get(C.PROP_POSITION)
 		)
 
 		// Iterate through each position and do a check.
-		for (let i = 0; i < this._positionList.length; i++) {
+		for (let i = 0; i < this.PositionList.length; i++) {
 			// We had a successful test, break the loop.
-			if (this._test(this._positionList[i])) break
+			if (this._test(this.PositionList[i])) break
 		}
 
 		// Set first for prior
-		this._item.data.position = this._positionList[0].key
+		//this._item.data.position = this._positionList[0].key
 
 		// Return the result if we had one. Return values for the default position if not.
-		return this._result || new PositionCalculator(this._item)
+		return this._result || new PositionCalculator(this.$)
 	}
 
 	/**
@@ -81,11 +72,11 @@ export default class {
 	_test(position) {
 		this._setProtipMinWidth()
 		let result = new PositionCalculator(
-			this._item,
+			this.$,
 			position.key,
 			position
 		)
-		Util.extend(this._item.el, result)
+		Util.extend(this.$.style, result)
 		this._setProtipDimensions()
 
 		if (this._topOk() && this._rightOk() && this._bottomOk() && this._leftOk()) {
@@ -142,20 +133,20 @@ export default class {
 	 * @private
 	 */
 	_setProtipMinWidth() {
-		if (this._item.classInstance.settings.forceMinWidth) {
+		if (Protip.Class.settings.forceMinWidth) {
 
-			Util.extend(this._protipEl.style, {
+			Util.extend(this.$.style, {
 				position: 'fixed',
 				left: 0,
 				top: 0,
 				minWidth: 0
 			})
 
-			Util.extend(this._protipEl.style, {
+			Util.extend(this.$.style, {
 				position: '',
 				left: '',
 				top: '',
-				minWidth: `${this._protipEl.offsetWidth+1}px`
+				minWidth: `${this.$.offsetWidth+1}px`
 			})
 		}
 	}
@@ -167,11 +158,11 @@ export default class {
 	 */
 	_setProtipDimensions() {
 		this._dimensions = {
-			width:  this._protipEl.offsetWidth,
-			height: this._protipEl.offsetHeight,
+			width:  this.$.offsetWidth,
+			height: this.$.offsetHeight,
 			offset: {
-				top: this._protipEl.offsetTop,
-				left: this._protipEl.offsetLeft
+				top: this.$.offsetTop,
+				left: this.$.offsetLeft
 			}
 		}
 	}

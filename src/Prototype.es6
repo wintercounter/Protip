@@ -1,6 +1,5 @@
+import * as C from './Constants'
 import Buffer from './Buffer'
-
-let Protip = window.Protip
 
 export default class {
 
@@ -8,11 +7,23 @@ export default class {
 	$ = undefined
 	Buffer = undefined
 	Protip = undefined
+	Prop = {}
+
 	/* jshint ignore:end */
 
-	constructor (el) {
-		this.$ = el
-		this.Buffer = new Buffer(el)
+	constructor ($) {
+		this.$ = $
+		this.Buffer = new Buffer(this)
+	}
+
+	/**
+	 * Simply sets tooltip to the element but it won't show.
+	 *
+	 * @param override [String] Pass custom settings to this tooltip.
+	 * @returns {String|Object}
+	 */
+	get (prop) {
+		return prop ? this.Prop[prop] : this.Prop
 	}
 	/**
 	 * Simply sets tooltip to the element but it won't show.
@@ -20,15 +31,13 @@ export default class {
 	 * @param override [Object] Pass custom settings to this tooltip.
 	 * @returns {Element}
 	 */
-	set (override) {
-		if (this.Buffer.isReady()) {
-			this.$.protip.destroy()
-			Protip.getItem(this.$, override)
-		}
-		else {
-			this.Buffer.add('set', arguments)
-		}
-		return this.$
+	set (prop, val) {
+		this.Prop[prop] = val
+		return this
+	}
+
+	getInstance () {
+		return Protip.get(this.$)
 	}
 
 	/**
@@ -40,7 +49,7 @@ export default class {
 	show (override) {
 		if (this.Buffer.isReady()) {
 			this.el.protip.destroy()
-			Protip.getItem(this.$, override).show(true)
+			this.getInstance(this.$).show(true)
 		}
 		else {
 			this.Buffer.add('show', arguments)
@@ -55,7 +64,7 @@ export default class {
 	 */
 	hide () {
 		if (this.Buffer.isReady()) {
-			Protip.getItem(this.$).hide(true)
+			this.getInstance(this.$).hide(true)
 		}
 		else {
 			this.Buffer.add('hide', arguments)
@@ -70,7 +79,7 @@ export default class {
 	 */
 	toggle () {
 		if (this.Buffer.isReady()) {
-			let instance = Protip.getItem(this.$)
+			let instance = this.getInstance(this.$)
 			instance.isVisible()
 				? instance.hide(true)
 				: instance.show(true)
@@ -132,8 +141,8 @@ export default class {
 	 */
 	_findAll (callback){
 		[].forEach.call(
-			this.el.querySelectorAll(Protip.Instance.settings.selector),
-			callback.bind(this.el)
+			this.$.querySelectorAll(Protip.Class.settings.selector),
+			callback.bind(this.$)
 		)
 	}
 }

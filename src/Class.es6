@@ -123,9 +123,10 @@ export default class {
 	 */
 	createItemInstance(el, override) {
 		let id = this._generateId()
-		this._itemInstances[id] = new Item(id, el, this, override)
+		this._itemInstances[id] = new Item(id, el, this.settings, override)
 		// TODO: replace data
 		el.protip.set(C.PROP_IDENTIFIER, id)
+		el.protip.set(C.PROP_INITED, true)
 		return this._itemInstances[id]
 	}
 
@@ -145,14 +146,14 @@ export default class {
 	 * Getter for retriving an ItemClass instance based on the passwed element.
 	 * In case this element doesn't have ItemClass yet this method will also create a new one.
 	 *
-	 * @param el       {Element} The element we're searching it's instance for.
+	 * @param $       {Element} The element we're searching it's instance for.
 	 * @param override [Object]  Settings overridables
 	 * @returns {Item}
 	 */
-	getItemInstance (el, override){
-		return el.protip.get(C.PROP_INITED)
-				? this._itemInstances[el.protip.get(C.PROP_IDENTIFIER)]
-				: this.createItemInstance(el, override)
+	getItem ($, override){
+		return $.protip.get(C.PROP_INITED)
+			? this._itemInstances[$.protip.get(C.PROP_IDENTIFIER)]
+			: this.createItemInstance($, override)
 	}
 
 	/**
@@ -165,7 +166,7 @@ export default class {
 		// Prevent early fetches
 		setTimeout(() => {
 			let elements = document.querySelectorAll(this.settings.selector)
-			Array.prototype.forEach.call(elements, (el) => this.getItemInstance(el))
+			Array.prototype.forEach.call(elements, ($) => this.getItem($))
 		});
 	}
 
@@ -215,12 +216,11 @@ export default class {
 	 */
 	_onAction(ev) {
 		for (let target = ev.target; target && target !== document.body; target = target.parentNode) {
-			if (target.matches(this.settings.selector)) {
-				let el = target
-				let item = this.getItemInstance(el)
+			if (target.matches && target.matches(this.settings.selector)) {
+				let item = this.getItem(target)
 
 				ev.type === C.EVENT_CLICK
-				&& el.protip.get(C.PROP_TRIGGER) === C.TRIGGER_CLICK
+				&& target.protip.get(C.PROP_TRIGGER) === C.TRIGGER_CLICK
 				&& ev.preventDefault()
 
 				item.actionHandler(ev.type)
@@ -253,15 +253,15 @@ export default class {
 		let el                = ev.target;
 		let container         = el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false
 		let source            = el.closest(C.DEFAULT_SELECTOR)
-		let containerInstance = container.protip.get(C.PROP_INITED) ? this.getItemInstance(container) : false
+		let containerInstance = container && container.protip.get(C.PROP_INITED) ? this.getItem(container) : false
 
 		if (!containerInstance || containerInstance && container.protip.get(C.PROP_TRIGGER) !== C.TRIGGER_CLICK) {
 			Object.keys(this._itemInstances).forEach((key) => {
 				let item = this._itemInstances[key]
-				item.isVisible()
-				&& item.el.protip.get(C.PROP_TRIGGER) === C.TRIGGER_CLICK
-				&& (!container || item.el.protip !== container)
-				&& (!source || item.el.source !== source)
+				item.isVisible
+				&& item.$protip.get(C.PROP_TRIGGER) === C.TRIGGER_CLICK
+				&& (!container || item.$protip !== container)
+				&& (!source || item.$source !== source)
 				&& item.hide()
 			})
 		}
@@ -275,7 +275,7 @@ export default class {
 	 */
 	_onCloseClick(ev) {
 		for (let target = ev.target; target && target !== document.body; target = target.parentNode) {
-			if (target.matches(C.SELECTOR_CLOSE)) {
+			if (target.matches && target.matches(C.SELECTOR_CLOSE)) {
 				let identifier = target.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER).protip.get(C.PROP_IDENTIFIER)
 				this._itemInstances[identifier] && this._itemInstances[identifier].hide()
 			}
@@ -293,12 +293,13 @@ export default class {
 			// Nodes added
 			for (let i = 0; i < mutation.addedNodes.length; i++) {
 				let node = mutation.addedNodes[i]
-				if (!node.classList.contains(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)) {
+				node = node.classList ? node : node.parentNode
+				if (node.parentNode && !node.classList.contains(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)) {
 					Array.prototype.forEach.call(node.parentNode.querySelectorAll(this.settings.selector), (el) => {
 						if (el.protip.get(C.PROP_INITED)) {
 							return
 						}
-						this.getItemInstance(el) // Init pls
+						this.getItem(el) // Init pls
 						if (el.protip.get(C.PROP_TRIGGER) === C.TRIGGER_STICKY) {
 							el.protip.show()
 						}
@@ -321,12 +322,11 @@ export default class {
 	 * @private
 	 */
 	_bind() {
-		document
-			.addEventListener(C.EVENT_CLICK, this._onBodyClick.bind(this))
-			.addEventListener(C.EVENT_MOUSEOVER, this._onAction.bind(this))
-			.addEventListener(C.EVENT_MOUSEOUT, this._onAction.bind(this))
-			.addEventListener(C.EVENT_CLICK, this._onAction.bind(this))
-			.addEventListener(C.EVENT_CLICK, this._onCloseClick.bind(this))
+		document.addEventListener(C.EVENT_CLICK, this._onBodyClick.bind(this))
+		document.addEventListener(C.EVENT_MOUSEOVER, this._onAction.bind(this))
+		document.addEventListener(C.EVENT_MOUSEOUT, this._onAction.bind(this))
+		document.addEventListener(C.EVENT_CLICK, this._onAction.bind(this))
+		document.addEventListener(C.EVENT_CLICK, this._onCloseClick.bind(this))
 
 		window.addEventListener(C.EVENT_RESIZE, this._onResize.bind(this))
 
@@ -349,12 +349,11 @@ export default class {
 	 * @private
 	 */
 	_unbind() {
-		document
-			.removeEventListener(C.EVENT_CLICK, this._onBodyClick.bind(this))
-			.removeEventListener(C.EVENT_MOUSEOVER, this._onAction.bind(this))
-			.removeEventListener(C.EVENT_MOUSEOUT, this._onAction.bind(this))
-			.removeEventListener(C.EVENT_CLICK, this._onAction.bind(this))
-			.removeEventListener(C.EVENT_CLICK, this._onCloseClick.bind(this))
+		document.removeEventListener(C.EVENT_CLICK, this._onBodyClick.bind(this))
+		document.removeEventListener(C.EVENT_MOUSEOVER, this._onAction.bind(this))
+		document.removeEventListener(C.EVENT_MOUSEOUT, this._onAction.bind(this))
+		document.removeEventListener(C.EVENT_CLICK, this._onAction.bind(this))
+		document.removeEventListener(C.EVENT_CLICK, this._onCloseClick.bind(this))
 
 		window.removeEventListener(C.EVENT_RESIZE, this._onResize.bind(this))
 
