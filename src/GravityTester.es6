@@ -30,9 +30,10 @@ export default class {
 	 * @returns {<top>:<string>, <left>:<string>}
 	 * @private
 	 */
-	constructor($) {
+	constructor($source, $protip) {
 
-		this.$ = $
+		this.$source = $source
+		this.$protip = $protip
 
 		// Set some initial values.
 		this._setWindowDimensions()
@@ -44,8 +45,8 @@ export default class {
 		 * @private
 		 */
 		this.PositionList = new GravityParser(
-			$.protip.get(C.PROP_GRAVITY),
-			$.protip.get(C.PROP_POSITION)
+			this.$source.protip.get(C.PROP_GRAVITY),
+			this.$source.protip.get(C.PROP_POSITION)
 		)
 
 		// Iterate through each position and do a check.
@@ -58,7 +59,7 @@ export default class {
 		//this._item.data.position = this._positionList[0].key
 
 		// Return the result if we had one. Return values for the default position if not.
-		return this._result || new PositionCalculator(this.$)
+		return this._result || new PositionCalculator(this.$protip)
 	}
 
 	/**
@@ -72,11 +73,11 @@ export default class {
 	_test(position) {
 		this._setProtipMinWidth()
 		let result = new PositionCalculator(
-			this.$,
+			this.$protip,
 			position.key,
 			position
 		)
-		Util.extend(this.$.style, result)
+		Util.extend(this.$protip.style, result)
 		this._setProtipDimensions()
 
 		if (this._topOk() && this._rightOk() && this._bottomOk() && this._leftOk()) {
@@ -135,18 +136,18 @@ export default class {
 	_setProtipMinWidth() {
 		if (Protip.Class.settings.forceMinWidth) {
 
-			Util.extend(this.$.style, {
+			Util.extend(this.$protip.style, {
 				position: 'fixed',
 				left: 0,
 				top: 0,
 				minWidth: 0
 			})
 
-			Util.extend(this.$.style, {
+			Util.extend(this.$protip.style, {
 				position: '',
 				left: '',
 				top: '',
-				minWidth: `${this.$.offsetWidth+1}px`
+				minWidth: `${this.$protip.offsetWidth+1}px`
 			})
 		}
 	}
@@ -158,11 +159,11 @@ export default class {
 	 */
 	_setProtipDimensions() {
 		this._dimensions = {
-			width:  this.$.offsetWidth,
-			height: this.$.offsetHeight,
+			width:  this.$protip.offsetWidth,
+			height: this.$protip.offsetHeight,
 			offset: {
-				top: this.$.offsetTop,
-				left: this.$.offsetLeft
+				top: this.$protip.offsetTop,
+				left: this.$protip.offsetLeft
 			}
 		}
 	}

@@ -19,6 +19,16 @@ try {
 
 export default class {
 	/**
+	 * Object storing the Item Class Instances
+	 *
+	 * @type {Object.<Number>.<ProtipItemClass>}
+	 * @private
+	 */
+	/* jshint ignore:start */
+	Items = {}
+	/* jshint ignore:end */
+
+	/**
 	 * @memberOf ProtipClass
 	 * @param settings [Object] Overridable configuration options
 	 * @returns {ProtipClass}
@@ -33,14 +43,6 @@ export default class {
 		 * @private
 		 */
 		this.settings = Util.extend(Defaults, settings)
-
-		/**
-		 * Object storing the Item Class Instances
-		 *
-		 * @type {Object.<Number>.<ProtipItemClass>}
-		 * @private
-		 */
-		this._itemInstances = {}
 
 		/**
 		 * Object storing the MutationObserver instance
@@ -85,11 +87,11 @@ export default class {
 	destroy() {
 		this._unbind()
 
-		Object.keys(this._itemInstances).forEach((key) => {
+		Object.keys(this.Items).forEach((key) => {
 			this.destroyItemInstance(key)
 		})
 
-		this._itemInstances = undefined
+		this.Items = undefined
 		this.settings       = undefined
 		window.Protip       = undefined
 	}
@@ -101,7 +103,7 @@ export default class {
 	 * @param key {string} Item instance identifier.
 	 */
 	destroyItemInstance(key) {
-		this._itemInstances[key].destroy()
+		this.Items[key].destroy()
 	}
 
 	/**
@@ -110,7 +112,7 @@ export default class {
 	 * @param key
 	 */
 	onItemDestroyed(key) {
-		delete this._itemInstances[key]
+		delete this.Items[key]
 	}
 
 	/**
@@ -123,11 +125,11 @@ export default class {
 	 */
 	createItemInstance(el, override) {
 		let id = this._generateId()
-		this._itemInstances[id] = new Item(id, el, this.settings, override)
+		this.Items[id] = new Item(id, el, this.settings, override)
 		// TODO: replace data
 		el.protip.set(C.PROP_IDENTIFIER, id)
 		el.protip.set(C.PROP_INITED, true)
-		return this._itemInstances[id]
+		return this.Items[id]
 	}
 
 	/**
@@ -151,8 +153,9 @@ export default class {
 	 * @returns {Item}
 	 */
 	getItem ($, override){
+		console.trace($, $.protip.get(C.PROP_IDENTIFIER))
 		return $.protip.get(C.PROP_INITED)
-			? this._itemInstances[$.protip.get(C.PROP_IDENTIFIER)]
+			? this.Items[$.protip.get(C.PROP_IDENTIFIER)]
 			: this.createItemInstance($, override)
 	}
 
@@ -167,7 +170,7 @@ export default class {
 		setTimeout(() => {
 			let elements = document.querySelectorAll(this.settings.selector)
 			Array.prototype.forEach.call(elements, ($) => this.getItem($))
-		});
+		})
 	}
 
 	/**
@@ -177,7 +180,7 @@ export default class {
 	 * @private
 	 */
 	_generateId() {
-		return new Date().valueOf() + Math.floor(Math.random() * 10000).toString();
+		return new Date().valueOf() + Math.floor(Math.random() * 10000).toString()
 	}
 
 	/**
@@ -187,9 +190,11 @@ export default class {
 	 * @private
 	 */
 	_hideAll(force, preventTrigger) {
-		Object.keys(this._itemInstances).forEach((key) => {
-			let item = this._itemInstances[key]
-			item.isVisible()
+		console.log(this.Items)
+		Object.keys(this.Items).forEach((key) => {
+			let item = this.Items[key]
+			
+			item.isVisible
 			&& this._visibleBeforeResize.push(item)
 			&& item.hide(force, preventTrigger)
 		})
@@ -240,7 +245,7 @@ export default class {
 			this._showAll(true, true)
 			this._task.resize = undefined
 			this._visibleBeforeResize = []
-		}, this.settings.delayResize);
+		}, this.settings.delayResize)
 	}
 
 	/**
@@ -256,10 +261,10 @@ export default class {
 		let containerInstance = container && container.protip.get(C.PROP_INITED) ? this.getItem(container) : false
 
 		if (!containerInstance || containerInstance && container.protip.get(C.PROP_TRIGGER) !== C.TRIGGER_CLICK) {
-			Object.keys(this._itemInstances).forEach((key) => {
-				let item = this._itemInstances[key]
+			Object.keys(this.Items).forEach((key) => {
+				let item = this.Items[key]
 				item.isVisible
-				&& item.$protip.get(C.PROP_TRIGGER) === C.TRIGGER_CLICK
+				&& item.$protip.protip.get(C.PROP_TRIGGER) === C.TRIGGER_CLICK
 				&& (!container || item.$protip !== container)
 				&& (!source || item.$source !== source)
 				&& item.hide()
@@ -277,7 +282,7 @@ export default class {
 		for (let target = ev.target; target && target !== document.body; target = target.parentNode) {
 			if (target.matches && target.matches(C.SELECTOR_CLOSE)) {
 				let identifier = target.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER).protip.get(C.PROP_IDENTIFIER)
-				this._itemInstances[identifier] && this._itemInstances[identifier].hide()
+				this.Items[identifier] && this.Items[identifier].hide()
 			}
 		}
 	}
@@ -309,9 +314,12 @@ export default class {
 			// Nodes removed
 			for (let i = 0; i < mutation.removedNodes.length; i++) {
 				let node = mutation.removedNodes[i]
-				Array.prototype.forEach.call(node.querySelectorAll(this.settings.selector), (el) => el.protip.destroy())
-				node.classList.contains(this.settings.selector.replace('.', ''))
-				&& node.protip.destroy
+				node = node.classList ? node : node.parentNode
+				if (node) {
+					Array.prototype.forEach.call(node.querySelectorAll(this.settings.selector), (el) => el.protip.destroy())
+					node.classList.contains(this.settings.selector.replace('.', ''))
+					&& node.protip.destroy
+				}
 			}
 		})
 	}

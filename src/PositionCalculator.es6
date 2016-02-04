@@ -138,7 +138,7 @@ export default class {
 	 * @private
 	 */
 	_getPosition () {
-		this.Item.applyPosition(this._position)
+		this.Item.applyPosition(this.Position)
 
 		let left = 0
 		let top = 0

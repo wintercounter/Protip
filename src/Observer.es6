@@ -1,6 +1,7 @@
 export default class {
 
 	construct(element) {
+		element = element || document.body
 		this.element = element
 	}
 

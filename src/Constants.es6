@@ -82,7 +82,7 @@ export const SELECTOR_TARGET        = '.protip-target'
 export const SELECTOR_MIXIN_PREFIX  = 'protip-mixin--'
 export const SELECTOR_OPEN          = 'protip-open'
 
-export const TEMPLATE_PROTIP = `<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">
+export const TEMPLATE_PROTIP = `<div class="{classes}" style="{widthType}:{width}px">
 									{arrow}
 									{icon}
 									<div class="protip-content">

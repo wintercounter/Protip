@@ -86,7 +86,7 @@ export default class extends Observer {
 	}
 
 	get $protip() {
-		return this.El.source
+		return this.El.protip
 	}
 
 	set $protip(el) {
@@ -208,8 +208,7 @@ export default class extends Observer {
 
 		// Handle gravity/non-gravity based position calculations
 		if (this.get(C.PROP_GRAVITY)) {
-			style = new GravityTester(this.$protip)
-			delete style.position
+			style = new GravityTester(this.$source, this.$protip)
 		}
 		else {
 			style = new PositionCalculator(this)
@@ -349,8 +348,7 @@ export default class extends Observer {
 			width: this._getWidth(),
 			content: this.get(C.PROP_TITLE),
 			icon: this._getIconTemplate(),
-			arrow: this.get(C.PROP_ARROW) ? C.TEMPLATE_ARROW : '',
-			identifier: this.get(C.PROP_IDENTIFIER)
+			arrow: this.get(C.PROP_ARROW) ? C.TEMPLATE_ARROW : ''
 		})
 
 		this.$target.insertAdjacentHTML('beforeend', html)
