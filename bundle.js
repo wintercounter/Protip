@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require('./src/Plugin');
 },{"./src/Plugin":8}],2:[function(require,module,exports){
 (function (global){
@@ -129,7 +129,7 @@ require('./src/Plugin');
 
 	return Buffer;
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 (function (global){
 /**
@@ -606,7 +606,7 @@ require('./src/Plugin');
 
 }));
 
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Constants":4,"./Item":7}],4:[function(require,module,exports){
 /**
  * Just contants
@@ -887,7 +887,7 @@ require('./src/Plugin');
 	return GravityParser;
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Constants":4}],6:[function(require,module,exports){
 (function (global){
 /**
@@ -1116,7 +1116,7 @@ require('./src/Plugin');
 	return GravityTester;
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Constants":4,"./GravityParser":5,"./PositionCalculator":9}],7:[function(require,module,exports){
 (function (global){
 /**
@@ -1743,7 +1743,7 @@ require('./src/Plugin');
 
 	return ProtipItemClass;
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Constants":4,"./GravityTester":6,"./PositionCalculator":9}],8:[function(require,module,exports){
 (function (global){
 (function (root, factory) {
@@ -1914,7 +1914,7 @@ require('./src/Plugin');
 	});
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Buffer":2,"./Class":3,"./Constants":4}],9:[function(require,module,exports){
 (function (global){
 /**
@@ -2213,5 +2213,5 @@ require('./src/Plugin');
 	return PositionCalculator;
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":4}]},{},[1])
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4}]},{},[1]);
