@@ -1,30 +1,29 @@
-riot.tag('form-range', '<label> <span>{ opts.name }</span> <div> <input type=range name=range value="{ values[0] }" min="{ values[1] }" max="{ values[2] }" step=1 onchange="{ change }" oninput="{ change }"> <input type=text name=input value="{ values[0] }" readonly> </div> </label>', function(opts) {
+riot.tag2('form-range', '<label> <span>{opts.name}</span> <div> <input type="range" name="range" value="{values[0]}" min="{values[1]}" max="{values[2]}" step="1" onchange="{change}" oninput="{change}"> <input type="text" name="input" value="{values[0]}" readonly> </div> </label>', '', '', function(opts) {
 
     var form = this.opts.api.form
     this.values = form.getDefault(opts.name)
     this.range.name = opts.name
     this.input.defaultValue = this.range.defaultValue = this.values[0]
 
-    this.change = function(ev) {
+    this.change = function(ev){
         var target = $(ev.target)
         var val = target.val()
         this.input.value = val
         form.trigger('update', target.attr('name'), val)
-    }.bind(this);
-
-});
-riot.tag('form-select', '<label> <span>{ opts.name }</span> <div class="padding"> <select name="{ opts.name }" onchange="{ change }"> <option each="{ value, i in values }" value="{ value }">{ value }</option> </select> </div> </label>', function(opts) {
+    }.bind(this)
+}, '{ }');
+riot.tag2('form-select', '<label> <span>{opts.name}</span> <div class="padding"> <select name="sel" onchange="{change}"> <option each="{value, i in values}" value="{value}">{value}</option> </select> </div> </label>', '', '', function(opts) {
 
     var form = this.opts.api.form
     this.values = form.getDefault(opts.name)
+    this.sel.name = this.opts.name
 
-    this.change = function(ev) {
+    this.change = function(ev){
         var target = $(ev.target)
         form.trigger('update', target.attr('name'), target.val())
-    }.bind(this);
-
-});
-riot.tag('md-content', '<div></div>', 'url', function(opts) {
+    }.bind(this)
+}, '{ }');
+riot.tag2('md-content', '<div></div>', '', '', function(opts) {
 
     $.get(this.opts.url, function(data){
         var content = $('<div>' + marked(data) + '</div>' )
@@ -42,5 +41,4 @@ riot.tag('md-content', '<div></div>', 'url', function(opts) {
             .wrapAll('<div class="row" />')
         this.root.childNodes[0].innerHTML = content.html()
     }.bind(this))
-
 });

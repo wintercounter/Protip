@@ -2,7 +2,7 @@
     <label>
         <span>{ opts.name }</span>
         <div class="padding">
-            <select name={ opts.name } onchange={ change }>
+            <select name="sel" onchange={ change }>
                 <option each={ value, i in values } value={ value }>{ value }</option>
             </select>
         </div>
@@ -10,6 +10,7 @@
 
     var form = this.opts.api.form
     this.values = form.getDefault(opts.name)
+    this.sel.name = this.opts.name
 
     change(ev){
         var target = $(ev.target)

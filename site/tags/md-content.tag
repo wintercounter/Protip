@@ -1,4 +1,4 @@
-<md-content url>
+<md-content>
     <div></div>
 
     $.get(this.opts.url, function(data){
