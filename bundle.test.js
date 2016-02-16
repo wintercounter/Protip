@@ -225,6 +225,14 @@ function fromJsonObject (that, object) {
 if (Buffer.TYPED_ARRAY_SUPPORT) {
   Buffer.prototype.__proto__ = Uint8Array.prototype
   Buffer.__proto__ = Uint8Array
+  if (typeof Symbol !== 'undefined' && Symbol.species &&
+      Buffer[Symbol.species] === Buffer) {
+    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+    Object.defineProperty(Buffer, Symbol.species, {
+      value: null,
+      configurable: true
+    })
+  }
 } else {
   // pre-set for values that may exist in the future
   Buffer.prototype.length = undefined
@@ -1460,28 +1468,27 @@ function blitBuffer (src, dst, offset, length) {
 ;(function (exports) {
   'use strict'
 
-  var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  var i
+  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  var lookup = []
+  for (i = 0; i < code.length; i++) {
+    lookup[i] = code[i]
+  }
+  var revLookup = []
+
+  for (i = 0; i < code.length; ++i) {
+    revLookup[code.charCodeAt(i)] = i
+  }
+  revLookup['-'.charCodeAt(0)] = 62
+  revLookup['_'.charCodeAt(0)] = 63
 
   var Arr = (typeof Uint8Array !== 'undefined')
     ? Uint8Array
     : Array
 
-  var PLUS = '+'.charCodeAt(0)
-  var SLASH = '/'.charCodeAt(0)
-  var NUMBER = '0'.charCodeAt(0)
-  var LOWER = 'a'.charCodeAt(0)
-  var UPPER = 'A'.charCodeAt(0)
-  var PLUS_URL_SAFE = '-'.charCodeAt(0)
-  var SLASH_URL_SAFE = '_'.charCodeAt(0)
-
   function decode (elt) {
-    var code = elt.charCodeAt(0)
-    if (code === PLUS || code === PLUS_URL_SAFE) return 62 // '+'
-    if (code === SLASH || code === SLASH_URL_SAFE) return 63 // '/'
-    if (code < NUMBER) return -1 // no match
-    if (code < NUMBER + 10) return code - NUMBER + 26 + 26
-    if (code < UPPER + 26) return code - UPPER
-    if (code < LOWER + 26) return code - LOWER + 26
+    var v = revLookup[elt.charCodeAt(0)]
+    return v !== undefined ? v : -1
   }
 
   function b64ToByteArray (b64) {
@@ -1530,24 +1537,36 @@ function blitBuffer (src, dst, offset, length) {
     return arr
   }
 
+  function encode (num) {
+    return lookup[num]
+  }
+
+  function tripletToBase64 (num) {
+    return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
+  }
+
+  function encodeChunk (uint8, start, end) {
+    var temp
+    var output = []
+    for (var i = start; i < end; i += 3) {
+      temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+      output.push(tripletToBase64(temp))
+    }
+    return output.join('')
+  }
+
   function uint8ToBase64 (uint8) {
     var i
     var extraBytes = uint8.length % 3 // if we have 1 byte left, pad 2 bytes
     var output = ''
+    var parts = []
     var temp, length
-
-    function encode (num) {
-      return lookup.charAt(num)
-    }
-
-    function tripletToBase64 (num) {
-      return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-    }
+    var maxChunkLength = 16383 // must be multiple of 3
 
     // go through the array every three bytes, we'll deal with trailing stuff later
-    for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-      temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-      output += tripletToBase64(temp)
+
+    for (i = 0, length = uint8.length - extraBytes; i < length; i += maxChunkLength) {
+      parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > length ? length : (i + maxChunkLength)))
     }
 
     // pad the end with zeros, but make sure to not forget the extra bytes
@@ -1569,7 +1588,9 @@ function blitBuffer (src, dst, offset, length) {
         break
     }
 
-    return output
+    parts.push(output)
+
+    return parts.join('')
   }
 
   exports.toByteArray = b64ToByteArray
