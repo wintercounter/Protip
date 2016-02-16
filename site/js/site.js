@@ -5,7 +5,7 @@ $(document).ready(function() {
             form: new Form().init()
         }
     });
-    $(window).resize();
+    setTimeout($(window).resize);
     $('.js-loading-overlay').fadeOut(1000, function(){
         $(this).remove();
     });
