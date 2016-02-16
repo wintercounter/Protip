@@ -5,8 +5,10 @@ $(document).ready(function() {
             form: new Form().init()
         }
     });
-    setTimeout($(window).resize);
+    setTimeout(function(){
+        $(window).resize()
+    }, 100);
     $('.js-loading-overlay').fadeOut(1000, function(){
-        $(this).remove();
+        $(this).remove()
     });
 });
