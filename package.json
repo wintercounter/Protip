@@ -6,9 +6,9 @@
   "scripts": {
     "test": "npm run-script build-test",
     "build-test": "browserify -t html2js-browserify test/test.js -o bundle.test.js && npm run-script sass",
-    "build-prod": "browserify -t html2js-browserify main.js -o bundle.js && npm run-script sass && node minify.js",
+    "build-prod": "browserify -t html2js-browserify -u jquery main.js -o bundle.js && npm run-script sass && node minify.js",
     "build": "npm run build-prod",
-    "build-all": "npm run build-test && npm run build-prod",
+    "build-all": "npm run build-prod",
     "sass": "node-sass css/protip.scss css/protip.css",
     "changelog": "github-changes -o DoclerLabs -r Protip -a"
   },
@@ -38,18 +38,6 @@
     "mocha": "2.4.5",
     "sinon": "1.17.3",
     "minifier": "0.7.1",
-    "browserify-shim": "3.8.12",
     "node-sass": "3.4.2"
-  },
-  "dependencies": {
-    "jquery": "2.2.0"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
-  },
-  "browserify-shim": {
-    "jquery": "global:jQuery"
   }
 }
