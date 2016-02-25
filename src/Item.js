@@ -104,6 +104,11 @@
 				.addClass(this.classInstance.settings.selector.replace('.', ''))
 				.data(this._namespaced(C.PROP_INITED), true);
 
+			// Fire ready with some timeout so any script can catch up.
+			setTimeout(function(){
+				this.el.source.trigger(C.EVENT_PROTIP_READY, this)
+			}.bind(this), 10);
+
 			return this;
 		},
 

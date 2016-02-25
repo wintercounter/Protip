@@ -69,6 +69,7 @@
 		EVENT_RESIZE: 'resize',
 		EVENT_PROTIP_SHOW: 'protipshow',
 		EVENT_PROTIP_HIDE: 'protiphide',
+		EVENT_PROTIP_READY: 'protipready',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',

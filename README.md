@@ -175,6 +175,11 @@ el.on('protipshow', function(ItemInstance){});
 // Custom hide event
 el.on('protiphide', function(ItemInstance){});
 
+// Custom ready event
+// Note that ready will fires after 10ms after it's actually ready.
+// This helps your scripts to catch up.
+el.on('protipready', function(ItemInstance){});
+
 // Use console.log(ItemInstance) in the callback to check what options you have.
 ```
 
