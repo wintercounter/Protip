@@ -1,6 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require('./src/Plugin');
 },{"./src/Plugin":8}],2:[function(require,module,exports){
+(function (global){
 /**
  * Buffer Class
  *
@@ -18,7 +19,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery')
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null)
 		);
 	} else {
 		factory(
@@ -128,7 +129,9 @@ require('./src/Plugin');
 
 	return Buffer;
 }));
-},{"jquery":undefined}],3:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
+(function (global){
 /**
  * Main Class of the tooltip plugin.
  * Initalizes and handles the the Item Instances.
@@ -146,7 +149,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery'),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./Item')
 		);
@@ -603,7 +606,8 @@ require('./src/Plugin');
 
 }));
 
-},{"./Constants":4,"./Item":7,"jquery":undefined}],4:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4,"./Item":7}],4:[function(require,module,exports){
 /**
  * Just contants
  */
@@ -714,6 +718,7 @@ require('./src/Plugin');
 	return ProtipConstants;
 }));
 },{}],5:[function(require,module,exports){
+(function (global){
 /**
  * GravityParser Class
  *
@@ -732,7 +737,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery'),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
@@ -882,7 +887,9 @@ require('./src/Plugin');
 	return GravityParser;
 
 }));
-},{"./Constants":4,"jquery":undefined}],6:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4}],6:[function(require,module,exports){
+(function (global){
 /**
  * GravityTester Class
  *
@@ -903,7 +910,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery'),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityParser'),
 			require('./PositionCalculator')
@@ -1109,7 +1116,9 @@ require('./src/Plugin');
 	return GravityTester;
 
 }));
-},{"./Constants":4,"./GravityParser":5,"./PositionCalculator":9,"jquery":undefined}],7:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4,"./GravityParser":5,"./PositionCalculator":9}],7:[function(require,module,exports){
+(function (global){
 /**
  * Item Class.
  * Each protip item has it's own ItemClass instance
@@ -1129,7 +1138,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery'),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants'),
 			require('./GravityTester'),
 			require('./PositionCalculator')
@@ -1734,7 +1743,9 @@ require('./src/Plugin');
 
 	return ProtipItemClass;
 }));
-},{"./Constants":4,"./GravityTester":6,"./PositionCalculator":9,"jquery":undefined}],8:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4,"./GravityTester":6,"./PositionCalculator":9}],8:[function(require,module,exports){
+(function (global){
 (function (root, factory) {
 
     'use strict';
@@ -1748,7 +1759,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery'),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Class'),
 			require('./Buffer'),
 			require('./Constants')
@@ -1903,7 +1914,9 @@ require('./src/Plugin');
 	});
 
 }));
-},{"./Buffer":2,"./Class":3,"./Constants":4,"jquery":undefined}],9:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Buffer":2,"./Class":3,"./Constants":4}],9:[function(require,module,exports){
+(function (global){
 /**
  * PositionCalculator Class
  * Calculates the proper top/left values for a tooltip.
@@ -1920,7 +1933,7 @@ require('./src/Plugin');
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
-			require('jquery'),
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 			require('./Constants')
 		);
 	} else {
@@ -2200,4 +2213,5 @@ require('./src/Plugin');
 	return PositionCalculator;
 
 }));
-},{"./Constants":4,"jquery":undefined}]},{},[1]);
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4}]},{},[1]);
