@@ -679,6 +679,7 @@ require('./src/Plugin');
 		EVENT_RESIZE: 'resize',
 		EVENT_PROTIP_SHOW: 'protipshow',
 		EVENT_PROTIP_HIDE: 'protiphide',
+		EVENT_PROTIP_READY: 'protipready',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
@@ -1224,6 +1225,11 @@ require('./src/Plugin');
 			this.el.source
 				.addClass(this.classInstance.settings.selector.replace('.', ''))
 				.data(this._namespaced(C.PROP_INITED), true);
+
+			// Fire ready with some timeout so any script can catch up.
+			setTimeout(function(){
+				this.el.source.trigger(C.EVENT_PROTIP_READY, this)
+			}.bind(this), 10);
 
 			return this;
 		},
