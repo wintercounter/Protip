@@ -6,7 +6,7 @@
 		define([
 			'jquery',
 			'./Class',
-			'./Class',
+			'./Buffer',
 			'./Constants'
 		], factory);
 	} else if (typeof exports === 'object') {
