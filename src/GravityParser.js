@@ -149,7 +149,7 @@
 						};
 					}
 				}).filter(function (a) {
-					return !!a
+					return !!a;
 				});
 
 				if (hasRest) {

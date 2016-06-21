@@ -1,11 +1,4 @@
-@function getArrowProto($size){
-    @return (
-
-    );
-}
-
 $_protipConfig: (
-    arrow-size: 4px,
     positions: (
         top: 1,
         right: 1,
@@ -19,10 +12,10 @@ $_protipConfig: (
         bottom-right: 2,
         left-top: 2,
         left-bottom: 2,
-        corner-left-top: 3,
-        corner-left-bottom: 3,
-        corner-right-top: 3,
-        corner-right-bottom: 3,
+        top-left-corner: 3,
+        top-right-corner: 3,
+        bottom-left-corner: 3,
+        bottom-right-corner: 3,
     )
 );
 

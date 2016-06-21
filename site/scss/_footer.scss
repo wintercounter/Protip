@@ -1,0 +1,51 @@
+footer {
+    width: 100%;
+    padding: 30px 0;
+    background-color: #000;
+
+    ul {
+        width: 90%;
+        max-width: 920px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .dl img {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 10px;
+    }
+
+    .w img {
+        width: 100%;
+        max-width: 30px;
+        margin: 0 10px;
+    }
+
+    .right {
+        float: right;
+    }
+
+    .left {
+        float: left;
+    }
+    
+    p {
+        color: #fff;
+    }
+    
+    a {
+        color: #da2e2b;
+        text-decoration: none;
+    }
+
+    .left span {
+        position: relative;
+        top: -7px;
+    }
+
+    .right p {
+        position: relative;
+        top: 9px;
+    }
+}

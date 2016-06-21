@@ -31,7 +31,13 @@
 	'use strict';
 
 	// Lower the interval time, we don't need that much accuracy.
-	window.MutationObserver._period = 100;
+	try {
+		window.MutationObserver._period = 100;
+	} catch(e) {
+		console.warn("Protip: MutationObserver polyfill haven't been loaded!");
+		// "Polyfill" for MutationObserver so Protip won't break if the real polyfill not included
+		window.MutationObserver = window.MutationObserver || function(){this.disconnect=this.observe=function(){}};
+	}
 
 	/**
 	 * The Protip main class
@@ -55,7 +61,7 @@
 		 * @private
 		 */
 		_defaults: {
-			/** @type String    Selector for clickable protips */
+			/** @type String    Selector for protips */
 			selector:           C.DEFAULT_SELECTOR,
 			/** @type String    Namespace of the data attributes */
 			namespace:          C.DEFAULT_NAMESPACE,
@@ -67,16 +73,40 @@
 			iconTemplate:       C.TEMPLATE_ICON,
 			/** @type Boolean   Should we observe whole document for assertions and removals */
 			observer:           true,
-			/** @type String    Default skin to use */
-			skin:               C.SKIN_DEFAULT,
-			/** @type String    Default size to use (provided by the Default skin only) */
-			size:               C.SIZE_DEFAULT,
-			/** @type String    Default color scheme to use (provided by the Default skin only) */
-			scheme:             C.SCHEME_DEFAULT,
-			/** @type Boolean   Global animation? */
-			animate:            false,
 			/** @type Number    Global offset of all tooltips. */
-			offset:             0
+			offset:             0,
+			/** @type Boolean   Forces the tooltip to have min-width by it's width calculation. */
+			forceMinWidth:      true,
+			/** @type Number    Default time for OnResize event Timeout. */
+			delayResize:        100,
+			/** @type Object    Default data-pt-* values for a tooltip */
+			defaults: {
+				trigger:     C.TRIGGER_HOVER,
+				title:       null,
+				inited:      false,
+				delayIn:     0,
+				delayOut:    0,
+				interactive: false,
+				gravity:     true,
+				offsetTop:   0,
+				offsetLeft:  0,
+				position:    C.POSITION_RIGHT,
+				placement: 	 C.PLACEMENT_OUTSIDE,
+				classes:     null,
+				arrow:       true,
+				width:       300,
+				identifier:  false,
+				icon:        false,
+				observer:    false,
+				target:      C.SELECTOR_BODY,
+				skin:        C.SKIN_DEFAULT,
+				size:        C.SIZE_DEFAULT,
+				scheme:      C.SCHEME_DEFAULT,
+				animate:     false,
+				autoHide:    false,
+				autoShow:    false,
+				mixin:       null
+			}
 		},
 
 		/**
@@ -91,7 +121,7 @@
 			 *
 			 * @type Object
 			 */
-			this.settings = $.extend({}, this._defaults, settings);
+			this.settings = $.extend(true, {}, this._defaults, settings);
 
 			/**
 			 * Object storing the Item Class Instances
@@ -173,6 +203,14 @@
 		 */
 		destroyItemInstance: function(key){
 			this._itemInstances[key].destroy();
+		},
+
+		/**
+		 * Called after item destory has been done.
+		 *
+		 * @param key
+		 */
+		onItemDestoryed: function(key){
 			delete this._itemInstances[key];
 		},
 
@@ -187,6 +225,7 @@
 		createItemInstance: function(el, override){
 			var id = this._generateId();
 			this._itemInstances[id] = new ProtipItemClass(id, el, this, override);
+			el.data(this.namespaced(C.PROP_IDENTIFIER), id);
 			return this._itemInstances[id];
 		},
 
@@ -222,9 +261,12 @@
 		 * @private
 		 */
 		_fetchElements: function(){
-			$(this.settings.selector).each($.proxy(function(index, el){
-				this.createItemInstance($(el));
-			}, this));
+			// Prevent early fetches
+			setTimeout(function(){
+				$(this.settings.selector).each($.proxy(function(index, el){
+					this.getItemInstance($(el));
+				}, this));
+			}.bind(this));
 		},
 
 		/**
@@ -250,23 +292,25 @@
 
 		/**
 		 * Method to hide all protips.
-		 *
+		 * @param force          [boolean] Force hide?
+		 * @param preventTrigger [boolean] Prevent hide event from triggering?
 		 * @private
 		 */
-		_hideAll: function(){
+		_hideAll: function(force, preventTrigger){
 			$.each(this._itemInstances, $.proxy(function(index, item){
-				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide();
+				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide(force, preventTrigger);
 			}, this));
 		},
 
 		/**
 		 * Method to show all protips.
-		 *
+		 * @param force          [boolean] Force show?
+		 * @param preventTrigger [boolean] Prevent show event from triggering?
 		 * @private
 		 */
-		_showAll: function(){
+		_showAll: function(force, preventTrigger){
 			this._visibleBeforeResize.forEach(function(item){
-				item.show();
+				item.show(force, preventTrigger);
 			});
 		},
 
@@ -291,13 +335,13 @@
 		 * @private
 		 */
 		_onResize: function(){
-			!this._task.resize && this._hideAll();
+			!this._task.resize && this._hideAll(true, true);
 			this._task.resize && clearTimeout(this._task.resize);
 			this._task.resize = setTimeout(function () {
-				this._showAll();
+				this._showAll(true, true);
 				this._task.resize = undefined;
 				this._visibleBeforeResize = [];
-			}.bind(this), 100);
+			}.bind(this), this.settings.delayResize);
 		},
 
 		/**
@@ -307,18 +351,18 @@
 		 * @private
 		 */
 		_onBodyClick: function(ev){
-			var el = $(ev.target);
-			var parent = el.parents('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-			var selector = C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER;
-			var container = el.hasClass(selector) ? el : parent.size() ? parent : false;
+			var el                = $(ev.target);
+			var container         = el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false;
+			var source            = el.closest(C.DEFAULT_SELECTOR);
+			var sourceInstance    = this._isInited(source) ? this.getItemInstance(source) : false;
+			var containerInstance = this._isInited(container) ? this.getItemInstance(container) : false;
 
-			var instance = this._isInited(el) ? this.getItemInstance(el) : false;
-
-			if (!instance || (instance.data.trigger !== C.TRIGGER_CLICK)) {
+			if (!containerInstance || containerInstance && containerInstance.data.trigger !== C.TRIGGER_CLICK) {
 				$.each(this._itemInstances, function (index, item) {
 					item.isVisible()
 					&& item.data.trigger === C.TRIGGER_CLICK
 					&& (!container || item.el.protip.get(0) !== container.get(0))
+					&& (!source || item.el.source.get(0) !== source.get(0))
 					&& item.hide();
 				});
 			}
@@ -343,14 +387,22 @@
 		 */
 		_mutationObserverCallback: function(mutations) {
 			mutations.forEach(function(mutation) {
+				var node;
 				for (var i = 0; i < mutation.addedNodes.length; i++) {
-					var els = $(mutation.addedNodes[i].parentNode).find(this.settings.selector);
-					els.each(function(index, el){
-						el = $(el);
-						if (el.data(this.namespaced(C.PROP_TRIGGER)) === C.TRIGGER_STICKY){
-							this.getItemInstance(el).show();
-						}
-					}.bind(this));
+					node = $(mutation.addedNodes[i]);
+					if (!node.hasClass(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)) {
+						var els = node.parent().find(this.settings.selector);
+						els.each(function (index, el) {
+							el = $(el);
+							if (this._isInited(el)) {
+								return;
+							}
+							var instance = this.getItemInstance(el);
+							if (instance.data.trigger === C.TRIGGER_STICKY) {
+								this.getItemInstance(el).show();
+							}
+						}.bind(this));
+					}
 				}
 
 				for (var i = 0; i < mutation.removedNodes.length; i++) {

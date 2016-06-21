@@ -1,4 +1,4 @@
-$_protipDefaultSkinColors: (
+$_protipSquareSkinColors: (
 	'pro': #da2e2b,
 	'blue': #336699,
 	'red': #802731,
@@ -10,14 +10,13 @@ $_protipDefaultSkinColors: (
 	'orange': #E64426
 ) !default;
 
-$_protipDefaultSkinSizes: (
+$_protipSquareSkinSizes: (
 
 		'tiny': (
 				arrow-size: 4px,
 				css: (
 						padding: 8px,
-						font-size: 10px,
-						border-radius: 3px
+						font-size: 10px
 				)
 		),
 
@@ -25,8 +24,7 @@ $_protipDefaultSkinSizes: (
 				arrow-size: 6px,
 				css: (
 						padding: 13px,
-						font-size: 12px,
-						border-radius: 4px
+						font-size: 12px
 				)
 		),
 
@@ -34,8 +32,7 @@ $_protipDefaultSkinSizes: (
 				arrow-size: 8px,
 				css: (
 						padding: 16px,
-						font-size: 15px,
-						border-radius: 6px
+						font-size: 15px
 				)
 		),
 
@@ -43,8 +40,7 @@ $_protipDefaultSkinSizes: (
 				arrow-size: 10px,
 				css: (
 						padding: 20px,
-						font-size: 18px,
-						border-radius: 8px
+						font-size: 18px
 				)
 		),
 
@@ -52,13 +48,12 @@ $_protipDefaultSkinSizes: (
 				arrow-size: 12px,
 				css: (
 						padding: 20px,
-						font-size: 18px,
-						border-radius: 8px
+						font-size: 18px
 				)
 		)
 ) !default;
 
-@mixin protipDefaultSkinArrowGenerator($skin, $arrow-size, $offset, $color, $cornerRadiusFix) {
+@mixin protipSquareSkinArrowGenerator($skin, $arrow-size, $offset, $color, $cornerRadiusFix) {
 
 	///////////// TOP
 	.#{$skin}[data-pt-position="top-left"],
@@ -189,9 +184,9 @@ $_protipDefaultSkinSizes: (
 }
 
 // Schemes
-@each $colorName, $color in $_protipDefaultSkinColors {
+@each $colorName, $color in $_protipSquareSkinColors {
 
-	$skinSel: protip-skin-default--scheme-#{$colorName};
+	$skinSel: protip-skin-square--scheme-#{$colorName};
 
 	.#{$skinSel} {
 		&.protip {
@@ -204,7 +199,7 @@ $_protipDefaultSkinSizes: (
 		}
 	}
 
-	@include protipDefaultSkinArrowGenerator(
+	@include protipSquareSkinArrowGenerator(
 		$skin: $skinSel,
 		$arrow-size: 8px,
 		$offset: 20px,
@@ -214,8 +209,8 @@ $_protipDefaultSkinSizes: (
 }
 
 // Sizes
-@each $sizeName, $sizeMap in $_protipDefaultSkinSizes {
-	$sizeSel: protip-skin-default--size-#{$sizeName};
+@each $sizeName, $sizeMap in $_protipSquareSkinSizes {
+	$sizeSel: protip-skin-square--size-#{$sizeName};
 
 	.#{$sizeSel} {
 		@each $prop, $val in map-get($sizeMap, css) {
@@ -223,7 +218,7 @@ $_protipDefaultSkinSizes: (
 		}
 	}
 
-	@include protipDefaultSkinArrowGenerator (
+	@include protipSquareSkinArrowGenerator (
 		$skin: $sizeSel,
 		$arrow-size: map-get($sizeMap, arrow-size),
 		$offset: 20px,

@@ -1,0 +1,152 @@
+.header {
+    height: 500px;
+    margin-top: 61px;
+    //background-color: #BCC1D8;
+    text-align: center;
+
+    background: #8300FF;
+    background: -moz-radial-gradient(center, ellipse cover, #8300FF 0%, #000 100%);
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #8300FF), color-stop(100%, #000));
+    background: -webkit-radial-gradient(center, ellipse cover, #8300FF 0%, #000 100%);
+    background: -o-radial-gradient(center, ellipse cover, #8300FF 0%, #000 100%);
+    background: -ms-radial-gradient(center, ellipse cover, #8300FF 0%, #000 100%);
+    background: radial-gradient(ellipse at center, #8300FF 0%, #000 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8300FF', endColorstr='#000', GradientType=1 );
+
+    &__logo {
+        margin-top: 60px;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+    h1 {
+        font-size: 80px; font-weight: 800;
+        color: #fff;
+        text-transform: lowercase;
+    }
+    
+    h2 {
+        margin: 20px 0 30px;
+        color: #935CC7;
+        font-size: 28px; font-style: italic;
+
+        strong {
+            font-weight: 700; font-style: normal;
+            color: #fff;
+        }
+
+        em {
+            text-transform: uppercase;
+        }
+    }
+
+    nav {
+        $nav-bg: rgba(44, 0, 85, 0.98);
+
+        position: fixed; z-index: 100;
+        top: 0; left: 0;
+        width: 100%; height: 61px;
+        //background-color: #2C0055;
+        background-color: $nav-bg;
+        border-bottom: 1px solid #3B0073;
+
+        ul {
+            display: table;
+            width: 90%; max-width: 920px; height: 100%;
+            margin: 0 auto;
+            list-style-type: none;
+        }
+        
+        li {
+            display: table-cell;
+            vertical-align: middle;
+            height: 100%;
+        }
+        
+        .link {
+            padding: 8px 16px;
+            display: block;
+            float: left;
+            border: 2px solid #fff; border-radius: 5px;
+            color: #fff;
+            text-decoration: none;
+            background-color: transparent;
+            transition: all 0.2s ease-out;
+
+            &:hover {
+                background-color: #fff;
+                color: $nav-bg;
+            }
+
+            &--js.protip-open,
+            &--js:hover {
+                background-color: #0098FF;
+                border-color: #5CBDFF;
+                color: #fff;
+            }
+
+            &--css.protip-open,
+            &--css:hover {
+                background-color: #FFA200;
+                border-color: #ffcc7b;
+                color: #fff;
+            }
+        }
+        
+        .align-right a {
+            display: block;
+            float: right;
+
+            img {
+                display: block;
+            }
+        }
+    }
+
+    .github {
+        &-ribbon {
+            position: absolute;
+            top: 0; right: 0; border: 0;
+        }
+    }
+
+    .protip-container.download-tooltip {
+        text-align: left;
+        box-shadow: 0 5px 10px 6px rgba(0, 0, 0, 0.37);
+
+        code {
+            font-size: 13px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        &--css {
+            background-color: #FFA200;
+
+            .protip-arrow {
+                border-bottom-color: #FFA200;
+            }
+        }
+
+        &--js {
+            background-color: #0098FF;
+
+            .protip-arrow {
+                border-bottom-color: #0098FF;
+            }
+            
+            pre {
+                margin-bottom: 5px;
+            }
+        }
+        
+        small {
+            font-size: 11px;
+            font-weight: bold;
+        }
+    }
+}

@@ -1,6 +1,136 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 require('./src/Plugin');
-},{"./src/Plugin":7}],2:[function(require,module,exports){
+},{"./src/Plugin":8}],2:[function(require,module,exports){
+(function (global){
+/**
+ * Buffer Class
+ *
+ * It will create a buffer of called protip jQuery helper methods
+ * and recalls them after protip initialization is done.
+ */
+
+(function (root, factory) {
+
+	'use strict';
+
+	if (typeof define === 'function' && define.amd) {
+		define([
+			'jquery'
+		], factory);
+	} else if (typeof exports === 'object') {
+		module.exports = factory(
+			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null)
+		);
+	} else {
+		factory(
+			root.jQuery
+		);
+	}
+}(this, function ($) {
+
+	'use strict';
+
+	/**
+	 * Buffer Class
+	 *
+	 * @returns {Buffer}
+	 * @constructor
+	 */
+	var Buffer = function () {
+		return this._Construct();
+	};
+
+	// Define the GravityParser members
+	Buffer.prototype = {
+		/**
+		 * Constructor
+		 *
+		 * @memberOf Buffer
+		 * @returns {Buffer}
+		 * @private
+		 */
+		_Construct: function () {
+
+			/**
+			 * List of commands called.
+			 *
+			 * @type {[]}
+			 * @private
+			 */
+			this._commandList = [];
+
+			/**
+			 * Tells if Protip is ready.
+			 *
+			 * @type {boolean}
+			 * @private
+			 */
+			this._isReady = false;
+
+			/**
+			 * Starts interval timer for checks.
+			 *
+			 * @type {number}
+			 * @private
+			 */
+			this._timer = setInterval(this._check.bind(this), 10);
+
+			return this;
+		},
+
+		/**
+		 * Add cmd to buffer
+		 *
+		 * @param {cmd}     cmd     The command called.
+		 * @param {jQuery}  el      The jQuery element the item is called on.
+		 * @param {cmdArgs} cmdArgs The arguments the command was called with.
+		 */
+		add: function (cmd, el, cmdArgs) {
+			this._commandList.push({
+				cmd: cmd,
+				el: el,
+				cmdArgs: cmdArgs
+			});
+		},
+
+		/**
+		 * Public getter for isReady.
+		 *
+		 * @returns {boolean}
+		 */
+		isReady: function(){
+			return this._isReady;
+		},
+
+		/**
+		 * Check interval callback.
+		 *
+		 * @private
+		 */
+		_check: function(){
+			$._protipClassInstance
+			&& (this._isReady = true)
+			&& (!this._commandList.length || this._run())
+			&& clearInterval(this._timer);
+		},
+
+		/**
+		 * Add cmd to buffer.
+		 *
+		 * @private
+		 */
+		_run: function () {
+			var call = this._commandList.shift();
+			call.el[call.cmd].apply(call.el, call.cmdArgs);
+			this._commandList.length && this._run();
+			return true;
+		}
+	};
+
+	return Buffer;
+}));
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
 (function (global){
 /**
  * Main Class of the tooltip plugin.
@@ -35,7 +165,13 @@ require('./src/Plugin');
 	'use strict';
 
 	// Lower the interval time, we don't need that much accuracy.
-	window.MutationObserver._period = 100;
+	try {
+		window.MutationObserver._period = 100;
+	} catch(e) {
+		console.warn("Protip: MutationObserver polyfill haven't been loaded!");
+		// "Polyfill" for MutationObserver so Protip won't break if the real polyfill not included
+		window.MutationObserver = window.MutationObserver || function(){this.disconnect=this.observe=function(){}};
+	}
 
 	/**
 	 * The Protip main class
@@ -59,7 +195,7 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_defaults: {
-			/** @type String    Selector for clickable protips */
+			/** @type String    Selector for protips */
 			selector:           C.DEFAULT_SELECTOR,
 			/** @type String    Namespace of the data attributes */
 			namespace:          C.DEFAULT_NAMESPACE,
@@ -71,16 +207,40 @@ require('./src/Plugin');
 			iconTemplate:       C.TEMPLATE_ICON,
 			/** @type Boolean   Should we observe whole document for assertions and removals */
 			observer:           true,
-			/** @type String    Default skin to use */
-			skin:               C.SKIN_DEFAULT,
-			/** @type String    Default size to use (provided by the Default skin only) */
-			size:               C.SIZE_DEFAULT,
-			/** @type String    Default color scheme to use (provided by the Default skin only) */
-			scheme:             C.SCHEME_DEFAULT,
-			/** @type Boolean   Global animation? */
-			animate:            false,
 			/** @type Number    Global offset of all tooltips. */
-			offset:             0
+			offset:             0,
+			/** @type Boolean   Forces the tooltip to have min-width by it's width calculation. */
+			forceMinWidth:      true,
+			/** @type Number    Default time for OnResize event Timeout. */
+			delayResize:        100,
+			/** @type Object    Default data-pt-* values for a tooltip */
+			defaults: {
+				trigger:     C.TRIGGER_HOVER,
+				title:       null,
+				inited:      false,
+				delayIn:     0,
+				delayOut:    0,
+				interactive: false,
+				gravity:     true,
+				offsetTop:   0,
+				offsetLeft:  0,
+				position:    C.POSITION_RIGHT,
+				placement: 	 C.PLACEMENT_OUTSIDE,
+				classes:     null,
+				arrow:       true,
+				width:       300,
+				identifier:  false,
+				icon:        false,
+				observer:    false,
+				target:      C.SELECTOR_BODY,
+				skin:        C.SKIN_DEFAULT,
+				size:        C.SIZE_DEFAULT,
+				scheme:      C.SCHEME_DEFAULT,
+				animate:     false,
+				autoHide:    false,
+				autoShow:    false,
+				mixin:       null
+			}
 		},
 
 		/**
@@ -95,7 +255,7 @@ require('./src/Plugin');
 			 *
 			 * @type Object
 			 */
-			this.settings = $.extend({}, this._defaults, settings);
+			this.settings = $.extend(true, {}, this._defaults, settings);
 
 			/**
 			 * Object storing the Item Class Instances
@@ -177,6 +337,14 @@ require('./src/Plugin');
 		 */
 		destroyItemInstance: function(key){
 			this._itemInstances[key].destroy();
+		},
+
+		/**
+		 * Called after item destory has been done.
+		 *
+		 * @param key
+		 */
+		onItemDestoryed: function(key){
 			delete this._itemInstances[key];
 		},
 
@@ -191,6 +359,7 @@ require('./src/Plugin');
 		createItemInstance: function(el, override){
 			var id = this._generateId();
 			this._itemInstances[id] = new ProtipItemClass(id, el, this, override);
+			el.data(this.namespaced(C.PROP_IDENTIFIER), id);
 			return this._itemInstances[id];
 		},
 
@@ -211,7 +380,7 @@ require('./src/Plugin');
 		 * In case this element doesn't have ItemClass yet this method will also create a new one.
 		 *
 		 * @param el       {jQuery} The element we're searching it's instance for.
-		 * @param override {object} data-pt-* overridables
+		 * @param override [object] data-pt-* overridables
 		 * @returns {ProtipItemClass}
 		 */
 		getItemInstance: function(el, override){
@@ -226,9 +395,12 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_fetchElements: function(){
-			$(this.settings.selector).each($.proxy(function(index, el){
-				this.createItemInstance($(el));
-			}, this));
+			// Prevent early fetches
+			setTimeout(function(){
+				$(this.settings.selector).each($.proxy(function(index, el){
+					this.getItemInstance($(el));
+				}, this));
+			}.bind(this));
 		},
 
 		/**
@@ -254,23 +426,25 @@ require('./src/Plugin');
 
 		/**
 		 * Method to hide all protips.
-		 *
+		 * @param force          [boolean] Force hide?
+		 * @param preventTrigger [boolean] Prevent hide event from triggering?
 		 * @private
 		 */
-		_hideAll: function(){
+		_hideAll: function(force, preventTrigger){
 			$.each(this._itemInstances, $.proxy(function(index, item){
-				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide();
+				item.isVisible() && this._visibleBeforeResize.push(item) && item.hide(force, preventTrigger);
 			}, this));
 		},
 
 		/**
 		 * Method to show all protips.
-		 *
+		 * @param force          [boolean] Force show?
+		 * @param preventTrigger [boolean] Prevent show event from triggering?
 		 * @private
 		 */
-		_showAll: function(){
+		_showAll: function(force, preventTrigger){
 			this._visibleBeforeResize.forEach(function(item){
-				item.show();
+				item.show(force, preventTrigger);
 			});
 		},
 
@@ -281,10 +455,12 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_onAction: function(ev){
-			ev.type === C.EVENT_CLICK && ev.preventDefault();
-
 			var el = $(ev.currentTarget);
-			this.getItemInstance(el).actionHandler(ev.type);
+			var item = this.getItemInstance(el);
+
+			ev.type === C.EVENT_CLICK && item.data.trigger === C.TRIGGER_CLICK && ev.preventDefault();
+
+			item.actionHandler(ev.type);
 		},
 
 		/**
@@ -293,13 +469,13 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_onResize: function(){
-			!this._task.resize && this._hideAll();
+			!this._task.resize && this._hideAll(true, true);
 			this._task.resize && clearTimeout(this._task.resize);
 			this._task.resize = setTimeout(function () {
-				this._showAll();
+				this._showAll(true, true);
 				this._task.resize = undefined;
 				this._visibleBeforeResize = [];
-			}.bind(this), 100);
+			}.bind(this), this.settings.delayResize);
 		},
 
 		/**
@@ -309,18 +485,18 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_onBodyClick: function(ev){
-			var el = $(ev.target);
-			var parent = el.parents('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-			var selector = C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER;
-			var container = el.hasClass(selector) ? el : parent.size() ? parent : false;
+			var el                = $(ev.target);
+			var container         = el.closest('.' + C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER) || false;
+			var source            = el.closest(C.DEFAULT_SELECTOR);
+			var sourceInstance    = this._isInited(source) ? this.getItemInstance(source) : false;
+			var containerInstance = this._isInited(container) ? this.getItemInstance(container) : false;
 
-			var instance = this._isInited(el) ? this.getItemInstance(el) : false;
-
-			if (!instance || (instance.data.trigger !== C.TRIGGER_CLICK)) {
+			if (!containerInstance || containerInstance && containerInstance.data.trigger !== C.TRIGGER_CLICK) {
 				$.each(this._itemInstances, function (index, item) {
 					item.isVisible()
 					&& item.data.trigger === C.TRIGGER_CLICK
 					&& (!container || item.el.protip.get(0) !== container.get(0))
+					&& (!source || item.el.source.get(0) !== source.get(0))
 					&& item.hide();
 				});
 			}
@@ -345,14 +521,22 @@ require('./src/Plugin');
 		 */
 		_mutationObserverCallback: function(mutations) {
 			mutations.forEach(function(mutation) {
+				var node;
 				for (var i = 0; i < mutation.addedNodes.length; i++) {
-					var els = $(mutation.addedNodes[i].parentNode).find(this.settings.selector);
-					els.each(function(index, el){
-						el = $(el);
-						if (el.data(this.namespaced(C.PROP_TRIGGER)) === C.TRIGGER_STICKY){
-							this.getItemInstance(el).show();
-						}
-					}.bind(this));
+					node = $(mutation.addedNodes[i]);
+					if (!node.hasClass(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER)) {
+						var els = node.parent().find(this.settings.selector);
+						els.each(function (index, el) {
+							el = $(el);
+							if (this._isInited(el)) {
+								return;
+							}
+							var instance = this.getItemInstance(el);
+							if (instance.data.trigger === C.TRIGGER_STICKY) {
+								this.getItemInstance(el).show();
+							}
+						}.bind(this));
+					}
 				}
 
 				for (var i = 0; i < mutation.removedNodes.length; i++) {
@@ -422,8 +606,8 @@ require('./src/Plugin');
 
 }));
 
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3,"./Item":6}],3:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4,"./Item":7}],4:[function(require,module,exports){
 /**
  * Just contants
  */
@@ -441,6 +625,11 @@ require('./src/Plugin');
 	"use strict";
 
 	var ProtipConstants = {
+		PLACEMENT_CENTER: 'center',
+		PLACEMENT_INSIDE: 'inside',
+		PLACEMENT_OUTSIDE: 'outside',
+		PLACEMENT_BORDER: 'border',
+
 		POSITION_TOP_LEFT: 'top-left',
 		POSITION_TOP: 'top',
 		POSITION_TOP_RIGHT: 'top-right',
@@ -453,12 +642,13 @@ require('./src/Plugin');
 		POSITION_LEFT_TOP: 'left-top',
 		POSITION_LEFT: 'left',
 		POSITION_LEFT_BOTTOM: 'left-bottom',
-		POSITION_CORNER_LEFT_TOP: 'corner-left-top',
-		POSITION_CORNER_RIGHT_TOP: 'corner-right-top',
-		POSITION_CORNER_LEFT_BOTTOM: 'corner-left-bottom',
-		POSITION_CORNER_RIGHT_BOTTOM: 'corner-right-bottom',
+		POSITION_CORNER_LEFT_TOP: 'top-left-corner',
+		POSITION_CORNER_RIGHT_TOP: 'top-right-corner',
+		POSITION_CORNER_LEFT_BOTTOM: 'bottom-left-corner',
+		POSITION_CORNER_RIGHT_BOTTOM: 'bottom-right-corner',
 
 		TRIGGER_CLICK: 'click',
+		TRIGGER_CLICK2: 'click2',
 		TRIGGER_HOVER: 'hover',
 		TRIGGER_STICKY: 'sticky',
 
@@ -478,7 +668,7 @@ require('./src/Plugin');
 		PROP_WIDTH: 'width',
 		PROP_IDENTIFIER: 'identifier',
 		PROP_ICON: 'icon',
-		PROP_AUTO: 'auto',
+		PROP_AUTOSHOW: 'autoShow',
 		PROP_TARGET: 'target',
 
 		EVENT_MOUSEOVER: 'mouseover',
@@ -487,10 +677,13 @@ require('./src/Plugin');
 		EVENT_MOUSELEAVE: 'mouseleave',
 		EVENT_CLICK: 'click',
 		EVENT_RESIZE: 'resize',
+		EVENT_PROTIP_SHOW: 'protipshow',
+		EVENT_PROTIP_HIDE: 'protiphide',
+		EVENT_PROTIP_READY: 'protipready',
 
 		DEFAULT_SELECTOR: '.protip',
 		DEFAULT_NAMESPACE: 'pt',
-		DEFAULT_DELAY_OUT: 250,
+		DEFAULT_DELAY_OUT: 100,
 
 		SELECTOR_PREFIX: 'protip-',
 		SELECTOR_BODY: 'body',
@@ -503,8 +696,10 @@ require('./src/Plugin');
         SELECTOR_SCHEME_PREFIX: '--scheme-',
         SELECTOR_ANIMATE: 'animated',
 		SELECTOR_TARGET: '.protip-target',
+		SELECTOR_MIXIN_PREFIX: 'protip-mixin--',
+		SELECTOR_OPEN: 'protip-open',
 
-		TEMPLATE_PROTIP: '<div id="{id}" class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div>{content}</div></div>',
+		TEMPLATE_PROTIP: '<div class="{classes}" data-pt-identifier="{identifier}" style="{widthType}:{width}px">{arrow}{icon}<div class="protip-content">{content}</div></div>',
 		TEMPLATE_ICON: '<i class="icon-{icon}"></i>',
 
 		ATTR_WIDTH: 'width',
@@ -512,14 +707,18 @@ require('./src/Plugin');
 
         SKIN_DEFAULT: 'default',
         SIZE_DEFAULT: 'normal',
-        SCHEME_DEFAULT: 'pro'
+        SCHEME_DEFAULT: 'pro',
+
+		PSEUDO_NEXT: 'next',
+		PSEUDO_PREV: 'prev',
+		PSEUDO_THIS: 'this'
 	};
 
 	ProtipConstants.TEMPLATE_ARROW = '<span class="' + ProtipConstants.SELECTOR_PREFIX + ProtipConstants.SELECTOR_ARROW + '"></span>';
 
 	return ProtipConstants;
 }));
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 /**
  * GravityParser Class
@@ -672,7 +871,7 @@ require('./src/Plugin');
 						};
 					}
 				}).filter(function (a) {
-					return !!a
+					return !!a;
 				});
 
 				if (hasRest) {
@@ -689,8 +888,8 @@ require('./src/Plugin');
 	return GravityParser;
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3}],5:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4}],6:[function(require,module,exports){
 (function (global){
 /**
  * GravityTester Class
@@ -783,10 +982,13 @@ require('./src/Plugin');
 			var i;
 			for (i = 0; i < this._positionList.length; i++) {
 				// We had a successful test, break the loop.
-				if (this._test(this._positionList[i])){
+				if (this._test(this._positionList[i])) {
 					break;
 				}
 			}
+
+			// Set first for prior
+			this._item.data.position = this._positionList[0].key;
 
 			// Return the result if we had one. Return values for the default position if not.
 			return this._result || new PositionCalculator(this._item);
@@ -801,6 +1003,7 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_test: function(position){
+			this._setProtipMinWidth();
 			var result = new PositionCalculator(this._item, position.key, position);
 			this._item.el.protip.css(result);
 			this._setProtipDimensions();
@@ -840,7 +1043,7 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_bottomOk: function(){
-			return (((this._dimensions.offset.top - this._windowDimensions.scrollTop) + this._dimensions.height) < (this._windowDimensions.height + this._windowDimensions.scrollTop));
+			return (((this._dimensions.offset.top - this._windowDimensions.scrollTop) + this._dimensions.height) < this._windowDimensions.height);
 		},
 
 		/**
@@ -854,6 +1057,30 @@ require('./src/Plugin');
 		},
 
 		/**
+		 * Sets the min width of the tooltip.
+		 *
+		 * @private
+		 */
+		_setProtipMinWidth: function() {
+			if (this._item.classInstance.settings.forceMinWidth) {
+				this._item.el.protip.css({
+					position: 'fixed',
+					left: 0,
+					top: 0,
+					minWidth: 0
+				});
+
+				var minWidth = this._item.el.protip.outerWidth() + 1; // Thanks Firefox
+				this._item.el.protip.css({
+					position: '',
+					left: '',
+					top: '',
+					minWidth: minWidth + 'px'
+				});
+			}
+		},
+
+		/**
 		 * Gets/sets initial protip dimensions to caclulate with.
 		 *
 		 * @private
@@ -864,13 +1091,6 @@ require('./src/Plugin');
 				height: this._item.el.protip.outerHeight(),
 				offset: this._item.el.protip.offset()
 			};
-
-			if (this._item.data.target !== C.SELECTOR_BODY) {
-				var parentOffset = this._item.el.source.offset();
-
-				this._dimensions.offset.top += parentOffset.top;
-				this._dimensions.offset.left += parentOffset.left;
-			}
 		},
 
 		/**
@@ -897,8 +1117,8 @@ require('./src/Plugin');
 	return GravityTester;
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3,"./GravityParser":4,"./PositionCalculator":8}],6:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4,"./GravityParser":5,"./PositionCalculator":9}],7:[function(require,module,exports){
 (function (global){
 /**
  * Item Class.
@@ -951,7 +1171,7 @@ require('./src/Plugin');
 		return this._Construct(id, el, classInstance, override);
 	};
 
-// Define the ProtipItemClass members
+	// Define the ProtipItemClass members
 	$.extend(true, ProtipItemClass.prototype, {
 
 		/**
@@ -970,39 +1190,13 @@ require('./src/Plugin');
 
 			/** @type {object} Override data-pt-* values. */
 			this._override = override || {};
-
-            /** @type {object} List of data-* properties and their default values. */
-            this._prop = {
-                trigger:     C.TRIGGER_HOVER,
-                title:       null,
-                inited:      false,
-                delayIn:     0,
-                delayOut:    0,
-                interactive: false,
-                gravity:     true,
-                offsetTop:   0,
-                offsetLeft:  0,
-                position:    C.POSITION_RIGHT,
-                classes:     null,
-                arrow:       true,
-                width:       300,
-                identifier:  false,
-                icon:        false,
-                observer:    false,
-                target:      C.SELECTOR_BODY,
-                skin:        undefined,
-                size:        undefined,
-                animate:     undefined
-            };
+			this._override.identifier = id;
 
 			/** @type {object}    Object storing jQuery elements */
 			this.el               = {};
 
 			/** @type {jQuery}    The source element. */
 			this.el.source        = el;
-
-			// Set identifier
-			this._prop.identifier = id;
 
 			/** @type {object}    All the data-* properties gathered from the source element. */
 			this.data             = {};
@@ -1024,10 +1218,18 @@ require('./src/Plugin');
 			this._prepareInternals();
 			this._appendProtip();
 			this._initSticky();
+			this._initAutoShow();
 			this._bind();
 
-			// Tell the source that we are ready to go!
-			this.el.source.data(this._namespaced(C.PROP_INITED), true);
+			// Tell the source that we are ready to go and add protip class if it didn't have.
+			this.el.source
+				.addClass(this.classInstance.settings.selector.replace('.', ''))
+				.data(this._namespaced(C.PROP_INITED), true);
+
+			// Fire ready with some timeout so any script can catch up.
+			setTimeout(function(){
+				this.el.source.trigger(C.EVENT_PROTIP_READY, this)
+			}.bind(this), 10);
 
 			return this;
 		},
@@ -1043,11 +1245,14 @@ require('./src/Plugin');
 				// No handler needed for sticky
 			}
 			// Handling clicky protips
-			else if (eventType === C.EVENT_CLICK && this.data.trigger === C.TRIGGER_CLICK) {
+			else if (
+					eventType === C.EVENT_CLICK
+					&& (this.data.trigger === C.TRIGGER_CLICK || this.data.trigger === C.TRIGGER_CLICK2)
+			) {
 				this.toggle();
 			}
 			// Handling mouseover protips
-			else if (this.data.trigger !== C.TRIGGER_CLICK) {
+			else if (this.data.trigger !== C.TRIGGER_CLICK && this.data.trigger !== C.TRIGGER_CLICK2) {
 				switch(eventType){
 					case C.EVENT_MOUSEOUT:
 						this.hide();
@@ -1065,10 +1270,17 @@ require('./src/Plugin');
 		 * Reset data, hide, unbind, remove.
 		 */
 		destroy: function(){
-			this.el.source.removeData();
 			this.hide(true);
 			this._unbind();
 			this.el.protip.remove();
+			this.el.source
+				.data(this._namespaced(C.PROP_INITED), false)
+				.data(this._namespaced(C.PROP_IDENTIFIER), false)
+				.removeData();
+			this.classInstance.onItemDestoryed(this.data.identifier);
+			$.each(this._task, function(k, task){
+				clearTimeout(task);
+			});
 		},
 
 		/**
@@ -1095,9 +1307,10 @@ require('./src/Plugin');
 		/**
 		 * Make a tooltip visible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipShow won't be triggered.
 		 */
-		show: function(force){
+		show: function(force, preventTrigger){
 
 			// No title? Why tooltip?
 			if (!this.data.title) {
@@ -1107,6 +1320,7 @@ require('./src/Plugin');
 			// Clear timeouts
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
+			this._task.autoHide && clearTimeout(this._task.autoHide);
 
 			// Set new timeout task if needed
 			if (!force && this.data.delayIn) {
@@ -1116,6 +1330,13 @@ require('./src/Plugin');
 
 				// Return, our timeout will again later...
 				return;
+			}
+
+			// Auto hide
+			if (this.data.autoHide !== false) {
+				this._task.autoHide = setTimeout(function(){
+					this.hide(true);
+				}.bind(this), this.data.autoHide);
 			}
 
 			var style;
@@ -1129,39 +1350,45 @@ require('./src/Plugin');
 				style = new PositionCalculator(this);
 			}
 
+			// Fire show event and add open class
+			this.el.source.addClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+
 			// Apply styles, classes
 			this.el.protip
 				.css(style)
 				.addClass(C.SELECTOR_SHOW);
 
-            // If we need animation
-            (this.data.animate || this.classInstance.settings.animate) &&
-                this.el.protip
-                    .addClass(C.SELECTOR_ANIMATE)
-                    .addClass(this.data.animate || this.classInstance.settings.animate);
+			// If we need animation
+			this.data.animate &&
+				this.el.protip
+					.addClass(C.SELECTOR_ANIMATE)
+					.addClass(this.data.animate || this.classInstance.settings.animate);
 
 			// Set visibility
 			this._isVisible = true;
 		},
 
-        /**
-         * Apply a position to the tooltip.
-         *
-         * @param position
-         */
-        applyPosition: function(position){
-            this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
-        },
+		/**
+		 * Apply a position to the tooltip.
+		 *
+		 * @param position
+		 */
+		applyPosition: function(position){
+			this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
+		},
 
 		/**
 		 * Make a tooltip invisible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipHide event won't be triggered.
 		 */
-		hide: function(force){
+		hide: function(force, preventTrigger) {
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
+			this._task.autoHide && clearTimeout(this._task.autoHide);
 
 			// Set new timeout task if needed
 			if (!force && this.data.delayOut) {
@@ -1173,25 +1400,30 @@ require('./src/Plugin');
 				return;
 			}
 
+			// Fire show event and remove open class
+			this.el.source.removeClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
+
 			// Remove classes and set visibility
 			this.el.protip
-                .removeClass(C.SELECTOR_SHOW)
-                .removeClass(C.SELECTOR_ANIMATE)
-                .removeClass(this.data.animate || this.classInstance.settings.animate);
+				.removeClass(C.SELECTOR_SHOW)
+				.removeClass(C.SELECTOR_ANIMATE)
+				.removeClass(this.data.animate);
 
 			this._isVisible = false;
 		},
 
-        /**
-         *
-         * @returns {{width: number, height: number}}
-         */
-        getArrowOffset: function(){
-            return {
-                width:  this.el.protipArrow.outerWidth(),
-                height: this.el.protipArrow.outerHeight()
-            };
-        },
+		/**
+		 * Returns arrow offset (width/height)
+		 *
+		 * @returns {{width: number, height: number}}
+		 */
+		getArrowOffset: function(){
+			return {
+				width:  this.el.protipArrow.outerWidth(),
+				height: this.el.protipArrow.outerHeight()
+			};
+		},
 
 		/**
 		 * Fetches every data-* properties from the source element.
@@ -1202,13 +1434,13 @@ require('./src/Plugin');
 		_fetchData: function(){
 
 			// Fetch
-			$.each(this._prop, $.proxy(function(key){
+			$.each(this.classInstance.settings.defaults, $.proxy(function(key){
 				this.data[key] = this.el.source.data(this._namespaced(key));
 			}, this));
 
-            // Merge/Extend
-            this.data = $.extend({}, this._prop, this.data);
-            this.data = $.extend({}, this.data, this._override);
+			// Merge/Extend
+			this.data = $.extend({}, this.classInstance.settings.defaults, this.data);
+			this.data = $.extend({}, this.data, this._override);
 
 			// Now apply back to the element
 			$.each(this.data, $.proxy(function(key, value){
@@ -1244,9 +1476,16 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_initSticky: function(){
-			if (this.data.trigger === C.TRIGGER_STICKY) {
-				this.show();
-			}
+			(this.data.trigger === C.TRIGGER_STICKY) && this.show();
+		},
+
+		/**
+		 * Initializes autoShow protips.
+		 *
+		 * @private
+		 */
+		_initAutoShow: function(){
+			this.data.autoShow && this.show();
 		},
 
 		/**
@@ -1270,7 +1509,7 @@ require('./src/Plugin');
 
 			// Convert to jQuery object and append
 			this.el.protip = $(this.el.protip);
-            this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
+			this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
 			this.el.target.append(this.el.protip);
 		},
 
@@ -1282,22 +1521,35 @@ require('./src/Plugin');
 		 */
 		_getClassList: function(){
 			var classList = [];
-            var skin = this.data.skin || this.classInstance.settings.skin;
-            var size = this.data.size || this.classInstance.settings.size;
-            var scheme = this.data.scheme || this.classInstance.settings.scheme;
+			var skin      = this.data.skin;
+			var size      = this.data.size;
+			var scheme    = this.data.scheme;
 
-            // Main container class
-            classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-            // Skin class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin);
-            // Size class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
-            // Scheme class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
-            // Custom classes
+			// Main container class
+			classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
+			// Skin class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin);
+			// Size class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
+			// Scheme class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
+			// Custom classes
 			this.data.classes && classList.push(this.data.classes);
+			// Mixin classes
+			this.data.mixin && classList.push(this._parseMixins());
 
 			return classList.join(' ');
+		},
+
+
+		_parseMixins: function(){
+			var mixin = [];
+
+			this.data.mixin && this.data.mixin.split(' ').forEach(function(val){
+				val && mixin.push(C.SELECTOR_MIXIN_PREFIX + val);
+			}, this);
+
+			return mixin.join(' ');
 		},
 
 		/**
@@ -1340,9 +1592,24 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_detectTitle: function(){
-			if (this.data.title && this.data.title.charAt(0) === '#') {
+			if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
+			}
+			else if (this.data.title && this.data.title.charAt(0) === ':') {
+				var which = this.data.title.substring(1);
+				switch (which) {
+					case C.PSEUDO_NEXT:
+						this.data.title = this.el.source.next().html();
+						break;
+					case C.PSEUDO_PREV:
+						this.data.title = this.el.source.prev().html();
+						break;
+					case C.PSEUDO_THIS:
+						this.data.title = this.el.source.html();
+						break;
+					default: break;
+				}
 			}
 
 			// Set to interactive if detects link
@@ -1359,14 +1626,14 @@ require('./src/Plugin');
 		_setTarget: function(){
 			var target = this._getData(C.PROP_TARGET);
 
-			// Target is self
+			// Target is itself
 			if (target === true) {
 				target = this.el.source;
 			}
 
 			// If has target container
-			else if (target === C.SELECTOR_BODY && this.el.source.parents(C.SELECTOR_TARGET).size()) {
-				target = this.el.source.parents(C.SELECTOR_TARGET);
+			else if (target === C.SELECTOR_BODY && this.el.source.closest(C.SELECTOR_TARGET).length) {
+				target = this.el.source.closest(C.SELECTOR_TARGET);
 			}
 
 			// Target is a selector
@@ -1424,9 +1691,7 @@ require('./src/Plugin');
 		 * @private
 		 */
 		_onProtipMouseleave: function(){
-			if (this.data.trigger === C.TRIGGER_HOVER) {
-				this.hide();
-			}
+			(this.data.trigger === C.TRIGGER_HOVER) && this.hide();
 		},
 
 		/**
@@ -1484,8 +1749,8 @@ require('./src/Plugin');
 
 	return ProtipItemClass;
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3,"./GravityTester":5,"./PositionCalculator":8}],7:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4,"./GravityTester":6,"./PositionCalculator":9}],8:[function(require,module,exports){
 (function (global){
 (function (root, factory) {
 
@@ -1494,29 +1759,37 @@ require('./src/Plugin');
 	if (typeof define === 'function' && define.amd) {
 		define([
 			'jquery',
-			'./Class'
+			'./Class',
+			'./Buffer',
+			'./Constants'
 		], factory);
 	} else if (typeof exports === 'object') {
 		module.exports = factory(
 			(typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
-			require('./Class')
+			require('./Class'),
+			require('./Buffer'),
+			require('./Constants')
 		);
 	} else {
 		factory(
 			root.jQuery,
-			root.ProtipClass
+			root.ProtipClass,
+			root.ProtipBuffer,
+			root.ProtipContants
 		);
 	}
-}(this, function ($, ProtipClass) {
+}(this, function ($, ProtipClass, ProtipBuffer, C) {
 
     'use strict';
 
 	// Extend the jQuery object with singleton members
 	$ = $.extend($, {
 		_protipClassInstance: undefined,
+		_protipBuffer: new ProtipBuffer(),
 		protip: function(settings){
 			if (!this._protipClassInstance) {
 				this._protipClassInstance = new ProtipClass(settings);
+				this.protip.C = C;
 			}
 			return this._protipClassInstance;
 		}
@@ -1526,16 +1799,37 @@ require('./src/Plugin');
 	$.fn.extend({
 
 		/**
+		 * Simply sets tooltip to the element but it won't show.
+		 *
+		 * @returns {*}
+		 */
+		protipSet: function(override) {
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+					$._protipClassInstance.getItemInstance(el, override);
+				});
+			}
+			$._protipBuffer.add('protipSet', this, arguments);
+			return this;
+		},
+
+		/**
 		 * Shows the protip on an element.
 		 *
 		 * @returns {*}
 		 */
 		protipShow: function(override) {
-			return this.each(function(index, el) {
-				el = $(el);
-				$._protipClassInstance.getItemInstance(el).destroy();
-				$._protipClassInstance.getItemInstance(el, override).show(true);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+					$._protipClassInstance.getItemInstance(el, override).show(true);
+				});
+			}
+			$._protipBuffer.add('protipShow', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1544,9 +1838,13 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipHide: function() {
-			return this.each(function(index, el) {
-				$._protipClassInstance.getItemInstance($(el)).hide(true);
-			});
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$._protipClassInstance.getItemInstance($(el)).hide(true);
+				});
+			}
+			$._protipBuffer.add('protipHide', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1555,12 +1853,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipToggle: function() {
-			var instance;
-
-			return this.each(function(index, el) {
-				instance = $._protipClassInstance.getItemInstance($(el));
-				instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
-			}.bind(this));
+			if ($._protipBuffer.isReady()) {
+				var instance;
+				return this.each(function (index, el) {
+					instance = $._protipClassInstance.getItemInstance($(el));
+					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+				}.bind(this));
+			}
+			$._protipBuffer.add('protipToggle', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1569,11 +1870,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipHideInside: function(){
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					$._protipClassInstance.getItemInstance($(el2)).hide(true);
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						$._protipClassInstance.getItemInstance($(el2)).hide(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipHideInside', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1582,11 +1887,15 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipShowInside: function(){
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					$._protipClassInstance.getItemInstance($(el2)).show(true);
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						$._protipClassInstance.getItemInstance($(el2)).show(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipShowInside', this, arguments);
+			return this;
 		},
 
 		/**
@@ -1595,20 +1904,24 @@ require('./src/Plugin');
 		 * @returns {*}
 		 */
 		protipToggleInside: function(){
-			var instance;
+			if ($._protipBuffer.isReady()) {
+				var instance;
 
-			return this.each(function(index, el) {
-				$(el).find($._protipClassInstance.settings.selector).each(function(index, el2){
-					instance = $._protipClassInstance.getItemInstance($(el2));
-					instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+				return this.each(function (index, el) {
+					$(el).find($._protipClassInstance.settings.selector).each(function (index, el2) {
+						instance = $._protipClassInstance.getItemInstance($(el2));
+						instance = instance.isVisible() ? instance.hide(true) : instance.show(true);
+					});
 				});
-			});
+			}
+			$._protipBuffer.add('protipToggleInside', this, arguments);
+			return this;
 		}
 	});
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Class":2}],8:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Buffer":2,"./Class":3,"./Constants":4}],9:[function(require,module,exports){
 (function (global){
 /**
  * PositionCalculator Class
@@ -1707,6 +2020,14 @@ require('./src/Plugin');
 			this._position     = position || this._itemInstance.data.position;
 
 			/**
+			 * Placement.
+			 *
+			 * @type {string}
+			 * @private
+			 */
+			this._placement    = this._itemInstance.data.placement;
+
+			/**
 			 * Offset of the tooltip.
 			 *
 			 * @type {{top: number, left: number}}
@@ -1755,88 +2076,137 @@ require('./src/Plugin');
 			var arrowOffset = this._itemInstance.getArrowOffset();
 			var globalOffset = this._itemInstance.classInstance.settings.offset;
 
-			switch(this._position){
-				case C.POSITION_TOP:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = ((this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left) + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_TOP_LEFT:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_TOP_RIGHT:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_RIGHT:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_RIGHT_TOP:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_RIGHT_BOTTOM:
-					this._offset.left += (globalOffset + arrowOffset.width);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_BOTTOM_LEFT:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_BOTTOM_RIGHT:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_LEFT:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_LEFT_TOP:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_LEFT_BOTTOM:
-					this._offset.left += (globalOffset + arrowOffset.width) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_LEFT_TOP:
-					this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_LEFT_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_RIGHT_BOTTOM:
-					this._offset.top += (globalOffset + arrowOffset.height);
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
-					break;
-				case C.POSITION_CORNER_RIGHT_TOP:
-                    this._offset.top += (globalOffset + arrowOffset.height) * -1;
-					position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-					position.top  = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
-					break;
-				default: break;
+			if (this._placement !== C.PLACEMENT_CENTER) {
+				switch (this._position) {
+					case C.POSITION_TOP:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = ((this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left) + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
+						break;
+					case C.POSITION_TOP_LEFT:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
+						break;
+					case C.POSITION_TOP_RIGHT:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
+						break;
+					case C.POSITION_RIGHT:
+						this._offset.left += (globalOffset + arrowOffset.width);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						break;
+					case C.POSITION_RIGHT_TOP:
+						this._offset.left += (globalOffset + arrowOffset.width);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						break;
+					case C.POSITION_RIGHT_BOTTOM:
+						this._offset.left += (globalOffset + arrowOffset.width);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						break;
+					case C.POSITION_BOTTOM:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
+						break;
+					case C.POSITION_BOTTOM_LEFT:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
+						break;
+					case C.POSITION_BOTTOM_RIGHT:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
+						break;
+					case C.POSITION_LEFT:
+						this._offset.left += (globalOffset + arrowOffset.width) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						break;
+					case C.POSITION_LEFT_TOP:
+						this._offset.left += (globalOffset + arrowOffset.width) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						break;
+					case C.POSITION_LEFT_BOTTOM:
+						this._offset.left += (globalOffset + arrowOffset.width) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						break;
+					case C.POSITION_CORNER_LEFT_TOP:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  += this._protip.height / 2;
+						break;
+					case C.POSITION_CORNER_LEFT_BOTTOM:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  -= this._protip.height / 2;
+						break;
+					case C.POSITION_CORNER_RIGHT_BOTTOM:
+						this._offset.top += (globalOffset + arrowOffset.height);
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  -= this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  -= this._protip.height / 2;
+						break;
+					case C.POSITION_CORNER_RIGHT_TOP:
+						this._offset.top += (globalOffset + arrowOffset.height) * -1;
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
+						if (this._placement === C.PLACEMENT_INSIDE) position.top  += this._protip.height;
+						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
+						if (this._placement === C.PLACEMENT_BORDER) position.top  += this._protip.height / 2;
+						break;
+					default:
+						break;
+				}
+			}
+
+			// Center Placement
+			else {
+				position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
+				position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
 			}
 
 			position.left = position.left + 'px';
@@ -1849,5 +2219,5 @@ require('./src/Plugin');
 	return PositionCalculator;
 
 }));
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Constants":3}]},{},[1])
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./Constants":4}]},{},[1]);

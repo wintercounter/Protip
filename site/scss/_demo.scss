@@ -1,0 +1,136 @@
+.demo {
+    width: 100%;
+    display: table;
+    background-color: #ddd;
+
+    > * {
+        display: table-cell;
+    }
+
+    &__form {
+        width: 550px;
+
+        form {
+            width: 100%;
+
+            > * {
+                position: relative; display: block; float: left;
+                width: 50%;
+                background-color: #efefef;
+                border-bottom: 1px solid #ddd;
+                border-left: 1px solid #fff;
+            }
+
+            label {
+                display: table;
+                width: 100%;
+                font-family: 'Source Code Pro', sans-serif;
+
+                > * {
+                    display: table-cell;
+                }
+
+                > span {
+                    padding: 10px;
+                    width: 100px;
+                    font-size: 12px;
+                    background-color: #CECECE; color: #585858;
+                }
+                
+                > div {
+                    cursor: pointer;
+                    position: relative;
+
+                    &.padding {
+                        padding: 0 10px;
+                    }
+                }
+
+                input {
+                    position: absolute;
+                    top: 8px;
+                    width: calc(100% - 20px);
+                    margin-left: 10px;
+                }
+
+                input[type="range"] {
+                    width: calc(100% - 60px);
+
+                    & + input[type=text] {
+                        width: 30px;
+                        right: 10px;
+                        font-size: 10px;
+                        text-align: center;
+                    }
+                }
+            }
+
+            button {
+                border: 0; outline: 0;
+                background-color: #877796; color: #fff;
+                height: 32px;
+                text-transform: uppercase;
+                font-size: 11px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #422C56;
+                }
+            }
+
+            select {
+                width: 100%; height: 100%;
+                background-color: #EFEFEF; color: #000;
+                border: 0;
+            }
+        }
+    }
+
+    &__tooltip {
+        position: relative;
+        background-color: transparent;
+        background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+        background-image: -webkit-linear-gradient(white 1px, transparent 1px),
+        -webkit-linear-gradient(0, white 1px, transparent 1px),
+        -webkit-linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+        -webkit-linear-gradient(0, rgba(255,255,255,.3) 1px, transparent 1px);
+        background-image: -moz-linear-gradient(white 1px, transparent 1px),
+        -moz-linear-gradient(0, white 1px, transparent 1px),
+        -moz-linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+        -moz-linear-gradient(0, rgba(255,255,255,.3) 1px, transparent 1px);
+        background-image: linear-gradient(white 1px, transparent 1px),
+        linear-gradient(90deg, white 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
+
+        .protip {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            margin: auto;
+            width: 300px; height: 100px;
+            background-color: #421F63;
+            text-align: center;
+            line-height: 100px;
+            box-shadow: 0 0 100px #000;
+
+            span {
+                text-transform: uppercase;
+                font-weight: bold;
+                font-size: 20px;
+                color: #fff;
+            }
+
+            &-placement--outside {
+
+            }
+        }
+    }
+}
+
+.form-helper-tooltip {
+    line-height: 16px !important;
+
+    a {
+        color: #fc0;
+    }
+}

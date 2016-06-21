@@ -1,0 +1,73 @@
+.markdown-body {
+    display: block;
+
+    pre {
+        background-color: #313131 !important;
+        color: #fff;
+    }
+
+    .row {
+        width: 100%;
+        float: left;
+    }
+}
+
+md-content {
+    > div {
+        > div:nth-child(even) {
+            background-color: #efefef;
+        }
+
+        > div:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        > div {
+            float: left; clear: both;
+            width: 100%;
+            padding: 50px 0 34px 0;
+
+            > div {
+                width: 90%; max-width: 920px;
+                margin: 0 auto;
+            }
+        }
+    }
+
+    hr {
+        display: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        border: 0 !important;
+        margin-top: 0 !important;
+    }
+}
+
+#list-of-available-positions {
+    position: relative;
+    z-index: 2;
+
+    + .row {
+
+        ul {
+            float: left;
+        }
+
+        p {
+            float: right;
+
+            img {
+                margin-top: -76px;
+            }
+        }
+    }
+}
+
+#data-pt-gravity:before {
+    content: '';
+    display: block;
+    clear: both;
+    float: left;
+    width: 100%;
+}

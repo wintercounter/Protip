@@ -49,7 +49,7 @@
 		return this._Construct(id, el, classInstance, override);
 	};
 
-// Define the ProtipItemClass members
+	// Define the ProtipItemClass members
 	$.extend(true, ProtipItemClass.prototype, {
 
 		/**
@@ -68,39 +68,13 @@
 
 			/** @type {object} Override data-pt-* values. */
 			this._override = override || {};
-
-            /** @type {object} List of data-* properties and their default values. */
-            this._prop = {
-                trigger:     C.TRIGGER_HOVER,
-                title:       null,
-                inited:      false,
-                delayIn:     0,
-                delayOut:    0,
-                interactive: false,
-                gravity:     true,
-                offsetTop:   0,
-                offsetLeft:  0,
-                position:    C.POSITION_RIGHT,
-                classes:     null,
-                arrow:       true,
-                width:       300,
-                identifier:  false,
-                icon:        false,
-                observer:    false,
-                target:      C.SELECTOR_BODY,
-                skin:        undefined,
-                size:        undefined,
-                animate:     undefined
-            };
+			this._override.identifier = id;
 
 			/** @type {object}    Object storing jQuery elements */
 			this.el               = {};
 
 			/** @type {jQuery}    The source element. */
 			this.el.source        = el;
-
-			// Set identifier
-			this._prop.identifier = id;
 
 			/** @type {object}    All the data-* properties gathered from the source element. */
 			this.data             = {};
@@ -122,10 +96,18 @@
 			this._prepareInternals();
 			this._appendProtip();
 			this._initSticky();
+			this._initAutoShow();
 			this._bind();
 
-			// Tell the source that we are ready to go!
-			this.el.source.data(this._namespaced(C.PROP_INITED), true);
+			// Tell the source that we are ready to go and add protip class if it didn't have.
+			this.el.source
+				.addClass(this.classInstance.settings.selector.replace('.', ''))
+				.data(this._namespaced(C.PROP_INITED), true);
+
+			// Fire ready with some timeout so any script can catch up.
+			setTimeout(function(){
+				this.el.source.trigger(C.EVENT_PROTIP_READY, this)
+			}.bind(this), 10);
 
 			return this;
 		},
@@ -141,11 +123,14 @@
 				// No handler needed for sticky
 			}
 			// Handling clicky protips
-			else if (eventType === C.EVENT_CLICK && this.data.trigger === C.TRIGGER_CLICK) {
+			else if (
+					eventType === C.EVENT_CLICK
+					&& (this.data.trigger === C.TRIGGER_CLICK || this.data.trigger === C.TRIGGER_CLICK2)
+			) {
 				this.toggle();
 			}
 			// Handling mouseover protips
-			else if (this.data.trigger !== C.TRIGGER_CLICK) {
+			else if (this.data.trigger !== C.TRIGGER_CLICK && this.data.trigger !== C.TRIGGER_CLICK2) {
 				switch(eventType){
 					case C.EVENT_MOUSEOUT:
 						this.hide();
@@ -163,10 +148,17 @@
 		 * Reset data, hide, unbind, remove.
 		 */
 		destroy: function(){
-			this.el.source.removeData();
 			this.hide(true);
 			this._unbind();
 			this.el.protip.remove();
+			this.el.source
+				.data(this._namespaced(C.PROP_INITED), false)
+				.data(this._namespaced(C.PROP_IDENTIFIER), false)
+				.removeData();
+			this.classInstance.onItemDestoryed(this.data.identifier);
+			$.each(this._task, function(k, task){
+				clearTimeout(task);
+			});
 		},
 
 		/**
@@ -193,9 +185,10 @@
 		/**
 		 * Make a tooltip visible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipShow won't be triggered.
 		 */
-		show: function(force){
+		show: function(force, preventTrigger){
 
 			// No title? Why tooltip?
 			if (!this.data.title) {
@@ -205,6 +198,7 @@
 			// Clear timeouts
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
+			this._task.autoHide && clearTimeout(this._task.autoHide);
 
 			// Set new timeout task if needed
 			if (!force && this.data.delayIn) {
@@ -214,6 +208,13 @@
 
 				// Return, our timeout will again later...
 				return;
+			}
+
+			// Auto hide
+			if (this.data.autoHide !== false) {
+				this._task.autoHide = setTimeout(function(){
+					this.hide(true);
+				}.bind(this), this.data.autoHide);
 			}
 
 			var style;
@@ -227,39 +228,45 @@
 				style = new PositionCalculator(this);
 			}
 
+			// Fire show event and add open class
+			this.el.source.addClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_SHOW, this);
+
 			// Apply styles, classes
 			this.el.protip
 				.css(style)
 				.addClass(C.SELECTOR_SHOW);
 
-            // If we need animation
-            (this.data.animate || this.classInstance.settings.animate) &&
-                this.el.protip
-                    .addClass(C.SELECTOR_ANIMATE)
-                    .addClass(this.data.animate || this.classInstance.settings.animate);
+			// If we need animation
+			this.data.animate &&
+				this.el.protip
+					.addClass(C.SELECTOR_ANIMATE)
+					.addClass(this.data.animate || this.classInstance.settings.animate);
 
 			// Set visibility
 			this._isVisible = true;
 		},
 
-        /**
-         * Apply a position to the tooltip.
-         *
-         * @param position
-         */
-        applyPosition: function(position){
-            this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
-        },
+		/**
+		 * Apply a position to the tooltip.
+		 *
+		 * @param position
+		 */
+		applyPosition: function(position){
+			this.el.protip.attr('data-' + C.DEFAULT_NAMESPACE + '-' + C.PROP_POSITION, position);
+		},
 
 		/**
 		 * Make a tooltip invisible.
 		 *
-		 * @param force [boolean]  If 'true' there will be no timeouts.
+		 * @param force          [boolean]  If 'true' there will be no timeouts.
+		 * @param preventTrigger [boolean]  If 'true' protipHide event won't be triggered.
 		 */
-		hide: function(force){
+		hide: function(force, preventTrigger) {
 
 			this._task.delayOut && clearTimeout(this._task.delayOut);
 			this._task.delayIn && clearTimeout(this._task.delayIn);
+			this._task.autoHide && clearTimeout(this._task.autoHide);
 
 			// Set new timeout task if needed
 			if (!force && this.data.delayOut) {
@@ -271,25 +278,30 @@
 				return;
 			}
 
+			// Fire show event and remove open class
+			this.el.source.removeClass(C.SELECTOR_OPEN);
+			!preventTrigger && this.el.source.trigger(C.EVENT_PROTIP_HIDE, this);
+
 			// Remove classes and set visibility
 			this.el.protip
-                .removeClass(C.SELECTOR_SHOW)
-                .removeClass(C.SELECTOR_ANIMATE)
-                .removeClass(this.data.animate || this.classInstance.settings.animate);
+				.removeClass(C.SELECTOR_SHOW)
+				.removeClass(C.SELECTOR_ANIMATE)
+				.removeClass(this.data.animate);
 
 			this._isVisible = false;
 		},
 
-        /**
-         *
-         * @returns {{width: number, height: number}}
-         */
-        getArrowOffset: function(){
-            return {
-                width:  this.el.protipArrow.outerWidth() || 0,
-                height: this.el.protipArrow.outerHeight() || 0
-            };
-        },
+		/**
+		 * Returns arrow offset (width/height)
+		 *
+		 * @returns {{width: number, height: number}}
+		 */
+		getArrowOffset: function(){
+			return {
+				width:  this.el.protipArrow.outerWidth() || 0,
+				height: this.el.protipArrow.outerHeight() || 0
+			};
+		},
 
 		/**
 		 * Fetches every data-* properties from the source element.
@@ -300,13 +312,13 @@
 		_fetchData: function(){
 
 			// Fetch
-			$.each(this._prop, $.proxy(function(key){
+			$.each(this.classInstance.settings.defaults, $.proxy(function(key){
 				this.data[key] = this.el.source.data(this._namespaced(key));
 			}, this));
 
-            // Merge/Extend
-            this.data = $.extend({}, this._prop, this.data);
-            this.data = $.extend({}, this.data, this._override);
+			// Merge/Extend
+			this.data = $.extend({}, this.classInstance.settings.defaults, this.data);
+			this.data = $.extend({}, this.data, this._override);
 
 			// Now apply back to the element
 			$.each(this.data, $.proxy(function(key, value){
@@ -342,9 +354,16 @@
 		 * @private
 		 */
 		_initSticky: function(){
-			if (this.data.trigger === C.TRIGGER_STICKY) {
-				this.show();
-			}
+			(this.data.trigger === C.TRIGGER_STICKY) && this.show();
+		},
+
+		/**
+		 * Initializes autoShow protips.
+		 *
+		 * @private
+		 */
+		_initAutoShow: function(){
+			this.data.autoShow && this.show();
 		},
 
 		/**
@@ -368,7 +387,7 @@
 
 			// Convert to jQuery object and append
 			this.el.protip = $(this.el.protip);
-            this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
+			this.el.protipArrow = this.el.protip.find('.' + C.SELECTOR_PREFIX + C.SELECTOR_ARROW);
 			this.el.target.append(this.el.protip);
 		},
 
@@ -380,22 +399,35 @@
 		 */
 		_getClassList: function(){
 			var classList = [];
-            var skin = this.data.skin || this.classInstance.settings.skin;
-            var size = this.data.size || this.classInstance.settings.size;
-            var scheme = this.data.scheme || this.classInstance.settings.scheme;
+			var skin      = this.data.skin;
+			var size      = this.data.size;
+			var scheme    = this.data.scheme;
 
-            // Main container class
-            classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
-            // Skin class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin);
-            // Size class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
-            // Scheme class
-            classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
-            // Custom classes
+			// Main container class
+			classList.push(C.SELECTOR_PREFIX + C.SELECTOR_CONTAINER);
+			// Skin class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin);
+			// Size class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SIZE_PREFIX + size);
+			// Scheme class
+			classList.push(C.SELECTOR_SKIN_PREFIX + skin + C.SELECTOR_SCHEME_PREFIX + scheme);
+			// Custom classes
 			this.data.classes && classList.push(this.data.classes);
+			// Mixin classes
+			this.data.mixin && classList.push(this._parseMixins());
 
 			return classList.join(' ');
+		},
+
+
+		_parseMixins: function(){
+			var mixin = [];
+
+			this.data.mixin && this.data.mixin.split(' ').forEach(function(val){
+				val && mixin.push(C.SELECTOR_MIXIN_PREFIX + val);
+			}, this);
+
+			return mixin.join(' ');
 		},
 
 		/**
@@ -438,9 +470,24 @@
 		 * @private
 		 */
 		_detectTitle: function(){
-			if (this.data.title && this.data.title.charAt(0) === '#') {
+			if (this.data.title && (this.data.title.charAt(0) === '#' || this.data.title.charAt(0) === '.')) {
 				this.data.titleSource = this.data.titleSource || this.data.title;
 				this.data.title = $(this.data.title).html();
+			}
+			else if (this.data.title && this.data.title.charAt(0) === ':') {
+				var which = this.data.title.substring(1);
+				switch (which) {
+					case C.PSEUDO_NEXT:
+						this.data.title = this.el.source.next().html();
+						break;
+					case C.PSEUDO_PREV:
+						this.data.title = this.el.source.prev().html();
+						break;
+					case C.PSEUDO_THIS:
+						this.data.title = this.el.source.html();
+						break;
+					default: break;
+				}
 			}
 
 			// Set to interactive if detects link
@@ -457,14 +504,14 @@
 		_setTarget: function(){
 			var target = this._getData(C.PROP_TARGET);
 
-			// Target is self
+			// Target is itself
 			if (target === true) {
 				target = this.el.source;
 			}
 
 			// If has target container
-			else if (target === C.SELECTOR_BODY && this.el.source.parents(C.SELECTOR_TARGET).size()) {
-				target = this.el.source.parents(C.SELECTOR_TARGET);
+			else if (target === C.SELECTOR_BODY && this.el.source.closest(C.SELECTOR_TARGET).length) {
+				target = this.el.source.closest(C.SELECTOR_TARGET);
 			}
 
 			// Target is a selector
@@ -522,9 +569,7 @@
 		 * @private
 		 */
 		_onProtipMouseleave: function(){
-			if (this.data.trigger === C.TRIGGER_HOVER) {
-				this.hide();
-			}
+			(this.data.trigger === C.TRIGGER_HOVER) && this.hide();
 		},
 
 		/**

@@ -1,0 +1,16 @@
+{
+  "name": "demo",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "riot-watch": "riot -w tags js/tags.js",
+    "sass-watch": "node-sass --watch --recursive scss/site.scss scss/site.css"
+  },
+  "author": "Victor Vincent",
+  "license": "ISC",
+  "devDependencies": {
+    "riot": "2.3.15"
+  }
+}

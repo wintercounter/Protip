@@ -89,10 +89,13 @@
 			var i;
 			for (i = 0; i < this._positionList.length; i++) {
 				// We had a successful test, break the loop.
-				if (this._test(this._positionList[i])){
+				if (this._test(this._positionList[i])) {
 					break;
 				}
 			}
+
+			// Set first for prior
+			this._item.data.position = this._positionList[0].key;
 
 			// Return the result if we had one. Return values for the default position if not.
 			return this._result || new PositionCalculator(this._item);
@@ -107,6 +110,7 @@
 		 * @private
 		 */
 		_test: function(position){
+			this._setProtipMinWidth();
 			var result = new PositionCalculator(this._item, position.key, position);
 			this._item.el.protip.css(result);
 			this._setProtipDimensions();
@@ -146,7 +150,7 @@
 		 * @private
 		 */
 		_bottomOk: function(){
-			return (((this._dimensions.offset.top - this._windowDimensions.scrollTop) + this._dimensions.height) < (this._windowDimensions.height + this._windowDimensions.scrollTop));
+			return (((this._dimensions.offset.top - this._windowDimensions.scrollTop) + this._dimensions.height) < this._windowDimensions.height);
 		},
 
 		/**
@@ -160,6 +164,30 @@
 		},
 
 		/**
+		 * Sets the min width of the tooltip.
+		 *
+		 * @private
+		 */
+		_setProtipMinWidth: function() {
+			if (this._item.classInstance.settings.forceMinWidth) {
+				this._item.el.protip.css({
+					position: 'fixed',
+					left: 0,
+					top: 0,
+					minWidth: 0
+				});
+
+				var minWidth = this._item.el.protip.outerWidth() + 1; // Thanks Firefox
+				this._item.el.protip.css({
+					position: '',
+					left: '',
+					top: '',
+					minWidth: minWidth + 'px'
+				});
+			}
+		},
+
+		/**
 		 * Gets/sets initial protip dimensions to caclulate with.
 		 *
 		 * @private
@@ -170,13 +198,6 @@
 				height: this._item.el.protip.outerHeight() || 0,
 				offset: this._item.el.protip.offset()
 			};
-
-			if (this._item.data.target !== C.SELECTOR_BODY) {
-				var parentOffset = this._item.el.source.offset();
-
-				this._dimensions.offset.top += parentOffset.top;
-				this._dimensions.offset.left += parentOffset.left;
-			}
 		},
 
 		/**

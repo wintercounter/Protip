@@ -1,0 +1,13 @@
+body .protip-container.protip-mixin--css {
+    &-no-transition {transition: all 0s}
+    &-bold          {font-weight: bold}
+    &-italic        {font-style: italic}
+    &-no-style      {
+        background: none;
+        color: inherit;
+
+        .protip-arrow {
+            display: none;
+        }
+    }
+}
