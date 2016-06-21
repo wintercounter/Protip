@@ -1087,8 +1087,8 @@ require('./src/Plugin');
 		 */
 		_setProtipDimensions: function(){
 			this._dimensions = {
-				width:  this._item.el.protip.outerWidth(),
-				height: this._item.el.protip.outerHeight(),
+				width:  this._item.el.protip.outerWidth() || 0,
+				height: this._item.el.protip.outerHeight() || 0,
 				offset: this._item.el.protip.offset()
 			};
 		},
@@ -1420,8 +1420,8 @@ require('./src/Plugin');
 		 */
 		getArrowOffset: function(){
 			return {
-				width:  this.el.protipArrow.outerWidth(),
-				height: this.el.protipArrow.outerHeight()
+				width:  this.el.protipArrow.outerWidth() || 0,
+				height: this.el.protipArrow.outerHeight() || 0
 			};
 		},
 
@@ -2057,8 +2057,8 @@ require('./src/Plugin');
 				offset: undefined
 			};
 			proto.el = el;
-			proto.width = el.outerWidth();
-			proto.height = el.outerHeight();
+			proto.width = el.outerWidth() || 0;
+			proto.height = el.outerHeight() || 0;
 			proto.offset = el.offset();
 			return proto;
 		},

@@ -1946,6 +1946,31 @@ if (typeof Object.create === 'function') {
 // shim for using process in browser
 
 var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+(function () {
+  try {
+    cachedSetTimeout = setTimeout;
+  } catch (e) {
+    cachedSetTimeout = function () {
+      throw new Error('setTimeout is not defined');
+    }
+  }
+  try {
+    cachedClearTimeout = clearTimeout;
+  } catch (e) {
+    cachedClearTimeout = function () {
+      throw new Error('clearTimeout is not defined');
+    }
+  }
+} ())
 var queue = [];
 var draining = false;
 var currentQueue;
@@ -1970,7 +1995,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = setTimeout(cleanUpNextTick);
+    var timeout = cachedSetTimeout(cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -1987,7 +2012,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    clearTimeout(timeout);
+    cachedClearTimeout(timeout);
 }
 
 process.nextTick = function (fun) {
@@ -1999,7 +2024,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        setTimeout(drainQueue, 0);
+        cachedSetTimeout(drainQueue, 0);
     }
 };
 
@@ -8187,7 +8212,11 @@ function AssertionError (message, _props, ssf) {
   if (ssf && Error.captureStackTrace) {
     Error.captureStackTrace(this, ssf);
   } else {
-    this.stack = new Error().stack;
+    try {
+      throw new Error();
+    } catch(e) {
+      this.stack = e.stack;
+    }
   }
 }
 
@@ -16266,8 +16295,8 @@ if (typeof sinon === "undefined") {
 		 */
 		_setProtipDimensions: function(){
 			this._dimensions = {
-				width:  this._item.el.protip.outerWidth(),
-				height: this._item.el.protip.outerHeight(),
+				width:  this._item.el.protip.outerWidth() || 0,
+				height: this._item.el.protip.outerHeight() || 0,
 				offset: this._item.el.protip.offset()
 			};
 		},
@@ -16599,8 +16628,8 @@ if (typeof sinon === "undefined") {
 		 */
 		getArrowOffset: function(){
 			return {
-				width:  this.el.protipArrow.outerWidth(),
-				height: this.el.protipArrow.outerHeight()
+				width:  this.el.protipArrow.outerWidth() || 0,
+				height: this.el.protipArrow.outerHeight() || 0
 			};
 		},
 
@@ -17236,8 +17265,8 @@ if (typeof sinon === "undefined") {
 				offset: undefined
 			};
 			proto.el = el;
-			proto.width = el.outerWidth();
-			proto.height = el.outerHeight();
+			proto.width = el.outerWidth() || 0;
+			proto.height = el.outerHeight() || 0;
 			proto.offset = el.offset();
 			return proto;
 		},
