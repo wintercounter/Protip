@@ -124,8 +124,8 @@
 				offset: undefined
 			};
 			proto.el = el;
-			proto.width = el.outerWidth();
-			proto.height = el.outerHeight();
+			proto.width = el.outerWidth() || 0;
+			proto.height = el.outerHeight() || 0;
 			proto.offset = el.offset();
 			return proto;
 		},

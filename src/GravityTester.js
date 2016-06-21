@@ -166,8 +166,8 @@
 		 */
 		_setProtipDimensions: function(){
 			this._dimensions = {
-				width:  this._item.el.protip.outerWidth(),
-				height: this._item.el.protip.outerHeight(),
+				width:  this._item.el.protip.outerWidth() || 0,
+				height: this._item.el.protip.outerHeight() || 0,
 				offset: this._item.el.protip.offset()
 			};
 
