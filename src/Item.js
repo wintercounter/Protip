@@ -298,8 +298,8 @@
 		 */
 		getArrowOffset: function(){
 			return {
-				width:  this.el.protipArrow.outerWidth(),
-				height: this.el.protipArrow.outerHeight()
+				width:  this.el.protipArrow.outerWidth() || 0,
+				height: this.el.protipArrow.outerHeight() || 0
 			};
 		},
 
