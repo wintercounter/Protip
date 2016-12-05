@@ -17170,12 +17170,11 @@ if (typeof sinon === "undefined") {
 }));
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Constants":75}],81:[function(require,module,exports){
-(function (process,global){
+(function (process){
 require('../src/Plugin.js');
 
 var assert = require('chai').assert,
 	sinon = require('sinon'),
-	$ = (typeof window !== "undefined" ? window['jQuery'] : typeof global !== "undefined" ? global['jQuery'] : null),
 	testContent = require('./testcontent.html');
 
 var protipInstance;
@@ -17273,7 +17272,7 @@ setTimeout(function(){
 }, 500);
 
 
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this,require('_process'))
 },{"../src/Plugin.js":79,"./testcontent.html":82,"_process":6,"chai":9,"sinon":45}],82:[function(require,module,exports){
 module.exports = '<style type="text/css">\n' +
     '	.protip {box-shadow: 0 0 5px green;}\n' +

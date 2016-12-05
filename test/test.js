@@ -2,7 +2,6 @@ require('../src/Plugin.js');
 
 var assert = require('chai').assert,
 	sinon = require('sinon'),
-	$ = require('jquery'),
 	testContent = require('./testcontent.html');
 
 var protipInstance;
