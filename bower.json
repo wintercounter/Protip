@@ -1,7 +1,10 @@
 {
   "name": "protip",
   "description": "A new generation jQuery Tooltip plugin.",
-  "main": "protip.min.js",
+  "main": [
+    "protip.min.js",
+    "protip.min.css"
+  ],
   "authors": [
     "Victor Vincent <wintercounter@gmail.com>"
   ],
