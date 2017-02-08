@@ -31,10 +31,8 @@
     "tests",
     "img",
     "site",
-    "src",
     "CNAME",
     "bundle.test.js",
-    "index.html",
-    "main.js"
+    "index.html"
   ]
 }
