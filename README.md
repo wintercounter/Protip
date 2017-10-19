@@ -1,6 +1,6 @@
-![TravisCI Build Status](https://travis-ci.org/DoclerLabs/Protip.svg)
-![Dependency Status](https://david-dm.org/DoclerLabs/Protip.svg)
-[![Join the chat at https://gitter.im/DoclerLabs/Protip](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DoclerLabs/Protip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+![TravisCI Build Status](https://travis-ci.org/wintercounter/Protip.svg)
+![Dependency Status](https://david-dm.org/wintercounter/Protip.svg)
+[![Join the chat at https://gitter.im/wintercounter/Protip](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wintercounter/Protip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ---
 # Features in Brief
@@ -36,13 +36,13 @@ At the company I working for we use many tooltips for several purposes. Especial
 Include the **protip.min.css** file in your `<head>` tag:
 
 ```html
-<link rel="stylesheet" href="//min.gitcdn.xyz/repo/DoclerLabs/Protip/master/protip.min.css">
+<link rel="stylesheet" href="//min.gitcdn.xyz/repo/wintercounter/Protip/master/protip.min.css">
 ```
 
 Include the **protip.min.js** file before your closing `</body>` tag (but after jQuery is included):
 
 ```html
-<script src="//min.gitcdn.xyz/repo/DoclerLabs/Protip/master/protip.min.js"></script>
+<script src="//min.gitcdn.xyz/repo/wintercounter/Protip/master/protip.min.js"></script>
 ```
 
 ## Get files using npm
@@ -231,7 +231,7 @@ el.protipShow({
 - left-bottom
 - corner-left-bottom
 
-![Available Protip positions](https://raw.githubusercontent.com/DoclerLabs/Protip/master/img/docs-positions.png)
+![Available Protip positions](https://raw.githubusercontent.com/wintercounter/Protip/master/img/docs-positions.png)
 
 ## data-pt-gravity
 

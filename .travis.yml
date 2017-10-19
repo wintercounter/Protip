@@ -10,7 +10,7 @@ before_deploy:
   - git config --global user.email "wintercounter@gmail.com"
   - git config --global user.name "Travis"
   - git config --global credential.helper "store --file=.git/credentials"
-  - git remote set-url origin https://github.com/DoclerLabs/Protip.git
+  - git remote set-url origin https://github.com/wintercounter/Protip.git
   - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
   - npm version patch --no-git-tag-version
   - git commit -a -m "Auto Build [ci skip]"
@@ -25,4 +25,4 @@ deploy:
   api_key:
     secure: am0NFP+jLbIjZULVFpGgnXgmbQeWUUJIXdeI8mhxr0xl2MRkv75oWrguf5RTsCLdTIf7s/w2cZGubcfRUXuTkzKwD27r0aiT+dY+0l59Itahv+ugjQ35la3eWY7reIyxEa4mMC52CA/ZCHoz3VH2n6GN1ci09M/oJ4rU1BKlWHnTZY0IupOVpnu1c6r4JgTr9CPoItdKv/RumUY8DfTyhh6lYzm/oY5rZsMApTLFhzvr+/tyrrbQtndZ46RD2+ZrKwTd7YfCYX6KEEpW1A0Hr9VDAGMh1rvcdrHX5BvIm5ajQXVIXcSCIb1DsoNPKe5aCKfCJ1VZb87R1QNLdrOU7rfgjW/WaKi/8nGTLuLfUXiqyLP8hchkRWuRPRiD5ZWvjupXA614J1FiU1+HsTza8XcNmWQy8QGVpKwVyUOKWi/GQwYMxNG4/ib94dQGrAQKfdjBzTl4bou8G7jgOHKz6llPgKWo4wR1IfxMhZN83S6UP5G6XXc6xqHUbEytb19zkNWmtVu/5rG2TNW2KSgAaOUkk87is4sZOlfQNKrlIQ4kTqgnTPFYmhpOytXbyihskchyT9s9vrbCXknLs/fBiXYhjPYXdPjo/6kRpo1Vo4BZoBzNiWjFiJVce2OGIUk6rqshueHG9Y5wvQLixZcrZLFQq+oW95JkN/N73jCPUbI=
   on:
-    repo: DoclerLabs/Protip
+    repo: wintercounter/Protip
