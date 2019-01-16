@@ -86,7 +86,8 @@ $_protipDefaultSkinSizes: (
 			left: auto;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: 0 $arrow-size $arrow-size $arrow-size;
-			border-color: transparent transparent $color transparent;
+			border-color: transparent;
+			border-bottom-color: $color;
 		}
 	}
 
@@ -103,7 +104,8 @@ $_protipDefaultSkinSizes: (
 			left: 100%;
 			margin: $arrow-size*-1 0 0 0;
 			border-width: $arrow-size 0 $arrow-size $arrow-size;
-			border-color: transparent transparent transparent $color;
+			border-color: transparent;
+			border-left-color: $color;
 		}
 	}
 
@@ -120,7 +122,8 @@ $_protipDefaultSkinSizes: (
 			right: 100%;
 			margin: $arrow-size*-1 0 0 0;
 			border-width: $arrow-size $arrow-size $arrow-size 0;
-			border-color: transparent $color transparent transparent;
+			border-color: transparent;
+			border-right-color: $color;
 		}
 	}
 
@@ -140,7 +143,8 @@ $_protipDefaultSkinSizes: (
 			left: 100%;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: 0 $arrow-size $arrow-size 0;
-			border-color: transparent $color transparent transparent;
+			border-color: transparent;
+			border-left-color: $color;
 		}
 	}
 
@@ -154,7 +158,8 @@ $_protipDefaultSkinSizes: (
 			left: $arrow-size*-1;
 			margin: 0 0 0 $arrow-size;
 			border-width: $arrow-size $arrow-size 0 0;
-			border-color: $color transparent transparent transparent;
+			border-color: transparent;
+			border-top-color: $color;
 		}
 	}
 
@@ -168,7 +173,8 @@ $_protipDefaultSkinSizes: (
 			left: 100%;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: 0 0 $arrow-size $arrow-size;
-			border-color: transparent transparent $color transparent;
+			border-color: transparent;
+			border-bottom-color: $color;
 		}
 	}
 
@@ -182,7 +188,8 @@ $_protipDefaultSkinSizes: (
 			left: $arrow-size*-1;
 			margin: $arrow-size*-1 0 0 $arrow-size;
 			border-width: $arrow-size 0 0 $arrow-size;
-			border-color: transparent transparent transparent $color;
+			border-color: transparent;
+			border-left-color: $color;
 		}
 	}
 
@@ -227,7 +234,7 @@ $_protipDefaultSkinSizes: (
 		$skin: $sizeSel,
 		$arrow-size: map-get($sizeMap, arrow-size),
 		$offset: 20px,
-		$color: invalid,  // Ugly, i know :(
+		$color: initial,  // Ugly, i know :(
 		$cornerRadiusFix: 0
 	);
 }
