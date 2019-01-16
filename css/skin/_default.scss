@@ -144,7 +144,7 @@ $_protipDefaultSkinSizes: (
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: 0 $arrow-size $arrow-size 0;
 			border-color: transparent;
-			border-left-color: $color;
+			border-right-color: $color;
 		}
 	}
 
@@ -234,7 +234,7 @@ $_protipDefaultSkinSizes: (
 		$skin: $sizeSel,
 		$arrow-size: map-get($sizeMap, arrow-size),
 		$offset: 20px,
-		$color: initial,  // Ugly, i know :(
+		$color: initial,
 		$cornerRadiusFix: 0
 	);
 }
