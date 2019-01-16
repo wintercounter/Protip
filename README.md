@@ -1,4 +1,3 @@
-![TravisCI Build Status](https://travis-ci.org/wintercounter/Protip.svg)
 ![Dependency Status](https://david-dm.org/wintercounter/Protip.svg)
 [![Join the chat at https://gitter.im/wintercounter/Protip](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wintercounter/Protip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -31,7 +30,7 @@ At the company I working for we use many tooltips for several purposes. Especial
 ---
 # Installation
 
-## The simple way 
+## The simple way
 
 Include the **protip.min.css** file in your `<head>` tag:
 
