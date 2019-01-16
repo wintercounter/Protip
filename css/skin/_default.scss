@@ -69,7 +69,8 @@ $_protipDefaultSkinSizes: (
 			left: auto;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: $arrow-size $arrow-size 0 $arrow-size;
-			border-color: $color transparent transparent transparent;
+			border-color: transparent;
+			border-top-color: $color;
 		}
 	}
 
