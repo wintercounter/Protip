@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 require('./src/Plugin');
 },{"./src/Plugin":8}],2:[function(require,module,exports){
 (function (global){
@@ -2075,97 +2075,106 @@ require('./src/Plugin');
 			var position = {left: 0, top: 0};
 			var arrowOffset = this._itemInstance.getArrowOffset();
 			var globalOffset = this._itemInstance.classInstance.settings.offset;
+			var bodyScrollLeft = document.body.scrollLeft || 0
+			var bodyScrollTop = document.body.scrollTop || 0
 
-			if (this._placement !== C.PLACEMENT_CENTER) {
+            bodyScrollLeft = window.pageXOffset === bodyScrollLeft
+				? 0 : this._target.el.get(0) !== document.body
+					? 0 : bodyScrollLeft
+            bodyScrollTop = window.pageYOffset === bodyScrollTop
+                ? 0 : this._target.el.get(0) !== document.body
+                    ? 0 : bodyScrollTop
+
+            if (this._placement !== C.PLACEMENT_CENTER) {
 				switch (this._position) {
 					case C.POSITION_TOP:
 						this._offset.top += (globalOffset + arrowOffset.height) * -1;
-						position.left = ((this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left) + this._offset.left;
-						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						position.left = ((this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left) + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
 						break;
 					case C.POSITION_TOP_LEFT:
 						this._offset.top += (globalOffset + arrowOffset.height) * -1;
-						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
 						break;
 					case C.POSITION_TOP_RIGHT:
 						this._offset.top += (globalOffset + arrowOffset.height) * -1;
-						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top += this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.top += this._protip.height / 2;
 						break;
 					case C.POSITION_RIGHT:
 						this._offset.left += (globalOffset + arrowOffset.width);
-						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
 						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
 						break;
 					case C.POSITION_RIGHT_TOP:
 						this._offset.left += (globalOffset + arrowOffset.width);
-						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
 						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
 						break;
 					case C.POSITION_RIGHT_BOTTOM:
 						this._offset.left += (globalOffset + arrowOffset.width);
-						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
 						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
 						break;
 					case C.POSITION_BOTTOM:
 						this._offset.top += (globalOffset + arrowOffset.height);
-						position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
 						break;
 					case C.POSITION_BOTTOM_LEFT:
 						this._offset.top += (globalOffset + arrowOffset.height);
-						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
 						break;
 					case C.POSITION_BOTTOM_RIGHT:
 						this._offset.top += (globalOffset + arrowOffset.height);
-						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width - this._protip.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top -= this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.top -= this._protip.height / 2;
 						break;
 					case C.POSITION_LEFT:
 						this._offset.left += (globalOffset + arrowOffset.width) * -1;
-						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
 						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
 						break;
 					case C.POSITION_LEFT_TOP:
 						this._offset.left += (globalOffset + arrowOffset.width) * -1;
-						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
 						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
 						break;
 					case C.POSITION_LEFT_BOTTOM:
 						this._offset.left += (globalOffset + arrowOffset.width) * -1;
-						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height - this._protip.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
 						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
 						break;
 					case C.POSITION_CORNER_LEFT_TOP:
 						this._offset.top += (globalOffset + arrowOffset.height) * -1;
-						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top  += this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
@@ -2173,8 +2182,8 @@ require('./src/Plugin');
 						break;
 					case C.POSITION_CORNER_LEFT_BOTTOM:
 						this._offset.top += (globalOffset + arrowOffset.height);
-						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left - this._protip.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left += this._protip.width;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top  -= this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.left += this._protip.width / 2;
@@ -2182,8 +2191,8 @@ require('./src/Plugin');
 						break;
 					case C.POSITION_CORNER_RIGHT_BOTTOM:
 						this._offset.top += (globalOffset + arrowOffset.height);
-						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top + this._source.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top  -= this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
@@ -2191,8 +2200,8 @@ require('./src/Plugin');
 						break;
 					case C.POSITION_CORNER_RIGHT_TOP:
 						this._offset.top += (globalOffset + arrowOffset.height) * -1;
-						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left;
-						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top;
+						position.left = (this._source.offset.left + this._source.width) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+						position.top = (this._source.offset.top - this._protip.height) - this._target.offset.top + this._offset.top + bodyScrollTop;
 						if (this._placement === C.PLACEMENT_INSIDE) position.left -= this._protip.width;
 						if (this._placement === C.PLACEMENT_INSIDE) position.top  += this._protip.height;
 						if (this._placement === C.PLACEMENT_BORDER) position.left -= this._protip.width / 2;
@@ -2205,8 +2214,8 @@ require('./src/Plugin');
 
 			// Center Placement
 			else {
-				position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left;
-				position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top;
+				position.left = (this._source.offset.left + this._source.width / 2 - this._protip.width / 2) - this._target.offset.left + this._offset.left + bodyScrollLeft;
+				position.top = (this._source.offset.top + this._source.height / 2 - this._protip.height / 2) - this._target.offset.top + this._offset.top + bodyScrollTop;
 			}
 
 			position.left = position.left + 'px';
