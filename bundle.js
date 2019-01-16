@@ -2075,15 +2075,15 @@ require('./src/Plugin');
 			var position = {left: 0, top: 0};
 			var arrowOffset = this._itemInstance.getArrowOffset();
 			var globalOffset = this._itemInstance.classInstance.settings.offset;
-			var bodyScrollLeft = document.body.scrollLeft || 0
-			var bodyScrollTop = document.body.scrollTop || 0
+			var bodyScrollLeft = document.body.scrollLeft || 0;
+			var bodyScrollTop = document.body.scrollTop || 0;
 
             bodyScrollLeft = window.pageXOffset === bodyScrollLeft
 				? 0 : this._target.el.get(0) !== document.body
-					? 0 : bodyScrollLeft
+					? 0 : bodyScrollLeft;
             bodyScrollTop = window.pageYOffset === bodyScrollTop
                 ? 0 : this._target.el.get(0) !== document.body
-                    ? 0 : bodyScrollTop
+                    ? 0 : bodyScrollTop;
 
             if (this._placement !== C.PLACEMENT_CENTER) {
 				switch (this._position) {
