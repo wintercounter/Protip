@@ -234,7 +234,7 @@ $_protipDefaultSkinSizes: (
 		$skin: $sizeSel,
 		$arrow-size: map-get($sizeMap, arrow-size),
 		$offset: 20px,
-		$color: initial,
+		$color: unset,
 		$cornerRadiusFix: 0
 	);
 }
