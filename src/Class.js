@@ -206,11 +206,11 @@
 		},
 
 		/**
-		 * Called after item destory has been done.
+		 * Called after item destroy has been done.
 		 *
 		 * @param key
 		 */
-		onItemDestoryed: function(key){
+		onItemDestroyed: function(key){
 			delete this._itemInstances[key];
 		},
 
