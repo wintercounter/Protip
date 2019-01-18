@@ -54,7 +54,7 @@
 				});
 			}
 			return this;
-		}
+		},
 		
 		/**
 		 * Simply sets tooltip to the element but it won't show.
