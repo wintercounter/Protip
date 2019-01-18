@@ -43,7 +43,19 @@
 
 	// Public element methods
 	$.fn.extend({
-
+		/**
+		 * Destroys protip
+		 */
+		protipDestroy: function() {
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+				});
+			}
+			return this;
+		}
+		
 		/**
 		 * Simply sets tooltip to the element but it won't show.
 		 *
