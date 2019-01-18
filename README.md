@@ -1,4 +1,3 @@
-![TravisCI Build Status](https://travis-ci.org/wintercounter/Protip.svg)
 ![Dependency Status](https://david-dm.org/wintercounter/Protip.svg)
 [![Join the chat at https://gitter.im/wintercounter/Protip](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wintercounter/Protip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -288,6 +287,19 @@ Skins are a little bit difficult at the moment and I'm looking forward to implem
 Anyway the markup won't change too drastic so the currently made skins should work in the future as well.
 Please check Protip's SCSS files for more details. There are configurable maps,
 so you can easily add your own styles (schemes and sizes also).
+
+#### List of available skins:
+- **pro**: ![#da2e2b]https://placehold.it/15/da2e2b/000000?text=+
+- **blue**: ![#336699]https://placehold.it/15/336699/000000?text=+
+- **red**: ![#802731]https://placehold.it/15/802731/000000?text=+
+- **aqua**: ![#339996]https://placehold.it/15/339996/000000?text=+
+- **dark**: ![#333]https://placehold.it/15/333/000000?text=+
+- **dark-transparent**: ![#141414cc]https://placehold.it/15/141414cc/000000?text=+,
+- **black**: ![#000]https://placehold.it/15/000/000000?text=+
+- **leaf**: ![#339959]https://placehold.it/15/339959/000000?text=+
+- **purple**: ![#613399]https://placehold.it/15/613399/000000?text=+
+- **pink**: ![#D457AA]https://placehold.it/15/D457AA/000000?text=+
+- **orange**: ![#E64426]https://placehold.it/15/E64426/000000?text=+
 
 ---
 # Good to know stuff
