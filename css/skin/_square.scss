@@ -3,7 +3,9 @@ $_protipSquareSkinColors: (
 	'blue': #336699,
 	'red': #802731,
 	'aqua': #339996,
-	'black': #000000,
+	'dark-transparent': rgba(20,20,20,.8),
+	'dark': #333,
+	'black': #000,
 	'leaf': #339959,
 	'purple': #613399,
 	'pink': #D457AA,
@@ -53,7 +55,7 @@ $_protipSquareSkinSizes: (
 		)
 ) !default;
 
-@mixin protipSquareSkinArrowGenerator($skin, $arrow-size, $offset, $color, $cornerRadiusFix) {
+@mixin protipSquareSkinArrowGenerator($skin, $arrow-size, $offset, $cornerRadiusFix) {
 
 	///////////// TOP
 	.#{$skin}[data-pt-position="top-left"],
@@ -64,8 +66,6 @@ $_protipSquareSkinSizes: (
 			left: auto;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: $arrow-size $arrow-size 0 $arrow-size;
-			border-color: transparent;
-			border-top-color: $color;
 		}
 	}
 
@@ -82,8 +82,6 @@ $_protipSquareSkinSizes: (
 			left: auto;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: 0 $arrow-size $arrow-size $arrow-size;
-			border-color: transparent;
-			border-bottom-color: $color;
 		}
 	}
 
@@ -100,8 +98,6 @@ $_protipSquareSkinSizes: (
 			left: 100%;
 			margin: $arrow-size*-1 0 0 0;
 			border-width: $arrow-size 0 $arrow-size $arrow-size;
-			border-color: transparent;
-			border-left-color: $color;
 		}
 	}
 
@@ -118,8 +114,6 @@ $_protipSquareSkinSizes: (
 			right: 100%;
 			margin: $arrow-size*-1 0 0 0;
 			border-width: $arrow-size $arrow-size $arrow-size 0;
-			border-color: transparent;
-			border-right-color: $color;
 		}
 	}
 
@@ -139,8 +133,6 @@ $_protipSquareSkinSizes: (
 			left: 100%;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: 0 $arrow-size $arrow-size 0;
-			border-color: transparent;
-			border-right-color: $color;
 		}
 	}
 
@@ -154,8 +146,6 @@ $_protipSquareSkinSizes: (
 			left: $arrow-size*-1;
 			margin: 0 0 0 $arrow-size;
 			border-width: $arrow-size $arrow-size 0 0;
-			border-color: transparent;
-			border-top-color: $color;
 		}
 	}
 
@@ -169,8 +159,6 @@ $_protipSquareSkinSizes: (
 			left: 100%;
 			margin: 0 0 0 $arrow-size*-1;
 			border-width: 0 0 $arrow-size $arrow-size;
-			border-color: transparent;
-			border-bottom-color: $color;
 		}
 	}
 
@@ -184,36 +172,9 @@ $_protipSquareSkinSizes: (
 			left: $arrow-size*-1;
 			margin: $arrow-size*-1 0 0 $arrow-size;
 			border-width: $arrow-size 0 0 $arrow-size;
-			border-color: transparent;
-			border-left-color: $color;
 		}
 	}
 
-}
-
-// Schemes
-@each $colorName, $color in $_protipSquareSkinColors {
-
-	$skinSel: protip-skin-square--scheme-#{$colorName};
-
-	.#{$skinSel} {
-		&.protip {
-			&-container {
-				color: #fff;
-				background: $color;
-				font-family: sans-serif;
-				transition: opacity 0.2s ease-out;
-			}
-		}
-	}
-
-	@include protipSquareSkinArrowGenerator(
-		$skin: $skinSel,
-		$arrow-size: 8px,
-		$offset: 20px,
-		$color: $color,  // Ugly, i know :(
-		$cornerRadiusFix: 0
-	);
 }
 
 // Sizes
@@ -230,7 +191,28 @@ $_protipSquareSkinSizes: (
 		$skin: $sizeSel,
 		$arrow-size: map-get($sizeMap, arrow-size),
 		$offset: 20px,
-		$color: unset,
 		$cornerRadiusFix: 0
 	);
 }
+// Schemes
+@each $colorName, $color in $_protipSquareSkinColors {
+
+	$skinSel: protip-skin-square--scheme-#{$colorName};
+
+	.#{$skinSel} {
+		&.protip {
+			&-container {
+				color: #fff;
+				background: $color;
+				font-family: sans-serif;
+				transition: opacity 0.2s ease-out;
+			}
+		}
+	}
+
+	@include protipColorArrowGenerator(
+		$skin: $skinSel,
+		$color: $color,
+	);
+}
+
