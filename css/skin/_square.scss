@@ -9,7 +9,8 @@ $_protipSquareSkinColors: (
 	'leaf': #339959,
 	'purple': #613399,
 	'pink': #D457AA,
-	'orange': #E64426
+	'orange': #E64426,
+	'white': #FFF
 ) !default;
 
 $_protipSquareSkinSizes: (
@@ -202,7 +203,11 @@ $_protipSquareSkinSizes: (
 	.#{$skinSel} {
 		&.protip {
 			&-container {
-				color: #fff;
+			    	@if (lightness($color) > 40) {
+				    color: #000;
+				} @else {
+				    color: #fff;
+				}
 				background: $color;
 				font-family: sans-serif;
 				transition: opacity 0.2s ease-out;
