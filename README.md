@@ -300,6 +300,7 @@ so you can easily add your own styles (schemes and sizes also).
 - ![#613399](https://placehold.it/15/613399/000000?text=+) **purple**
 - ![#D457AA](https://placehold.it/15/D457AA/000000?text=+) **pink**
 - ![#E64426](https://placehold.it/15/E64426/000000?text=+) **orange**
+- ![#FFF](https://placehold.it/15/FFFFFF/000000?text=+) **white**
 
 ---
 # Good to know stuff
