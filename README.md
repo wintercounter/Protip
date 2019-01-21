@@ -1,4 +1,3 @@
-![TravisCI Build Status](https://travis-ci.org/wintercounter/Protip.svg)
 ![Dependency Status](https://david-dm.org/wintercounter/Protip.svg)
 [![Join the chat at https://gitter.im/wintercounter/Protip](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wintercounter/Protip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -136,10 +135,10 @@ Protip related attributes will always get a pt namespace so Protip won't conflic
 | **icon**        | false     | *Bool, String* | Adds icon template to the tooltip markup with the specified icon **class**.                                                                                                                                                                 |
 | **observer**    | false     | *Bool*         | If **true**, we will attach an observer to the source element and watch for changes. *For example if you change the data-pt-title attribute, the tooltip title will be changed also.*                                                         |
 | **target**      | 'body'    | *Bool, String* | We will append the tooltip to this **selector**. Use **true** if you want to append into the source element.                                                                                                                                    |
-| **skin**        | 'default' | *Bool, String* | Skin to apply only to this tooltip.                                                                                                                                    |
-| **size**        | 'normal'  | *String*       | tiny, small, normal, big, large (Provided only by the Default skin.)                                                                                                                                    |
-| **scheme**      | 'pro'     | *String*       | Default color scheme to use (provided by the Default skin only)                                                                                                                             |
-| **animate**     | undefined | *Bool, String* | Animation type based on Animate.css. See: Animations                                                                                                                                    |
+| **skin**        | 'default' | *Bool, String* | Skin to apply only to this tooltip. (Currently available: default, square)                                                                                                                                   |
+| **size**        | 'normal'  | *String*       | tiny, small, normal, big, large                                                                                                                                 |
+| **scheme**      | 'pro'     | *String*       | Color scheme to use. [See the scheme list](#list-of-available-schemes)                                                                                                                           |
+| **animate**     | undefined | *Bool, String* | Animation type based on Animate.css. [See Animations](#animations)                                                                                                                                    |
 | **auto-hide**   | false     | *Bool, Number* | Tooltip will hide itself automatically after this timeout (milliseconds).                                                                                                                                    |
 | **auto-show**   | false     | *Bool*         | Automatically show tooltip for this element on load (stickies will be shown anyway).                                                                                                                                    |
 | **mixin**       | undefined | *String*       | Tooltip mixins to use. Separated by spaces.                                                                                                                                    |
@@ -288,6 +287,20 @@ Skins are a little bit difficult at the moment and I'm looking forward to implem
 Anyway the markup won't change too drastic so the currently made skins should work in the future as well.
 Please check Protip's SCSS files for more details. There are configurable maps,
 so you can easily add your own styles (schemes and sizes also).
+
+## List of available schemes
+- ![#da2e2b](https://placehold.it/15/da2e2b/000000?text=+) **pro**
+- ![#336699](https://placehold.it/15/336699/000000?text=+) **blue**
+- ![#802731](https://placehold.it/15/802731/000000?text=+) **red**
+- ![#339996](https://placehold.it/15/339996/000000?text=+) **aqua**
+- ![#333](https://placehold.it/15/333/000000?text=+) **dark**
+- ![#141414cc](https://placehold.it/15/141414cc/000000?text=+) **dark-transparent**
+- ![#000](https://placehold.it/15/000/000000?text=+) **black**
+- ![#339959](https://placehold.it/15/339959/000000?text=+) **leaf**
+- ![#613399](https://placehold.it/15/613399/000000?text=+) **purple**
+- ![#D457AA](https://placehold.it/15/D457AA/000000?text=+) **pink**
+- ![#E64426](https://placehold.it/15/E64426/000000?text=+) **orange**
+- ![#FFF](https://placehold.it/15/FFFFFF/000000?text=+) **white**
 
 ---
 # Good to know stuff

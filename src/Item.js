@@ -155,7 +155,7 @@
 				.data(this._namespaced(C.PROP_INITED), false)
 				.data(this._namespaced(C.PROP_IDENTIFIER), false)
 				.removeData();
-			this.classInstance.onItemDestoryed(this.data.identifier);
+			this.classInstance.onItemDestroyed(this.data.identifier);
 			$.each(this._task, function(k, task){
 				clearTimeout(task);
 			});
