@@ -15814,11 +15814,11 @@ function hasOwnProperty(obj, prop) {
 		},
 
 		/**
-		 * Called after item destory has been done.
+		 * Called after item destroy has been done.
 		 *
 		 * @param key
 		 */
-		onItemDestoryed: function(key){
+		onItemDestroyed: function(key){
 			delete this._itemInstances[key];
 		},
 
@@ -16751,7 +16751,7 @@ function hasOwnProperty(obj, prop) {
 				.data(this._namespaced(C.PROP_INITED), false)
 				.data(this._namespaced(C.PROP_IDENTIFIER), false)
 				.removeData();
-			this.classInstance.onItemDestoryed(this.data.identifier);
+			this.classInstance.onItemDestroyed(this.data.identifier);
 			$.each(this._task, function(k, task){
 				clearTimeout(task);
 			});
@@ -17223,6 +17223,7 @@ function hasOwnProperty(obj, prop) {
 
 	return ProtipItemClass;
 }));
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Constants":76,"./GravityTester":78,"./PositionCalculator":81}],80:[function(require,module,exports){
 (function (global){
@@ -17271,7 +17272,19 @@ function hasOwnProperty(obj, prop) {
 
 	// Public element methods
 	$.fn.extend({
-
+		/**
+		 * Destroys protip
+		 */
+		protipDestroy: function() {
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+				});
+			}
+			return this;
+		},
+		
 		/**
 		 * Simply sets tooltip to the element but it won't show.
 		 *
@@ -17394,6 +17407,7 @@ function hasOwnProperty(obj, prop) {
 	});
 
 }));
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Buffer":74,"./Class":75,"./Constants":76}],81:[function(require,module,exports){
 (function (global){

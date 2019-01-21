@@ -340,11 +340,11 @@ require('./src/Plugin');
 		},
 
 		/**
-		 * Called after item destory has been done.
+		 * Called after item destroy has been done.
 		 *
 		 * @param key
 		 */
-		onItemDestoryed: function(key){
+		onItemDestroyed: function(key){
 			delete this._itemInstances[key];
 		},
 
@@ -1277,7 +1277,7 @@ require('./src/Plugin');
 				.data(this._namespaced(C.PROP_INITED), false)
 				.data(this._namespaced(C.PROP_IDENTIFIER), false)
 				.removeData();
-			this.classInstance.onItemDestoryed(this.data.identifier);
+			this.classInstance.onItemDestroyed(this.data.identifier);
 			$.each(this._task, function(k, task){
 				clearTimeout(task);
 			});
@@ -1749,6 +1749,7 @@ require('./src/Plugin');
 
 	return ProtipItemClass;
 }));
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Constants":4,"./GravityTester":6,"./PositionCalculator":9}],8:[function(require,module,exports){
 (function (global){
@@ -1797,7 +1798,19 @@ require('./src/Plugin');
 
 	// Public element methods
 	$.fn.extend({
-
+		/**
+		 * Destroys protip
+		 */
+		protipDestroy: function() {
+			if ($._protipBuffer.isReady()) {
+				return this.each(function (index, el) {
+					el = $(el);
+					$._protipClassInstance.getItemInstance(el).destroy();
+				});
+			}
+			return this;
+		},
+		
 		/**
 		 * Simply sets tooltip to the element but it won't show.
 		 *
@@ -1920,6 +1933,7 @@ require('./src/Plugin');
 	});
 
 }));
+
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./Buffer":2,"./Class":3,"./Constants":4}],9:[function(require,module,exports){
 (function (global){
